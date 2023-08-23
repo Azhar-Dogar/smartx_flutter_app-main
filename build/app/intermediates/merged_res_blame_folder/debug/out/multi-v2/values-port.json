@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.smartx_flutter_app-mergeDebugResources-41:/values-port/values-port.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\730953c7b831ad4a5402c154468c957b\\transformed\\appcompat-1.4.1\\res\\values-port\\values-port.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "55",
+                        "endOffsets": "106"
+                    }
+                }
+            ]
+        }
+    ]
+}

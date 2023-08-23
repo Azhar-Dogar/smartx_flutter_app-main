@@ -1,0 +1,12 @@
+com.tekartik.sqflite-jetified-annotation-experimental-1.1.0-0 C:\Users\PC\.gradle\caches\transforms-3\28dac84bdc3ab843116d08fe0af5fb68\transformed\jetified-annotation-experimental-1.1.0\res
+com.tekartik.sqflite-jetified-window-1.0.0-beta04-1 C:\Users\PC\.gradle\caches\transforms-3\56f3b8d678499a8c91a60a7c5c8eb1b0\transformed\jetified-window-1.0.0-beta04\res
+com.tekartik.sqflite-core-1.6.0-2 C:\Users\PC\.gradle\caches\transforms-3\a7e7071e5260490419dce2b68196a7b9\transformed\core-1.6.0\res
+com.tekartik.sqflite-jetified-window-java-1.0.0-beta04-3 C:\Users\PC\.gradle\caches\transforms-3\dd80bbc3426f9187c06096b08e1cefd6\transformed\jetified-window-java-1.0.0-beta04\res
+com.tekartik.sqflite-main-4 C:\Users\PC\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite-2.2.8+4\android\src\main\res
+com.tekartik.sqflite-release-5 C:\Users\PC\AppData\Local\Pub\Cache\hosted\pub.dev\sqflite-2.2.8+4\android\src\release\res
+com.tekartik.sqflite-pngs-6 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\generated\res\pngs\release
+com.tekartik.sqflite-resValues-7 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\generated\res\resValues\release
+com.tekartik.sqflite-rs-8 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\generated\res\rs\release
+com.tekartik.sqflite-mergeReleaseResources-9 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\intermediates\incremental\release\mergeReleaseResources\merged.dir
+com.tekartik.sqflite-mergeReleaseResources-10 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+com.tekartik.sqflite-merged_res-11 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\intermediates\merged_res\release

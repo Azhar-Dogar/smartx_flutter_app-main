@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">stroll_app</string>
+    <string name="default_notification_channel_id">notifications</string>
+
+    <string name="facebook_app_id">801679501749089</string>
+    <string name="fb_login_protocol_scheme">fb203797468595808</string>
+    <string name="facebook_client_token">d318f69284853f855193e69ef46c50ae</string>
+
+</resources>

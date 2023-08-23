@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.example.mylibrary-merged_res-30:/animator-v21/design_appbar_state_list_animator.xml",
+        "source": "com.example.mylibrary-material-1.9.0-15:/animator-v21/design_appbar_state_list_animator.xml"
+    },
+    {
+        "merged": "com.example.mylibrary-merged_res-30:/animator-v21/m3_appbar_state_list_animator.xml",
+        "source": "com.example.mylibrary-material-1.9.0-15:/animator-v21/m3_appbar_state_list_animator.xml"
+    }
+]
