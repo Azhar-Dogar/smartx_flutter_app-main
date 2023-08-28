@@ -1,18 +1,100 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart' as geo_locator;
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
+import 'package:smartx_flutter_app/common/margin_widget.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/ui/map-walk/stop_walk_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
-class MapWalkScreen extends StatelessWidget {
+import '../main/main_screen_controller.dart';
+
+class MapWalkScreen extends StatefulWidget {
   static const String route = '/map_walk_screen_route';
   static const String key_title = '/map_walk_screen_title';
   const MapWalkScreen({super.key});
 
   @override
+  State<MapWalkScreen> createState() => _MapWalkScreenState();
+}
+
+class _MapWalkScreenState extends State<MapWalkScreen> {
+  final controller = Get.put(MapWalkController());
+  GoogleMapController? _controller;
+  LocationData? _myLocation;
+  late double width, height;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _requestLocationPermission();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    final permission_handler.PermissionStatus status =
+        await permission_handler.Permission.location.request();
+    if (status.isGranted) {
+      print("granted");
+      _getLocation();
+      // Permission granted, proceed to get location
+    } else {
+      print("not granted");
+      // Permission denied, handle accordingly
+    }
+  }
+
+  Future<void> _getLocation() async {
+    try {
+      geo_locator.Position position =
+          await geo_locator.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo_locator.LocationAccuracy.high,
+      );
+      double latitude = position.latitude;
+      double longitude = position.longitude;
+      print(latitude);
+      print(longitude);
+      print("latitude and longitude");
+      // Use latitude and longitude as needed
+    } catch (e) {
+      // Handle location fetching errors
+    }
+  }
+
+  Future<void> _setMyLocation() async {
+    final Location location = Location();
+    location.onLocationChanged.listen((LocationData newLocation) {
+      if (controller.isStart.value) {
+        Future.delayed(const Duration(seconds: 5)).then((value) {
+          setState(() {
+            _myLocation = newLocation;
+            controller.pathPoints
+                .add(LatLng(newLocation.latitude!, newLocation.longitude!));
+            print("paths ${controller.pathPoints.length}");
+            print(newLocation.latitude);
+            print(newLocation.longitude);
+          });
+        });
+      }
+      if (_controller != null) {
+        _controller!.animateCamera(
+          CameraUpdate.newLatLng(
+            LatLng(newLocation.latitude!, newLocation.longitude!),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final size = context.screenSize;
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -38,165 +120,170 @@ class MapWalkScreen extends StatelessWidget {
           ),
         ),
       ),
-     
-     
-     
-     
       body: SizedBox(
-        height: size.height,
-        width: size.width,
+        height: height,
+        width: width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              child: GetX<MapWalkController>(
-                builder: (controller) {
-                  if (controller.isStart.value) {
-                    return Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          margin: const EdgeInsets.only(top: 40),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.7),
-                                  offset: const Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 3.0,
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(10),
-                              color: Constants.colorOnBackground),
-                          child: const Column(
-                            children: [
-                              Text(
-                                '300m',
-                                style: TextStyle(
-                                    fontFamily: Constants.workSansBold,
-                                    fontSize: 28),
-                              ),
-                              Text(
-                                'Distance Covered',
-                                style: TextStyle(
-                                  fontFamily: Constants.workSansLight,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          margin: const EdgeInsets.only(bottom: 20),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.7),
-                                  offset: const Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 3.0,
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(10),
-                              color: Constants.colorOnBackground),
-                          child: const Column(
-                            children: [
-                              Text(
-                                '00:02:03',
-                                style: TextStyle(
-                                    fontFamily: Constants.workSansBold,
-                                    fontSize: 28),
-                              ),
-                              Text(
-                                'Hrs    Min    Sec',
-                                style: TextStyle(
-                                  fontFamily: Constants.workSansLight,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                                alignment: Alignment.center,
-                                height: 40,
-                                margin: EdgeInsets.only(
-                                    bottom: 50,
-                                    right: 20,
-                                    left: size.width * 0.2),
-                                width: 40,
-                                decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Constants.colorOnSurface),
-                                child: const Icon(Icons.pause)),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  height: 110,
-                                  margin: const EdgeInsets.only(bottom: 50),
-                                  width: 110,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Constants.colorOnSurface
-                                          .withOpacity(0.4)),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(StopWalkScreen.route);
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 70,
-                                    margin: const EdgeInsets.only(bottom: 50),
-                                    width: 70,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Constants.colorSecondary),
-                                    child: const Text('Stop',
-                                        style: TextStyle(
-                                            color:
-                                                Constants.colorOnBackground)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  }
-
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () => controller.isStart(true),
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 80,
-                          margin: const EdgeInsets.only(bottom: 50),
-                          width: 80,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Constants.colorOnSurface),
-                          child: const Text('Start',
-                              style: TextStyle(
-                                  color: Constants.colorOnBackground)),
-                        ),
+            GetX<MapWalkController>(
+              builder: (_) {
+                return Expanded(
+                  child: Column(children: [
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          googleMap(),
+                          if (controller.isStart.value) ...[
+                            stopButton()
+                          ] else ...[
+                            startButton()
+                          ]
+                        ],
                       ),
-                    ],
-                  );
-                },
-              ),
+                    )
+                  ]),
+                );
+              },
             )
           ],
         ),
       ),
+    );
+  }
+
+  Widget stopButton() {
+    DateTime date = DateTime.now();
+    return Positioned(
+      bottom: 10,
+      left: width * 0.25,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          timer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Text(controller.totalDistance.toStringAsFixed(3)),
+              Container(
+                  alignment: Alignment.center,
+                  height: 40,
+                  width: 40,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Constants.colorOnSurface),
+                  child: const Icon(Icons.pause)),
+              const MarginWidget(
+                factor: 1,
+                isHorizontal: true,
+              ),
+              GestureDetector(
+                onTap: () {
+                  controller.calDistance();
+                  // controller.hours.value = 0;
+                  // controller.minutes.value = 0;
+                  // controller.seconds.value = 0;
+                  controller.pathPoints = [];
+                  controller.timer!.cancel();
+                  controller.isStart(false);
+                  // print(controller.seconds.value);
+                  // print("seconds");
+                  Get.toNamed(StopWalkScreen.route);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 110,
+                  width: 110,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Constants.colorOnSurface.withOpacity(0.4)),
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(20),
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Constants.colorSecondary),
+                    child: const Text('Stop',
+                        style: TextStyle(color: Constants.colorOnBackground)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget timer() {
+    DateTime time = controller.time;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 5),
+      width: width * 0.25,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Constants.colorTextWhite),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          children: [
+            Text(
+                "${controller.hours}:${controller.minutes}:${controller.seconds}")
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget startButton() {
+    return Positioned(
+      bottom: 10,
+      right: width * 0.39,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Text(controller.totalDistance.toStringAsFixed(3)),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: GestureDetector(
+              onTap: () {
+                controller.isStart(true);
+                controller.pathPoints = [];
+                controller.startTimer();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                height: 80,
+                width: 80,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Constants.colorSecondary),
+                child: const Text('Start',
+                    style: TextStyle(color: Constants.colorOnBackground)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget googleMap() {
+    return GoogleMap(
+      initialCameraPosition: const CameraPosition(
+          zoom: 16, target: LatLng(31.5223654, 74.4390812)),
+      onMapCreated: (GoogleMapController controller) {
+        print('changes');
+        _controller = controller;
+        _setMyLocation();
+      },
+      myLocationEnabled: true,
+      polylines: {
+        Polyline(
+          polylineId: const PolylineId('path'),
+          color: Colors.blue,
+          points: controller.pathPoints,
+        ),
+      },
     );
   }
 }

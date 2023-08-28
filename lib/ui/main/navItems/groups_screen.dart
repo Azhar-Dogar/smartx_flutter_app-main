@@ -11,6 +11,8 @@ import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../../models/group_model.dart';
+
 class GroupsScreen extends StatelessWidget {
   static const String key_title = '/groups_screen_title';
 

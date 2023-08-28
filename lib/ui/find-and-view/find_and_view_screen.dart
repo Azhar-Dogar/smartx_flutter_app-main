@@ -7,6 +7,7 @@ import 'package:smartx_flutter_app/helper/meta_data.dart';
 import 'package:smartx_flutter_app/ui/find-and-view/find_view_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../models/user_model.dart';
 import '../user-detail/user_detail_screen.dart';
 
 class FindAndViewScreen extends StatelessWidget {

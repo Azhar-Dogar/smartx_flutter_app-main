@@ -6,6 +6,8 @@ import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 
+import '../../models/user_model.dart';
+
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

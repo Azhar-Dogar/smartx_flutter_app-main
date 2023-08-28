@@ -14,6 +14,8 @@ import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../../models/post_model.dart';
+
 class HomeScreen extends StatelessWidget {
   static const String key_title = '/home_screen_title';
 

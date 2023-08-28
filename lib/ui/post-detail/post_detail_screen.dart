@@ -12,6 +12,8 @@ import 'package:smartx_flutter_app/ui/post-detail/post_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../models/comment_model.dart';
+
 class PostDetailScreen extends StatelessWidget {
   static const String route = '/post_detail_screen_route';
 

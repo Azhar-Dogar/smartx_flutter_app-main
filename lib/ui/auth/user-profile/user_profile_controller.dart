@@ -8,6 +8,7 @@ import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 
 import '../../../helper/firebase_storage_helper.dart';
 import '../../../helper/firestore_database_helper.dart';
+import '../../../models/user_model.dart';
 
 class UserProfileController extends GetxController {
   bool isFromStart;

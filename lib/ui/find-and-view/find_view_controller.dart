@@ -8,6 +8,8 @@ import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 
+import '../../models/user_model.dart';
+
 class FindAndViewController extends GetxController {
   Rx<DataEvent> userDataEvent = Rx<DataEvent>(const Initial());
 

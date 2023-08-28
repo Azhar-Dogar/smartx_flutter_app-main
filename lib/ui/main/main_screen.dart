@@ -140,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
         //       Get.find<MainScreenController>().handleNavigationIndex(index);
         //     })),
         floatingActionButton: GetX<MainScreenController>(builder: (_) {
-          if (controller.indexState.value == 2) {
+          if (controller.indexState.value == 3) {
              return FloatingActionButton(
               backgroundColor: Constants.buttonColor,
               onPressed: () => Get.toNamed(MapWalkScreen.route),
@@ -166,7 +166,7 @@ class _MainScreenState extends State<MainScreen> {
         BottomNavItem(
           isFirst: true,
             index: 0,
-            image: 'assets/Home.png',
+            image: '',
             isSelected: controller.indexState.value == 0),
         BottomNavItem(
             index: 1,

@@ -15,6 +15,8 @@ import 'package:smartx_flutter_app/ui/auth/dog-profile/dog_profile_controller.da
 import 'package:smartx_flutter_app/ui/main/main_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../../models/dog_model.dart';
+
 class DogProfileScreen extends StatelessWidget {
   static const String route = '/dog_profile_screen_route';
 

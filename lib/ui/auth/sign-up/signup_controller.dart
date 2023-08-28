@@ -7,6 +7,8 @@ import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 import 'package:smartx_flutter_app/extension/string_extention.dart';
 
+import '../../../models/user_model.dart';
+
 class SignUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

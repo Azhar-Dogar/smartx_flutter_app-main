@@ -4,14 +4,20 @@ import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
 
+import '../../models/dog_model.dart';
+import '../../models/post_model.dart';
+import '../../models/user_model.dart';
+
 class UserDetailController extends GetxController {
   Rx<DataEvent> userPostEvents = Rx<DataEvent>(const Initial());
   Rx<DataEvent> userDogEvents = Rx<DataEvent>(const Initial());
   final MapEntry mapEntry;
-
+List<DogModel> dogs = [];
   UserDetailController({required this.mapEntry}) {
     getUserPosts();
-    getUserDogs();
+   getUserDogs();
+   print("user dogs");
+   print(dogs.length);
   }
 
   Rx<int> tabIndex = Rx<int>(0);
@@ -55,20 +61,22 @@ class UserDetailController extends GetxController {
     }
   }
 
-  getUserDogs() async {
+  Future<DataEvent?> getUserDogs() async {
     userDogEvents(const Loading());
     try {
       final res = await FirestoreDatabaseHelper.instance()
           .getUserDogs((mapEntry.value as UserModel).id);
       if (res == null) {
         userDogEvents(const Empty(message: ''));
-        return;
+        return null;
       }
       if (res.isEmpty) {
         userDogEvents(const Empty(message: ''));
-        return;
+        return null;
       }
-      userDogEvents(Data(data: res));
+      print("events");
+      print(res.length);
+      return userDogEvents(Data(data: res));
     } catch (_) {
       userDogEvents(Error(exception: Exception()));
     }

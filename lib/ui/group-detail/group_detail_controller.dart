@@ -3,6 +3,9 @@ import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
 
+import '../../models/group_model.dart';
+import '../../models/post_model.dart';
+
 class GroupDetailController extends GetxController {
   final GroupModel groupModel;
   Rx<DataEvent> groupPostEvents = Rx<DataEvent>(const Initial());

@@ -8,6 +8,9 @@ import 'package:smartx_flutter_app/helper/firebase_storage_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 
+import '../../models/post_model.dart';
+import '../../models/user_model.dart';
+
 class AddPostController extends GetxController {
   String? groupId;
 

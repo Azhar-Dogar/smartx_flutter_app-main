@@ -11,6 +11,8 @@ import 'package:smartx_flutter_app/ui/group-detail/group_detail_controller.dart'
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../models/post_model.dart';
+
 class GroupDetailScreen extends StatelessWidget {
   static const String route = '/group_detai_screen_route';
 

@@ -18,6 +18,9 @@ import 'package:smartx_flutter_app/ui/main/navItems/location_screen.dart';
 import 'package:smartx_flutter_app/ui/main/navItems/profile_screen.dart';
 
 import '../../helper/firestore_database_helper.dart';
+import '../../models/group_model.dart';
+import '../../models/post_model.dart';
+import '../../models/user_model.dart';
 import '../map-walk/map_walk_screen.dart';
 
 class MainScreenController extends GetxController {
@@ -87,7 +90,7 @@ class MainScreenController extends GetxController {
   Widget _navigationItemIndex(int index) {
     switch (index) {
       case 0:
-        return const MapWalkScreen(key: _mainAddNavigationItemScreenKey);
+        return  MapWalkScreen(key: _mainAddNavigationItemScreenKey);
       case 1:
         return const HomeScreen(key: _mainhomeNavigationItemScreenKey);
       case 2:

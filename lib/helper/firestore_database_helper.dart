@@ -2,6 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
 
+import '../models/dog_model.dart';
+import '../models/group_model.dart';
+import '../models/post_model.dart';
+import '../models/user_model.dart';
+
 class FirestoreDatabaseHelper {
   static const String _USER = 'user';
   static const String _POSTS = 'posts';

@@ -12,6 +12,8 @@ import 'package:smartx_flutter_app/helper/snackbar_message.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../models/post_model.dart';
+
 class AddPostScreen extends StatelessWidget {
   static const String route = '/add_post_screen_route';
 

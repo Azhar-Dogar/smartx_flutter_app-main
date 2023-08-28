@@ -8,6 +8,8 @@ import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 import 'package:http/http.dart' as http;
 
+import '../../models/post_model.dart';
+
 class PostDetailController extends GetxController {
   PostModel postModel;
 

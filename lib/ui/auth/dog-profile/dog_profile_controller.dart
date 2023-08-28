@@ -8,6 +8,7 @@ import 'package:smartx_flutter_app/helper/firebase_storage_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 
 import '../../../helper/shared_preference_helpert.dart';
+import '../../../models/dog_model.dart';
 
 class DogProfileController extends GetxController {
   bool isFromStart;

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smartx_flutter_app/common/app_button.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
+import 'package:smartx_flutter_app/dialogues/dogs_alert.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
+
+import 'map_walk_controller.dart';
 
 class StopWalkScreen extends StatelessWidget {
   static const String route = '/stop_Walk_screen';
@@ -12,6 +15,7 @@ class StopWalkScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(MapWalkController());
     final size = context.screenSize;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -51,13 +55,13 @@ class StopWalkScreen extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: Constants.workSansMedium,
                         fontSize: 16,
-                        color: Constants.colorTextField)),
+                        color: Constants.colorSecondary)),
                 const SizedBox(width: 10),
                 const DottedLineContainer(),
                 const SizedBox(width: 10),
-                const Text(
-                  '5min 3sec',
-                  style: TextStyle(color: Constants.colorOnSurface),
+                Text(
+                  '${controller.hours.value}:${controller.minutes.value}:${controller.seconds.value}',
+                  style: const TextStyle(color: Constants.colorOnSurface),
                 ),
               ],
             ),
@@ -70,18 +74,18 @@ class StopWalkScreen extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: Constants.workSansMedium,
                         fontSize: 16,
-                        color: Constants.colorTextField)),
+                        color: Constants.colorSecondary)),
                 const SizedBox(width: 10),
                 const DottedLineContainer(),
                 const SizedBox(width: 10),
-                const Text(
-                  '450m',
-                  style: TextStyle(color: Constants.colorOnSurface),
+                 Text(
+                  '${controller.totalDistance}',
+                  style: const TextStyle(color: Constants.colorOnSurface),
                 ),
               ],
             ),
             Container(
-                margin: const EdgeInsets.symmetric(vertical: 30),
+                margin: const EdgeInsets.symmetric(vertical: 20),
                 width: 100,
                 height: 2,
                 color: Constants.colorTextField),
@@ -93,17 +97,22 @@ class StopWalkScreen extends StatelessWidget {
                     style: TextStyle(
                         fontFamily: Constants.workSansMedium,
                         fontSize: 16,
-                        color: Constants.colorTextField)),
+                        color: Constants.colorSecondary)),
                 const SizedBox(width: 10),
                 const DottedLineContainer(),
                 const SizedBox(width: 10),
                 DottedBorder(
-                  color: Constants.colorTextField,
+                  color: Constants.colorSecondary,
                   borderType: BorderType.Circle,
-                  child: const Icon(
-                    Icons.add,
-                    color: Constants.colorOnSurface,
-                    size: 20,
+                  child: IconButton(
+                    onPressed: (){
+                    showDialog(context: context, builder:(_)=>DogsAlert());
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Constants.colorOnSurface,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],
@@ -154,7 +163,6 @@ class StopWalkScreen extends StatelessWidget {
                                     horizontal: 20, vertical: 20),
                                 content: const Text(
                                   'Your route has been successfully saved  you can also share it in your Activities',
-                                  
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontFamily: Constants.workSansRegular),
@@ -165,13 +173,13 @@ class StopWalkScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                         onTap: ()=> Get.back(),
+                                        onTap: () => Get.back(),
                                         child: Container(
-                                            margin:
-                                                const EdgeInsets.only(right: 20),
+                                            margin: const EdgeInsets.only(
+                                                right: 20),
                                             alignment: Alignment.center,
                                             height: 50,
-                                            width: Get.width/4,
+                                            width: Get.width / 4,
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -188,7 +196,7 @@ class StopWalkScreen extends StatelessWidget {
                                             const EdgeInsets.only(bottom: 8.0),
                                         child: SizedBox(
                                           height: 60,
-                                          width: Get.width/4,
+                                          width: Get.width / 4,
                                           child: AppButton(
                                               borderRadius: 10,
                                               color: Constants.colorOnSurface,

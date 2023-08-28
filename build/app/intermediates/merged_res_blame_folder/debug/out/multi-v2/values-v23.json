@@ -4,7 +4,7 @@
             "outputFile": "com.example.smartx_flutter_app-mergeDebugResources-41:/values-v23/values-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\75c55c8f4d0c4c0d85a626830c2d13c8\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\45a27f1cbff0e6856c5c75b0b231dddc\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\730953c7b831ad4a5402c154468c957b\\transformed\\appcompat-1.4.1\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\1883ab733a84171ebd49dc509256ce69\\transformed\\appcompat-1.4.1\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,20,34,35,36,39,43,44,45,46",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",

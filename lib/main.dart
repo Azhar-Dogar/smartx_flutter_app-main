@@ -132,7 +132,7 @@ final List<GetPage<dynamic>> _pages = [
       })),
   GetPage(
       name: MapWalkScreen.route,
-      page: () => const MapWalkScreen(),
+      page: () =>  MapWalkScreen(),
       binding: BindingsBuilder(() {
         return Get.lazyPut(() => MapWalkController());
       })),

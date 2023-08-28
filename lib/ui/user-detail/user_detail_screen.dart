@@ -14,6 +14,9 @@ import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
 import '../../backend/server_response.dart';
+import '../../models/dog_model.dart';
+import '../../models/post_model.dart';
+import '../../models/user_model.dart';
 
 class UserDetailScreen extends StatelessWidget {
   static const String route = '/user_detai_screen_route';
