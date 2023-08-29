@@ -8,6 +8,7 @@ import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/models/dog_model.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../util/functions.dart';
 import 'map_walk_controller.dart';
 
 class StopWalkScreen extends StatelessWidget {
@@ -164,59 +165,10 @@ class StopWalkScreen extends StatelessWidget {
                           fontFamily: Constants.workSansRegular,
                           text: 'Save',
                           onClick: () {
+                            Functions.showLoaderDialog(context);
                             controller.addWalk();
-                            // Get.defaultDialog(
-                            //     title: '',
-                            //     contentPadding: const EdgeInsets.symmetric(
-                            //         horizontal: 20, vertical: 20),
-                            //     content: const Text(
-                            //       'Your route has been successfully saved  you can also share it in your Activities',
-                            //       textAlign: TextAlign.center,
-                            //       style: TextStyle(
-                            //           fontFamily: Constants.workSansRegular),
-                            //     ),
-                            //     backgroundColor: Colors.white,
-                            //     actions: [
-                            //       Row(
-                            //         mainAxisAlignment: MainAxisAlignment.center,
-                            //         children: [
-                            //           GestureDetector(
-                            //             onTap: () => Get.back(),
-                            //             child: Container(
-                            //                 margin: const EdgeInsets.only(
-                            //                     right: 20),
-                            //                 alignment: Alignment.center,
-                            //                 height: 50,
-                            //                 width: Get.width / 4,
-                            //                 decoration: BoxDecoration(
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(10),
-                            //                     border: Border.all(
-                            //                         color: Constants
-                            //                             .colorTextField)),
-                            //                 child: const Text('Close',
-                            //                     style: TextStyle(
-                            //                         color: Constants
-                            //                             .colorTextField))),
-                            //           ),
-                            //           Padding(
-                            //             padding:
-                            //                 const EdgeInsets.only(bottom: 8.0),
-                            //             child: SizedBox(
-                            //               height: 60,
-                            //               width: Get.width / 4,
-                            //               child: AppButton(
-                            //                   borderRadius: 10,
-                            //                   color: Constants.colorOnSurface,
-                            //                   fontFamily:
-                            //                       Constants.workSansRegular,
-                            //                   text: 'Share',
-                            //                   onClick: () {}),
-                            //             ),
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ]);
+                            Get.back();
+                            shareDialogue();
                           }),
                     ),
                   ),
@@ -230,6 +182,59 @@ class StopWalkScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future shareDialogue(){
+    return Get.defaultDialog(
+        title: '',
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20, vertical: 20),
+        content: const Text(
+          'Your route has been successfully saved  you can also share it in your Activities',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: Constants.workSansRegular),
+        ),
+        backgroundColor: Colors.white,
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Container(
+                    margin: const EdgeInsets.only(
+                        right: 20),
+                    alignment: Alignment.center,
+                    height: 50,
+                    width: Get.width / 4,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                        BorderRadius.circular(10),
+                        border: Border.all(
+                            color: Constants.colorSecondary)),
+                    child: const Text('Close',
+                        style: TextStyle(
+                            color: Constants
+                                .colorSecondary))),
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.only(bottom: 8.0),
+                child: SizedBox(
+                  height: 60,
+                  width: Get.width / 4,
+                  child: AppButton(
+                      borderRadius: 10,
+                      color: Constants.colorOnSurface,
+                      fontFamily:
+                      Constants.workSansRegular,
+                      text: 'Share',
+                      onClick: () {}),
+                ),
+              ),
+            ],
+          ),
+        ]);
   }
 }
 

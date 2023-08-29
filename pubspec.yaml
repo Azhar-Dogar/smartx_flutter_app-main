@@ -48,6 +48,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   firebase_storage: ^11.2.5
   country_picker: ^2.0.20
+  fluttertoast: ^8.2.2
   cached_network_image: ^3.2.3
   timeago: ^3.5.0
   flutter_spinkit: ^5.2.0

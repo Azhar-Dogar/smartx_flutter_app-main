@@ -26,18 +26,12 @@ class _DogsAlertState extends State<DogsAlert> {
     height = MediaQuery.of(context).size.height;
     final controller = Get.put(
         UserDetailController(mapEntry: MapEntry(true, _controller.user)));
-    // return
-    //   GetX<UserDetailController>(
-    //   builder: (controller) {
     List<DogModel> list = [];
-    final event = controller.userDogEvents.value;
-    if (event is Data) {
-      list = event.data as List<DogModel>;
-      print(list.length);
-      print("dogs");
-    }
-
-    return GetX<UserDetailController>(builder: (DisposableInterface controlle) {
+    return GetX<UserDetailController>(builder: (DisposableInterface con) {
+      final event = controller.userDogEvents.value;
+      if (event is Data) {
+        list = event.data as List<DogModel>;
+      }
       return AlertDialog(
         scrollable: true,
         title: const Center(child: Text("Select Dogs")),

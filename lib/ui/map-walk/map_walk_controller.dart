@@ -61,6 +61,7 @@ class MapWalkController extends GetxController {
     });
   }
  getUserWalks(){
+   userWalks = [].obs;
    String docId = FirebaseAuth.instance.currentUser!.uid;
    FirebaseFirestore.instance
        .collection("user")

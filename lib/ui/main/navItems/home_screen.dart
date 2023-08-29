@@ -189,7 +189,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       );
                     }
-                    if (state is Empty) {
+                    if (state is Data) {
                       return Center(
                           child: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
