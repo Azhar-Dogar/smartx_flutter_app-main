@@ -3,11 +3,16 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:smartx_flutter_app/models/dog_model.dart';
 import 'package:smartx_flutter_app/models/walk_model.dart';
 
 class MapWalkController extends GetxController {
+  MapWalkController(){
+    getUserWalks();
+  }
   Rx<bool> isStart = Rx<bool>(false);
   List<LatLng> pathPoints = [];
   RxDouble totalDistance = 0.0.obs;
@@ -15,9 +20,12 @@ class MapWalkController extends GetxController {
   RxInt minutes = 0.obs;
   RxInt seconds = 0.obs;
   RxInt hours = 0.obs;
+  RxList userWalks = [].obs;
   DateTime time = DateTime.now();
   int _seconds = 0;
+  List<DogModel> selectedDogs = [];
   Timer? timer;
+  final titleController = TextEditingController();
   double calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var a = 0.5 -
@@ -52,10 +60,21 @@ class MapWalkController extends GetxController {
       hours.value = modified.hour;
     });
   }
+ getUserWalks(){
+   String docId = FirebaseAuth.instance.currentUser!.uid;
+   FirebaseFirestore.instance
+       .collection("user")
+       .doc(docId)
+       .collection("walks").snapshots().listen((event) {
+     for (var element in event.docs) {
+       userWalks.add(WalkModel.fromJson(element.data()));
+     }
 
+     print("user walks");
+     print(userWalks.first.dogs?.first.name);
+   });
+ }
   addWalk() async {
-    print(seconds.value);
-    print("hours");
     String docId = FirebaseAuth.instance.currentUser!.uid;
     CollectionReference ref = FirebaseFirestore.instance
         .collection("user")
@@ -63,6 +82,8 @@ class MapWalkController extends GetxController {
         .collection("walks");
     var doc = ref.doc();
     await doc.set(WalkModel(
+      title: titleController.text,
+      dogs: selectedDogs,
       paths: pathPoints,
             duration: hours.value * 3600 + minutes.value * 60 + seconds.value,
             distance: totalDistance.value,

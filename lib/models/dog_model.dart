@@ -7,13 +7,13 @@ class DogModel {
   final bool isGoodWithDogs;
   final bool isGoodWithKids;
   final bool isNeutered;
-  bool? isSelected = false;
+   bool isSelected;
   final String? imagePath;
 
   DogModel(
       {required this.name,
         required this.size,
-        this.isSelected,
+        required this.isSelected,
         required this.id,
         required this.userId,
         required this.isGoodWithDogs,
@@ -38,6 +38,9 @@ class DogModel {
     final bool isGoodWithKids = json.containsKey('isGoodWithKids')
         ? json['isGoodWithKids'] ?? false
         : false;
+    final bool isSelected = json.containsKey('isSelected')
+        ? json['isSelected'] ?? false
+        : false;
     final bool isNeutered =
     json.containsKey('isNeutered') ? json['isNeutered'] ?? false : false;
 
@@ -50,6 +53,7 @@ class DogModel {
         isGoodWithKids: isGoodWithKids,
         isNeutered: isNeutered,
         id: id,
+        isSelected: isSelected,
         imagePath: imagePath);
   }
 
@@ -64,7 +68,7 @@ class DogModel {
           isGoodWithKids: isGoodWithKids,
           isGoodWithDogs: isGoodWithDogs,
           gender: gender,
-          id: id ?? this.id);
+          id: id ?? this.id, isSelected: isSelected);
 
   Map<String, dynamic> toJson() => {
     'name': name,

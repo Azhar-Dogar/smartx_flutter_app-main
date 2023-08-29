@@ -57,7 +57,7 @@ class DogProfileController extends GetxController {
           isGoodWithDogs: isGoodWithDogs.value,
           isGoodWithKids: isGoodWithKids.value,
           isNeutered: isNeutered.value,
-          gender: genderController.text);
+          gender: genderController.text, isSelected: false);
       final res = await _firestoreDatabaseHelper.addDogProfile(dog);
       return res;
     } catch (_) {
@@ -84,7 +84,7 @@ class DogProfileController extends GetxController {
           isGoodWithDogs: isGoodWithDogs.value,
           isGoodWithKids: isGoodWithKids.value,
           isNeutered: isNeutered.value,
-          gender: genderController.text);
+          gender: genderController.text, isSelected: false);
       final res = await _firestoreDatabaseHelper.updateDogProfile(dog);
     } catch (_) {
       return;

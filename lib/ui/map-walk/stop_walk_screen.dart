@@ -5,6 +5,7 @@ import 'package:smartx_flutter_app/common/app_button.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/dialogues/dogs_alert.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
+import 'package:smartx_flutter_app/models/dog_model.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
 import 'map_walk_controller.dart';
@@ -106,7 +107,12 @@ class StopWalkScreen extends StatelessWidget {
                   borderType: BorderType.Circle,
                   child: IconButton(
                     onPressed: (){
-                    showDialog(context: context, builder:(_)=>DogsAlert());
+                    showDialog(context: context, builder:(_)=>const DogsAlert()).then((value){
+                      if (value != null) {
+                        controller.selectedDogs = value["list"] as List<DogModel>;
+                      }
+                      print(controller.selectedDogs.length);
+                    });
                     },
                     icon: const Icon(
                       Icons.add,
@@ -123,11 +129,12 @@ class StopWalkScreen extends StatelessWidget {
                 height: 2,
                 color: Constants.colorTextField),
             const SizedBox(height: 30),
-            const SizedBox(
+             SizedBox(
                 height: 50,
                 child: DottedBorderAppTextField(
                     hint: 'Set title',
                     radius: 10,
+                    controller: controller.titleController,
                     textInputType: TextInputType.text,
                     isError: false)),
             const Spacer(),
@@ -157,58 +164,59 @@ class StopWalkScreen extends StatelessWidget {
                           fontFamily: Constants.workSansRegular,
                           text: 'Save',
                           onClick: () {
-                            Get.defaultDialog(
-                                title: '',
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 20),
-                                content: const Text(
-                                  'Your route has been successfully saved  you can also share it in your Activities',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: Constants.workSansRegular),
-                                ),
-                                backgroundColor: Colors.white,
-                                actions: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () => Get.back(),
-                                        child: Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 20),
-                                            alignment: Alignment.center,
-                                            height: 50,
-                                            width: Get.width / 4,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color: Constants
-                                                        .colorTextField)),
-                                            child: const Text('Close',
-                                                style: TextStyle(
-                                                    color: Constants
-                                                        .colorTextField))),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8.0),
-                                        child: SizedBox(
-                                          height: 60,
-                                          width: Get.width / 4,
-                                          child: AppButton(
-                                              borderRadius: 10,
-                                              color: Constants.colorOnSurface,
-                                              fontFamily:
-                                                  Constants.workSansRegular,
-                                              text: 'Share',
-                                              onClick: () {}),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ]);
+                            controller.addWalk();
+                            // Get.defaultDialog(
+                            //     title: '',
+                            //     contentPadding: const EdgeInsets.symmetric(
+                            //         horizontal: 20, vertical: 20),
+                            //     content: const Text(
+                            //       'Your route has been successfully saved  you can also share it in your Activities',
+                            //       textAlign: TextAlign.center,
+                            //       style: TextStyle(
+                            //           fontFamily: Constants.workSansRegular),
+                            //     ),
+                            //     backgroundColor: Colors.white,
+                            //     actions: [
+                            //       Row(
+                            //         mainAxisAlignment: MainAxisAlignment.center,
+                            //         children: [
+                            //           GestureDetector(
+                            //             onTap: () => Get.back(),
+                            //             child: Container(
+                            //                 margin: const EdgeInsets.only(
+                            //                     right: 20),
+                            //                 alignment: Alignment.center,
+                            //                 height: 50,
+                            //                 width: Get.width / 4,
+                            //                 decoration: BoxDecoration(
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(10),
+                            //                     border: Border.all(
+                            //                         color: Constants
+                            //                             .colorTextField)),
+                            //                 child: const Text('Close',
+                            //                     style: TextStyle(
+                            //                         color: Constants
+                            //                             .colorTextField))),
+                            //           ),
+                            //           Padding(
+                            //             padding:
+                            //                 const EdgeInsets.only(bottom: 8.0),
+                            //             child: SizedBox(
+                            //               height: 60,
+                            //               width: Get.width / 4,
+                            //               child: AppButton(
+                            //                   borderRadius: 10,
+                            //                   color: Constants.colorOnSurface,
+                            //                   fontFamily:
+                            //                       Constants.workSansRegular,
+                            //                   text: 'Share',
+                            //                   onClick: () {}),
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ]);
                           }),
                     ),
                   ),

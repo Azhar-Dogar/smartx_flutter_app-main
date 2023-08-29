@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:smartx_flutter_app/common/dog_checkbox.dart';
 import 'package:smartx_flutter_app/common/margin_widget.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
@@ -18,8 +19,11 @@ class DogsAlert extends StatefulWidget {
 
 class _DogsAlertState extends State<DogsAlert> {
   final _controller = Get.find<MainScreenController>();
+  late double width, height;
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     final controller = Get.put(
         UserDetailController(mapEntry: MapEntry(true, _controller.user)));
     // return
@@ -33,11 +37,12 @@ class _DogsAlertState extends State<DogsAlert> {
       print("dogs");
     }
 
-    return GetX<UserDetailController>(
-      builder: (DisposableInterface controlle) => AlertDialog(
+    return GetX<UserDetailController>(builder: (DisposableInterface controlle) {
+      return AlertDialog(
         scrollable: true,
         title: const Center(child: Text("Select Dogs")),
         content: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             if (controller.userDogEvents.value is Loading) ...[
               const Column(
@@ -52,27 +57,61 @@ class _DogsAlertState extends State<DogsAlert> {
               const Center(child: Text('no dog profile added yet'))
             ],
             if (controller.userDogEvents.value is Data) ...[
-              ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  itemCount: list.length,
-                  shrinkWrap: true,
-                  itemBuilder: (_, i) {
-                    return dogWidget(list[i]);
-                  })
+              SizedBox(
+                height: 300,
+                width: double.infinity,
+                child: ListView.builder(
+                    // padding: const EdgeInsets.symmetric(horizontal: 3),
+                    itemCount: list.length,
+                    // shrinkWrap: true,
+                    itemBuilder: (_, i) {
+                      return
+                          // Text("data");
+                          DogCheckBox(
+                              check: list[i].isSelected,
+                              onChanged: (v) {
+                                setState(() {
+                                  list[i].isSelected = !list[i].isSelected;
+                                });
+                              },
+                              model: list[i]);
+                    }),
+              )
             ],
             // return const SizedBox();
           ],
         ),
-      ),
-    );
+        actions: [
+          TextButton(onPressed: () {
+            Get.back();
+          }, child: const Text("cancel")),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop({
+                  "list": list
+                      .where((element) => element.isSelected == true)
+                      .toList(),
+                });
+              },
+              child: const Text("ok"))
+        ],
+      );
+    });
   }
 
   //   );
   // }
   Widget dogWidget(DogModel model) {
+    // bool check = true;
+    // if(model.isSelected != null){
+    //   check = model.isSelected!;
+    // }
     return InkWell(
       onTap: () {
-        model.isSelected != model.isSelected;
+        setState(() {
+          model.isSelected != model.isSelected;
+        });
+        print(model.isSelected);
       },
       child: Row(
         children: [
@@ -86,7 +125,7 @@ class _DogsAlertState extends State<DogsAlert> {
             isHorizontal: true,
           ),
           Expanded(child: Text(model.name)),
-          Checkbox(value: model.isSelected, onChanged: (v) {})
+          Checkbox(value: model.isSelected ?? false, onChanged: (v) {})
         ],
       ),
     );
