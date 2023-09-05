@@ -117,6 +117,8 @@ class AddPostScreen extends StatelessWidget {
                               final XFile? pickedImage = await ImagePicker()
                                   .pickImage(source: ImageSource.gallery);
                               controller.fileImage(pickedImage);
+                              print("path");
+                              print(controller.fileImage.value?.path);
                             },
                             child: Row(
                               children: [

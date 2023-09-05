@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
@@ -10,6 +12,8 @@ import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/ui/user-detail/user_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/welcome_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
+
+import '../../../models/user_model.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String key_title = '/profile_screen_title';
@@ -47,34 +51,52 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50),
-            controller.user?.imagePath.toString() == ''
-                ? Image.asset('assets/3.png', width: 100)
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: CachedNetworkImage(
-                        imageUrl: controller.user?.imagePath ?? '',
-                        fit: BoxFit.cover,
-                        height: 100,
-                        width: 100),
-                  ),
-            const SizedBox(height: 20),
-            Text(
-              controller.user?.firstName ?? 'David Johnson',
-              style: const TextStyle(
-                  fontSize: 22,
-                  fontFamily: Constants.workSansBold,
-                  color: Constants.colorSecondary),
-            ),
-            GestureDetector(
-              onTap: () => Get.toNamed(UserDetailScreen.route, arguments: MapEntry(true, controller.user)),
-              child: const Text(
-                'View Profile',
-                style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: Constants.workSansRegular,
-                    color: Constants.colorOnSurface),
-              ),
-            ),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("user")
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .snapshots(),
+                builder: (_, snapshot) {
+                  if (snapshot.hasData) {
+                    UserModel user =
+                    UserModel.fromJson(snapshot.data!.data()!);
+                    return Column(
+                      children: [
+                        user.imagePath.toString() == ''
+                            ? Image.asset('assets/3.png', width: 100)
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: CachedNetworkImage(
+                                    imageUrl: user.imagePath ?? '',
+                                    fit: BoxFit.cover,
+                                    height: 100,
+                                    width: 100),
+                              ),
+                        const SizedBox(height: 20),
+                        Text(
+                          user.firstName ?? 'David Johnson',
+                          style: const TextStyle(
+                              fontSize: 22,
+                              fontFamily: Constants.workSansBold,
+                              color: Constants.colorSecondary),
+                        ),
+                        GestureDetector(
+                          onTap: () => Get.toNamed(UserDetailScreen.route,
+                              arguments: MapEntry(true, user)),
+                          child: const Text(
+                            'View Profile',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: Constants.workSansRegular,
+                                color: Constants.colorOnSurface),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                }),
             const SizedBox(height: 30),
             Container(
                 width: 130,

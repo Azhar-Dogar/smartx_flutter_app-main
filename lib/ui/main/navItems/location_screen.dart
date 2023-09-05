@@ -136,12 +136,12 @@ class _LocationScreenState extends State<LocationScreen> {
         // _setMyLocation();
       },
       // myLocationEnabled: true,
-      markers: {
-         Marker(markerId: const MarkerId("1"),
-        position: model.paths.first,
-           icon: BitmapDescriptor.defaultMarkerWithHue(12)
-        )
-      },
+      // markers: {
+      //    Marker(markerId: const MarkerId("1"),
+      //   position: model.paths.first,
+      //      icon: BitmapDescriptor.defaultMarkerWithHue(12)
+      //   )
+      // },
       polylines: {
         Polyline(
           polylineId: const PolylineId('path'),

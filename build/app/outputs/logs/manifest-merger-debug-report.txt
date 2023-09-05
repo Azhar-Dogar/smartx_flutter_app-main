@@ -123,6 +123,7 @@ MERGED from [:google_sign_in_android] C:\Users\PC\StudioProjects\smartx_flutter_
 MERGED from [:flutter_facebook_auth] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\flutter_facebook_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:shared_preferences_android] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\shared_preferences_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:permission_handler_android] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\permission_handler_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:fluttertoast] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\fluttertoast\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:location] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\location\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-18:12
 MERGED from [com.facebook.android:facebook-login:14.1.1] C:\Users\PC\.gradle\caches\transforms-3\41dd648db4d8e4e146c61cc89f93540e\transformed\jetified-facebook-login-14.1.1\AndroidManifest.xml:21:1-31:12
 MERGED from [com.facebook.android:facebook-common:14.1.1] C:\Users\PC\.gradle\caches\transforms-3\ef1462ea03bcd6ed6205cf6b5c09115c\transformed\jetified-facebook-common-14.1.1\AndroidManifest.xml:21:1-56:12
@@ -330,6 +331,8 @@ MERGED from [:shared_preferences_android] C:\Users\PC\StudioProjects\smartx_flut
 MERGED from [:shared_preferences_android] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\shared_preferences_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:permission_handler_android] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\permission_handler_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:permission_handler_android] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\permission_handler_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:fluttertoast] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\fluttertoast\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:fluttertoast] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\fluttertoast\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:location] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\location\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:location] C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\location\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [com.facebook.android:facebook-login:14.1.1] C:\Users\PC\.gradle\caches\transforms-3\41dd648db4d8e4e146c61cc89f93540e\transformed\jetified-facebook-login-14.1.1\AndroidManifest.xml:24:5-26:41

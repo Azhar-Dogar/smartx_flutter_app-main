@@ -70,9 +70,6 @@ class MapWalkController extends GetxController {
      for (var element in event.docs) {
        userWalks.add(WalkModel.fromJson(element.data()));
      }
-
-     print("user walks");
-     print(userWalks.first.dogs?.first.name);
    });
  }
   addWalk() async {

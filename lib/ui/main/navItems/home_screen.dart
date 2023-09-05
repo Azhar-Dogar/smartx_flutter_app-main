@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,247 +28,212 @@ class HomeScreen extends StatelessWidget {
     final size = context.screenSize;
     final controller = Get.find<MainScreenController>();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-          width: size.width,
-          decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.4),
-                  offset: const Offset(0.0, 1.0), //(x,y)
-                  blurRadius: 3.0,
-                ),
-              ],
-              color: Constants.colorSecondary,
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10))),
-          child: Row(children: [
-            const Expanded(
-              child: AppTextField(
-                  hint: 'Search',
-                  height: 50,
-                  color: Constants.colorOnBackground,
-                  radius: 10,
-                  textInputType: TextInputType.text,
-                  isError: false),
-            ),
-            InkWell(
-                onTap: () => Get.toNamed(NotificationScreen.route),
-                child: Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 12),
-                    decoration: BoxDecoration(
-                        color: Constants.colorOnBackground,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Image.asset('assets/Notification.png', height: 25)))
-          ]),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Challenges',
-                            style: TextStyle(
-                                fontFamily: Constants.workSansBold,
-                                fontSize: 16),
-                          ),
-                          Text('SEE ALL',
-                              style: TextStyle(
-                                  fontFamily: Constants.workSansRegular,
-                                  color: Constants.colorPrimary,
-                                  fontSize: 16))
-                        ])),
-                SizedBox(
-                  height: 250,
-                  width: size.width,
-                  child: ListView.builder(
-                    itemCount: 3,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, i) => Container(
-                      height: 250,
-                      width: size.width - 50,
-                      decoration: BoxDecoration(
-                          color: Constants.colorOnBackground,
-                          borderRadius: BorderRadius.circular(10)),
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Image.asset(
-                                    'assets/1.png',
-                                    height: 40,
-                                  )),
-                              const Text(
-                                'Daily Walk Challenge',
-                                style: TextStyle(
-                                    fontFamily: Constants.workSansBold,
-                                    fontSize: 16,
-                                    color: Constants.colorSecondary),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Commit to taking your dog for a daily walk, exploring different routes and parks to keep things interesting for both of you..',
-                            style: TextStyle(
-                                fontFamily: Constants.workSansRegular,
-                                color: Constants.colorSecondary),
-                          ),
-                          const SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Image.asset(
-                                'assets/time.png',
-                                width: 20,
-                                color: Constants.colorTextField,
-                              ),
-                              const SizedBox(width: 10),
-                              const Text(
-                                'July 1, 2023 to July 31, 2023',
-                                style: TextStyle(
-                                    fontFamily: Constants.workSansLight,
-                                    color: Constants.colorTextField),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                              height: 55,
-                              width: size.width / 1.6,
-                              child: AppButton(
-                                  onClick: () {},
-                                  text: 'Mark as complete',
-                                  fontFamily: Constants.workSansRegular,
-                                  textColor: Constants.colorTextWhite,
-                                  borderRadius: 10.0,
-                                  fontSize: 16,
-                                  color: Constants.buttonColor)),
-                        ],
-                      ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        width: size.width,
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.4),
+                offset: const Offset(0.0, 1.0), //(x,y)
+                blurRadius: 3.0,
+              ),
+            ],
+            color: Constants.colorSecondary,
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10))),
+        child: Row(children: [
+          const Expanded(
+            child: AppTextField(
+                hint: 'Search',
+                height: 50,
+                color: Constants.colorOnBackground,
+                radius: 10,
+                textInputType: TextInputType.text,
+                isError: false),
+          ),
+          InkWell(
+              onTap: () => Get.toNamed(NotificationScreen.route),
+              child: Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  decoration: BoxDecoration(
+                      color: Constants.colorOnBackground,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Image.asset('assets/Notification.png', height: 25)))
+        ]),
+      ),
+      Expanded(
+          child: CustomScrollView(slivers: [
+        const SliverToBoxAdapter(
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Challenges',
+                      style: TextStyle(
+                          fontFamily: Constants.workSansBold, fontSize: 16),
                     ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    'News Feed',
-                    style: TextStyle(
-                        fontFamily: Constants.workSansBold, fontSize: 16),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                GetX<MainScreenController>(
-                  builder: (_) {
-                    final state = controller.postDataEvent.value;
-                    print(state);
-                    if (state is Loading) {
-                      return const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator.adaptive(),
-                          ],
+                    Text('SEE ALL',
+                        style: TextStyle(
+                            fontFamily: Constants.workSansRegular,
+                            color: Constants.colorPrimary,
+                            fontSize: 16))
+                  ])),
+        ),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: 250,
+            width: size.width,
+            child: ListView.builder(
+              itemCount: 3,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (_, i) => Container(
+                height: 250,
+                width: size.width - 50,
+                decoration: BoxDecoration(
+                    color: Constants.colorOnBackground,
+                    borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Image.asset(
+                              'assets/1.png',
+                              height: 40,
+                            )),
+                        const Text(
+                          'Daily Walk Challenge',
+                          style: TextStyle(
+                              fontFamily: Constants.workSansBold,
+                              fontSize: 16,
+                              color: Constants.colorSecondary),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Commit to taking your dog for a daily walk, exploring different routes and parks to keep things interesting for both of you..',
+                      style: TextStyle(
+                          fontFamily: Constants.workSansRegular,
+                          color: Constants.colorSecondary),
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/time.png',
+                          width: 20,
+                          color: Constants.colorTextField,
                         ),
-                      );
-                    }
-                    if (state is Data) {
-                      return Center(
-                          child: ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 3),
-                              itemCount: 2,
-                              shrinkWrap: true,
-                              itemBuilder: (_, i) {
-                                return SinglePostWidget(
-                                  postModel: PostModel(
-                                      text: 'First Dog',
-                                      username: 'Tester',
-                                      userImage:
-                                          'https://firebasestorage.googleapis.com/v0/b/stroll-b2e07.appspot.com/o/profile%2F1690963975633?alt=media&token=04d7ace0-742f-4793-9684-a4447c5c6330',
-                                      imagePath:
-                                          'https://images.unsplash.com/photo-1611003228941-98852ba62227?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3348&q=80',
-                                      userid: '1',
-                                      id: '2',
-                                      created: DateTime.now(),
-                                      likedUsers: []),
-                                  onLikedTap: () {},
-                                );
-                              }));
-                    }
-                    if (state is Data) {
-                      final allIds = state.data as List<String>;
-                      return StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection("posts")
-                            .where('userid', whereIn: allIds)
-                            .orderBy("created", descending: true)
-                            .snapshots(includeMetadataChanges: true),
-                        builder: (_, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
-
-                          if (!snapshot.hasData) {
-                            return const CircularProgressIndicator();
-                          }
-                          if (snapshot.data == null) {
-                            return const Text('Something went wrong');
-                          }
-                          final posts = snapshot.data!.docs
-                              .map((e) => PostModel.fromJson(
-                                  e.data() as Map<String, dynamic>))
-                              .toList();
-                          return ListView.builder(
-                              itemCount: posts.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (_, i) {
-                                final isLiked = posts[i].likedUsers.contains(
-                                    FirebaseAuth.instance.currentUser?.uid);
-
-                                return SinglePostWidget(
-                                  postModel:
-                                      posts[i].copyWith(isLiked: isLiked),
-                                  isLiked: isLiked,
-                                  onLikedTap: () {
-                                    controller.toggleLike(posts[i], isLiked);
-                                  },
-                                );
-                              });
-                          return const SizedBox();
-                        },
-                      );
-                    }
-
-                    return const SizedBox();
-                  },
+                        const SizedBox(width: 10),
+                        const Text(
+                          'July 1, 2023 to July 31, 2023',
+                          style: TextStyle(
+                              fontFamily: Constants.workSansLight,
+                              color: Constants.colorTextField),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                        height: 55,
+                        width: size.width / 1.6,
+                        child: AppButton(
+                            onClick: () {},
+                            text: 'Mark as complete',
+                            fontFamily: Constants.workSansRegular,
+                            textColor: Constants.colorTextWhite,
+                            borderRadius: 10.0,
+                            fontSize: 16,
+                            color: Constants.buttonColor)),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
+        ),
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              'News Feed',
+              style:
+                  TextStyle(fontFamily: Constants.workSansBold, fontSize: 16),
+            ),
+          ),
+        ),
+        // const SizedBox(height: 10),
+        SliverToBoxAdapter(
+          child: GetX<MainScreenController>(
+              builder: (_) {
+          final state = controller.postDataEvent.value;
+          print(state);
+          if (state is Loading) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+          if (state is Data) {
+            final allIds = state.data as List<String>;
+            return StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("posts")
+                  .where('userid', whereIn: allIds)
+                  .orderBy("created", descending: true)
+                  .snapshots(includeMetadataChanges: true),
+              builder: (_, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (snapshot.data == null) {
+                  return const Text('Something went wrong');
+                }
+                if (snapshot.hasData) {
+                  final posts = snapshot.data!.docs
+                      .map((e) => PostModel.fromJson(
+                          e.data() as Map<String, dynamic>))
+                      .toList();
+                  return
+                    ListView.builder(
+                      itemCount: posts.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (_, i) {
+                        final isLiked = posts[i].likedUsers.contains(
+                            FirebaseAuth.instance.currentUser?.uid);
+
+                        return SinglePostWidget(
+                          postModel: posts[i].copyWith(isLiked: isLiked),
+                          isLiked: isLiked,
+                          onLikedTap: () {
+                            controller.toggleLike(posts[i], isLiked);
+                          },
+                        );
+                      });
+                }
+                return const SizedBox();
+              },
+            );
+          }
+
+          return const SizedBox();
+              },
+            ),
         )
-      ],
-    );
+      ]))
+    ]);
   }
 }

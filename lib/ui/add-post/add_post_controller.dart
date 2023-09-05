@@ -20,6 +20,9 @@ class AddPostController extends GetxController {
 
   getUser() async {
     user = await SharedPreferenceHelper.instance.user;
+    print("this is user");
+    print(user?.firstName);
+    print(user?.lastName);
   }
 
   UserModel? user;
@@ -38,7 +41,9 @@ class AddPostController extends GetxController {
       String? url;
       if (fileImage.value != null) {
         url = await _firebaseStorageHelper
-            .uploadImage(File(fileImage.value?.path ?? ''));
+            .uploadImage(File(fileImage.value!.path));
+        print("this is image url");
+        print(url);
       }
       final post = PostModel(
           text: textController.text,

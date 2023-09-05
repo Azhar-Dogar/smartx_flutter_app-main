@@ -105,7 +105,7 @@ class PostDetailController extends GetxController {
       FirebaseFirestore.instance
           .collection('posts')
           .doc(postModel.id)
-          .update({'commentsCount': postModel.commentsCount + 1});
+          .update({'commentsCount': postModel.commentsCount});
     });
   }
 }

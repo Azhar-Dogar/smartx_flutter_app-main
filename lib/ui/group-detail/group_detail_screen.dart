@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
 import '../../models/post_model.dart';
+import '../../models/user_model.dart';
 
 class GroupDetailScreen extends StatelessWidget {
   static const String route = '/group_detai_screen_route';
@@ -317,15 +319,18 @@ class FeedTabScreen extends StatelessWidget {
 }
 
 class SinglePostWidget extends StatelessWidget {
-  final PostModel? postModel;
+  final PostModel postModel;
   final bool isLiked;
   final VoidCallback onLikedTap;
-
-  const SinglePostWidget(
-      {this.postModel, required this.onLikedTap, this.isLiked = false});
+String? userImagePath;
+   SinglePostWidget(
+      {super.key,required this.postModel, this.userImagePath, required this.onLikedTap, this.isLiked = false});
 
   @override
   Widget build(BuildContext context) {
+    print(postModel.text);
+    print(postModel.commentsCount);
+    print("user image");
     return Container(
       color: Constants.colorOnBackground,
       margin: const EdgeInsets.only(top: 5),
@@ -335,39 +340,49 @@ class SinglePostWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                  child: (postModel?.userImage.toString() == 'null' ||
-                          postModel?.userImage.toString() == '')
-                      ? Image.asset('assets/4.png', height: 60)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: CachedNetworkImage(
-                              imageUrl: postModel?.userImage ?? '',
-                              height: 60,
-                              width: 60,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator.adaptive())),
-                        )),
+    //           StreamBuilder(
+    //          stream: FirebaseFirestore.instance
+    // .collection("user")
+    //     .doc(postModel.userid)
+    //     .snapshots(),
+    //             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    //            if(snapshot.hasData){
+    //              UserModel user =
+    //              UserModel.fromJson(snapshot.data!.data()!);
+    //             return Container(
+    //                 margin: const EdgeInsets.only(right: 10),
+    //                 decoration:
+    //                     BoxDecoration(borderRadius: BorderRadius.circular(50)),
+    //                 child: (user.imagePath.toString() == null ||
+    //                         user.imagePath.toString() == '')
+    //                     ? Image.asset('assets/4.png', height: 60)
+    //                     : ClipRRect(
+    //                         borderRadius: BorderRadius.circular(50),
+    //                         child: CachedNetworkImage(
+    //                             imageUrl:user.imagePath!,
+    //                             height: 60,
+    //                             width: 60,
+    //                             fit: BoxFit.cover,
+    //                             placeholder: (context, url) => const Center(
+    //                                 child: CircularProgressIndicator.adaptive())),
+    //                       ));}else{
+    //            return const CircularProgressIndicator();
+    //            }
+    //             }
+    //           ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    postModel?.groupId.toString() != ''
+                    postModel.groupId.toString() != ''
                         ? 'Group Post'
-                        : postModel?.username ?? 'Stella Andrew',
+                        : postModel.username ?? 'Stella Andrew',
                     style: const TextStyle(
                         fontFamily: Constants.workSansMedium,
                         color: Constants.colorSecondary),
                   ),
-                  Text(
-                    postModel == null
-                        ? ' June 30, 2023'
-                        : DateFormat('MMMM dd, yyyy')
-                            .format(postModel?.created ?? DateTime.now()),
+                  Text(DateFormat('MMMM dd, yyyy')
+                            .format(postModel.created),
                     style: const TextStyle(
                         fontFamily: Constants.workSansLight,
                         color: Constants.colorSecondary),
@@ -378,20 +393,20 @@ class SinglePostWidget extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            postModel?.text ?? 'Unleashing pure happiness, one wag at a time.',
+            postModel.text ?? 'Unleashing pure happiness, one wag at a time.',
             style: const TextStyle(
                 fontFamily: Constants.workSansRegular,
                 color: Constants.colorSecondary),
           ),
           const SizedBox(height: 10),
-          (postModel?.imagePath.toString() == 'null' ||
-                  postModel?.imagePath.toString() == '')
+          (postModel.imagePath == null ||
+                  postModel.imagePath.toString() == '')
               ? Image.asset('assets/2.png')
               : GestureDetector(
                   onTap: () =>
                       Get.toNamed(PostDetailScreen.route, arguments: postModel),
                   child: CachedNetworkImage(
-                      imageUrl: postModel?.imagePath ?? '',
+                      imageUrl: postModel.imagePath!,
                       placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator.adaptive()))),
           const SizedBox(height: 10),
@@ -415,7 +430,7 @@ class SinglePostWidget extends StatelessWidget {
                   child: Image.asset('assets/Chat.png', height: 20)),
               const Spacer(),
               Text(
-                '${postModel?.totalLikes ?? 0} Likes',
+                '${postModel.totalLikes ?? 0} Likes',
                 style: const TextStyle(
                     fontFamily: Constants.workSansLight,
                     color: Constants.colorSecondary),
@@ -425,7 +440,7 @@ class SinglePostWidget extends StatelessWidget {
                 onTap: () =>
                     Get.toNamed(PostDetailScreen.route, arguments: postModel),
                 child: Text(
-                  '${postModel?.commentsCount ?? 0} comments',
+                  '${postModel.commentsCount ?? 0} comments',
                   style: const TextStyle(
                       fontFamily: Constants.workSansLight,
                       color: Constants.colorSecondary),

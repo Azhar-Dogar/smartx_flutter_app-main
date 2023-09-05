@@ -32,7 +32,7 @@ class MainScreenController extends GetxController {
       FirestoreDatabaseHelper.instance();
   final bottomNavigationMap = <PageStorageKey<String>, Widget>{};
   final GlobalKey globalKey = GlobalKey(debugLabel: 'btm_app_bar');
-
+  List posts = [].obs;
   ///INDEXED STACK SETUP
   static const _mainAddNavigationItemScreenKey =
   PageStorageKey(MapWalkScreen.key_title);
@@ -48,6 +48,7 @@ class MainScreenController extends GetxController {
 
   MainScreenController() {
     initData();
+
     mainNavigationScreenMap[_mainAddNavigationItemScreenKey] =
     const SizedBox();
     mainNavigationScreenMap[_mainhomeNavigationItemScreenKey] =
@@ -111,6 +112,7 @@ class MainScreenController extends GetxController {
   Rx<int> selectedSliderIndex = Rx(0);
 
   Rx<DataEvent> postDataEvent = Rx<DataEvent>(const Initial());
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Rx<bool> isLoadingMore = Rx<bool>(false);
   Rx<List<QueryDocumentSnapshot>> documentSnapshots =
