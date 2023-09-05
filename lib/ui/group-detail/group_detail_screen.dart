@@ -57,6 +57,7 @@ class GroupDetailScreen extends StatelessWidget {
                           imageUrl: controller.groupModel.profileImage,
                           height: 100,
                           width: 100,
+                          fit: BoxFit.cover,
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -244,7 +245,7 @@ class FeedTabScreen extends StatelessWidget {
                           final res = await Get.toNamed(AddPostScreen.route,
                               arguments: Get.find<GroupDetailController>()
                                   .groupModel
-                                  .id);
+                                  .id,);
 
                           if (res is PostModel) {
                             Get.find<GroupDetailController>()
@@ -273,27 +274,28 @@ class FeedTabScreen extends StatelessWidget {
               }
 
               if (event is Empty) {
-                return Expanded(
-                  child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      itemCount: 2,
-                      shrinkWrap: true,
-                      itemBuilder: (_, i) {
-                        return SinglePostWidget(
-                          postModel: PostModel(
-                              text: 'First Dog',
-                              username: 'Tester',
-                              userImage:
-                                  'https://firebasestorage.googleapis.com/v0/b/stroll-b2e07.appspot.com/o/profile%2F1690963975633?alt=media&token=04d7ace0-742f-4793-9684-a4447c5c6330',
-                              imagePath:
-                                  'https://images.unsplash.com/photo-1611003228941-98852ba62227?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3348&q=80',
-                              userid: '1',
-                              id: '2',
-                              created: DateTime.now(),
-                              likedUsers: []),
-                          onLikedTap: () {},
-                        );
-                      }),
+                return const Expanded(
+                  child:Center(child: Text("No Post Yet",style: TextStyle(fontWeight: FontWeight.w500),)),
+                  // ListView.builder(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 3),
+                  //     itemCount: 2,
+                  //     shrinkWrap: true,
+                  //     itemBuilder: (_, i) {
+                  //       return SinglePostWidget(
+                  //         postModel: PostModel(
+                  //             text: 'First Dog',
+                  //             username: 'Tester',
+                  //             userImage:
+                  //                 'https://firebasestorage.googleapis.com/v0/b/stroll-b2e07.appspot.com/o/profile%2F1690963975633?alt=media&token=04d7ace0-742f-4793-9684-a4447c5c6330',
+                  //             imagePath:
+                  //                 'https://images.unsplash.com/photo-1611003228941-98852ba62227?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3348&q=80',
+                  //             userid: '1',
+                  //             id: '2',
+                  //             created: DateTime.now(),
+                  //             likedUsers: []),
+                  //         onLikedTap: () {},
+                  //       );
+                  //     }),
                 );
               }
               if (event is Data) {
@@ -321,10 +323,11 @@ class FeedTabScreen extends StatelessWidget {
 class SinglePostWidget extends StatelessWidget {
   final PostModel postModel;
   final bool isLiked;
+  bool? isGroup;
   final VoidCallback onLikedTap;
 String? userImagePath;
    SinglePostWidget(
-      {super.key,required this.postModel, this.userImagePath, required this.onLikedTap, this.isLiked = false});
+      {super.key,required this.postModel,this.isGroup, this.userImagePath, required this.onLikedTap, this.isLiked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -340,36 +343,36 @@ String? userImagePath;
         children: [
           Row(
             children: [
-    //           StreamBuilder(
-    //          stream: FirebaseFirestore.instance
-    // .collection("user")
-    //     .doc(postModel.userid)
-    //     .snapshots(),
-    //             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-    //            if(snapshot.hasData){
-    //              UserModel user =
-    //              UserModel.fromJson(snapshot.data!.data()!);
-    //             return Container(
-    //                 margin: const EdgeInsets.only(right: 10),
-    //                 decoration:
-    //                     BoxDecoration(borderRadius: BorderRadius.circular(50)),
-    //                 child: (user.imagePath.toString() == null ||
-    //                         user.imagePath.toString() == '')
-    //                     ? Image.asset('assets/4.png', height: 60)
-    //                     : ClipRRect(
-    //                         borderRadius: BorderRadius.circular(50),
-    //                         child: CachedNetworkImage(
-    //                             imageUrl:user.imagePath!,
-    //                             height: 60,
-    //                             width: 60,
-    //                             fit: BoxFit.cover,
-    //                             placeholder: (context, url) => const Center(
-    //                                 child: CircularProgressIndicator.adaptive())),
-    //                       ));}else{
-    //            return const CircularProgressIndicator();
-    //            }
-    //             }
-    //           ),
+              StreamBuilder(
+             stream: FirebaseFirestore.instance
+    .collection("user")
+        .doc(postModel.userid)
+        .snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+               if(snapshot.hasData){
+                 UserModel user =
+                 UserModel.fromJson(snapshot.data!.data()!);
+                return Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                    child: (user.imagePath.toString() == null ||
+                            user.imagePath.toString() == '')
+                        ? Image.asset('assets/4.png', height: 60)
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                                imageUrl:user.imagePath!,
+                                height: 60,
+                                width: 60,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator.adaptive())),
+                          ));}else{
+               return const CircularProgressIndicator();
+               }
+                }
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

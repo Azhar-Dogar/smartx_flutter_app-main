@@ -19,13 +19,15 @@ class AddPostController extends GetxController {
   }
 
   getUser() async {
-    user = await SharedPreferenceHelper.instance.user;
+    user.value = await SharedPreferenceHelper.instance.user;
+    update();
     print("this is user");
-    print(user?.firstName);
-    print(user?.lastName);
+    print(user.value?.firstName);
+    print(user.value?.lastName);
+    print(user.value?.imagePath);
   }
 
-  UserModel? user;
+  Rx<UserModel?> user = Rx<UserModel?>(null);
   final textController = TextEditingController();
   Rx<XFile?> fileImage = Rx<XFile?>(null);
 
@@ -34,7 +36,7 @@ class AddPostController extends GetxController {
   final FirestoreDatabaseHelper _firestoreDatabaseHelper =
       FirestoreDatabaseHelper.instance();
 
-  Future<PostModel?> addPost() async {
+  Future<PostModel?> addPost(String groupId) async {
     if (user == null) return null;
 
     try {
@@ -47,13 +49,13 @@ class AddPostController extends GetxController {
       }
       final post = PostModel(
           text: textController.text,
-          username: '${user?.firstName} ${user?.lastName}',
+          username: '${user.value?.firstName} ${user.value?.lastName}',
           imagePath: url,
-          userImage: user?.imagePath ?? '',
+          userImage: user.value?.imagePath ?? '',
           created: DateTime.now(),
           groupId: groupId ?? '',
           likedUsers: [],
-          userid: user?.id ?? '',
+          userid: user.value?.id ?? '',
           id: '');
       final res = await _firestoreDatabaseHelper.addPost(post);
       if (res is PostModel) {

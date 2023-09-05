@@ -7,13 +7,12 @@ import '../../models/group_model.dart';
 import '../../models/post_model.dart';
 
 class GroupDetailController extends GetxController {
-  final GroupModel groupModel;
   Rx<DataEvent> groupPostEvents = Rx<DataEvent>(const Initial());
 
   GroupDetailController({required this.groupModel}){
     getGroupPosts();
   }
-
+  GroupModel groupModel;
 
   updateTempPost(PostModel model) {
     if (groupPostEvents.value is Data) {
@@ -26,6 +25,7 @@ class GroupDetailController extends GetxController {
   }
 
   getGroupPosts() async {
+    print("getting group posts");
     groupPostEvents(const Loading());
     try {
       final res =

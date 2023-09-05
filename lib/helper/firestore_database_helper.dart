@@ -172,7 +172,7 @@ class FirestoreDatabaseHelper {
   Future<List<PostModel>?> getUserPosts(id) async {
     final documentReference = await _firebaseFirestore
         .collection(_POSTS)
-        .where('userid', isEqualTo: id)
+        .where('userid', isEqualTo: id).where('groupId', isEqualTo: "")
         .get()
         .timeout(_timeoutDuration);
     if (documentReference.docs.isEmpty) return null;
@@ -185,9 +185,11 @@ class FirestoreDatabaseHelper {
   Future<List<PostModel>?> getGroupPosts(id) async {
     final documentReference = await _firebaseFirestore
         .collection(_POSTS)
-        .where('groupId', isEqualTo: id)
+         .where('groupId', isEqualTo: id)
         .get()
         .timeout(_timeoutDuration);
+    print("document");
+    print(documentReference.docs.length);
     if (documentReference.docs.isEmpty) return null;
     return documentReference.docs.map((e) {
       final post = PostModel.fromJson(e.data());

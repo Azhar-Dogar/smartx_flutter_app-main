@@ -192,7 +192,7 @@ class HomeScreen extends StatelessWidget {
               stream: FirebaseFirestore.instance
                   .collection("posts")
                   .where('userid', whereIn: allIds)
-                  .orderBy("created", descending: true)
+                  .where("groupId",isEqualTo: "")
                   .snapshots(includeMetadataChanges: true),
               builder: (_, snapshot) {
                 if (snapshot.hasError) {
