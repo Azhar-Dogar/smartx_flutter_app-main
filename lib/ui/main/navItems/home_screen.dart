@@ -10,7 +10,7 @@ import 'package:smartx_flutter_app/common/app_button.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
-import 'package:smartx_flutter_app/notification_screen.dart';
+import 'package:smartx_flutter_app/ui/main/notifications/notification_screen.dart';
 import 'package:smartx_flutter_app/ui/auth/dog-profile/dog_profile_screen.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';

@@ -481,9 +481,12 @@ class UserFeedTabScreen extends StatelessWidget {
                       itemCount: list.length,
                       // shrinkWrap: true,
                       itemBuilder: (_, i) {
+                        final isLiked = list[i].likedUsers.contains(
+                            FirebaseAuth.instance.currentUser?.uid);
                         return SinglePostWidget(
                           userImagePath: userImage,
                           postModel: list[i],
+                          isLiked: isLiked,
                           onLikedTap: () {},
                         );
                       }),

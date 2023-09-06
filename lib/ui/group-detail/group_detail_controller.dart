@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
@@ -23,7 +25,22 @@ class GroupDetailController extends GetxController {
       groupPostEvents(Data(data: [model]));
     }
   }
+  void toggleLike(PostModel post, bool isLiked) async {
+    final user = FirebaseAuth.instance.currentUser;
 
+    List<String> likes = post.likedUsers;
+
+    if (isLiked) {
+      likes.remove(user?.uid);
+    } else {
+      likes.add(user!.uid);
+    }
+
+    await FirebaseFirestore.instance.collection('posts').doc(post.id).update({
+      'likedUsers': likes,
+      'totalLikes': likes.length,
+    });
+  }
   getGroupPosts() async {
     print("getting group posts");
     groupPostEvents(const Loading());

@@ -7,6 +7,7 @@ import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/common/stream_comments_wrapper.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
+import 'package:smartx_flutter_app/models/post_model.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
@@ -23,6 +24,9 @@ class PostDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<PostDetailController>();
     final size = context.screenSize;
+    PostModel args = Get.arguments;
+    print(args);
+    print("these are args");
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -52,12 +56,16 @@ class PostDetailScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GetBuilder<PostDetailController>(builder: (con) {
+                          final isLiked = controller.postModel.likedUsers.contains(
+                              FirebaseAuth.instance.currentUser?.uid);
+                          print("comments");
+                          print(controller.postModel.commentsCount);
                           return SinglePostWidget(
                             postModel: controller.postModel,
-                            isLiked: controller.postModel.isLiked,
+                            isLiked: isLiked,
                             onLikedTap: () {
                               controller.toggleLike(controller.postModel,
-                                  controller.postModel.isLiked);
+                                 isLiked);
                             },
                           );
                         }),
@@ -116,8 +124,6 @@ class PostDetailScreen extends StatelessWidget {
                                               Container(
                                                 padding:
                                                     const EdgeInsets.all(10),
-                                                margin: const EdgeInsets.only(
-                                                    bottom: 5),
                                                 decoration: BoxDecoration(
                                                     color: Constants
                                                         .colorBackground,
@@ -141,18 +147,21 @@ class PostDetailScreen extends StatelessWidget {
                                                                 fontSize: 16,
                                                                 color: Constants
                                                                     .colorSecondary)),
-                                                        Text(
-                                                            timeago.format(
-                                                                comments
-                                                                    .timestamp
-                                                                    .toDate()),
-                                                            style: const TextStyle(
-                                                                fontFamily:
-                                                                    Constants
-                                                                        .workSansLight,
-                                                                fontSize: 12,
-                                                                color: Constants
-                                                                    .colorSecondary)),
+                                                        const SizedBox(width: 5,),
+                                                        Expanded(
+                                                          child: Text(
+                                                              timeago.format(
+                                                                  comments
+                                                                      .timestamp
+                                                                      .toDate()),
+                                                              style: const TextStyle(
+                                                                  fontFamily:
+                                                                      Constants
+                                                                          .workSansLight,
+                                                                  fontSize: 12,
+                                                                  color: Constants
+                                                                      .colorSecondary)),
+                                                        ),
                                                       ],
                                                     ),
                                                     Text(

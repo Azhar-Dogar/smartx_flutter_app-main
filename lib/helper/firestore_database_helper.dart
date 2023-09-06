@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
+import 'package:smartx_flutter_app/models/notification_model.dart';
 
 import '../models/dog_model.dart';
 import '../models/group_model.dart';
@@ -12,6 +13,7 @@ class FirestoreDatabaseHelper {
   static const String _POSTS = 'posts';
   static const String _DOGS = 'dogs';
   static const String _GROUPS = 'groups';
+  static const String _NOTIFICATIONS = 'notifications';
   static const String _USER_FOLLOWING = 'following';
 
   static FirestoreDatabaseHelper? _instance;
@@ -25,12 +27,21 @@ class FirestoreDatabaseHelper {
       _firebaseFirestore.settings = const Settings(persistenceEnabled: true);
     }
   }
-
+    sendNotification(PostModel post)async{
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    var doc  = _firebaseFirestore.collection(_USER).doc(post.userid).collection(_NOTIFICATIONS).doc();
+    await doc.set({
+      "id": doc.id,
+      "userId": uid,
+      "postId": post.id,
+      "dateTime" : DateTime.now(),
+    });
+   }
   static FirestoreDatabaseHelper instance() {
     _instance ??= FirestoreDatabaseHelper._();
     return _instance!;
   }
-
+   
   Future<UserModel?> addUser(UserModel user) async {
     await _firebaseFirestore
         .collection(_USER)

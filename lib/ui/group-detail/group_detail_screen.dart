@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ import 'package:smartx_flutter_app/ui/group-detail/group_detail_controller.dart'
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../helper/firestore_database_helper.dart';
 import '../../models/post_model.dart';
 import '../../models/user_model.dart';
 
@@ -53,11 +55,14 @@ class GroupDetailScreen extends StatelessWidget {
                             color: Constants.colorOnBackground,
                           ),
                         ),
-                        CachedNetworkImage(
-                          imageUrl: controller.groupModel.profileImage,
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: CachedNetworkImage(
+                            imageUrl: controller.groupModel.profileImage,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -224,6 +229,7 @@ class FeedTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<GroupDetailController>();
     return Column(
       children: [
         if (canPost)
@@ -257,64 +263,110 @@ class FeedTabScreen extends StatelessWidget {
                                 fontFamily: Constants.workSansLight,
                                 color: color))))
               ])),
-        GetX<GroupDetailController>(
-            autoRemove: false,
-            builder: (con) {
-              final event = con.groupPostEvents.value;
-              if (event is Loading) {
-                return const Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator.adaptive(),
-                    ],
-                  ),
-                );
-              }
-
-              if (event is Empty) {
-                return const Expanded(
-                  child:Center(child: Text("No Post Yet",style: TextStyle(fontWeight: FontWeight.w500),)),
-                  // ListView.builder(
-                  //     padding: const EdgeInsets.symmetric(horizontal: 3),
-                  //     itemCount: 2,
-                  //     shrinkWrap: true,
-                  //     itemBuilder: (_, i) {
-                  //       return SinglePostWidget(
-                  //         postModel: PostModel(
-                  //             text: 'First Dog',
-                  //             username: 'Tester',
-                  //             userImage:
-                  //                 'https://firebasestorage.googleapis.com/v0/b/stroll-b2e07.appspot.com/o/profile%2F1690963975633?alt=media&token=04d7ace0-742f-4793-9684-a4447c5c6330',
-                  //             imagePath:
-                  //                 'https://images.unsplash.com/photo-1611003228941-98852ba62227?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3348&q=80',
-                  //             userid: '1',
-                  //             id: '2',
-                  //             created: DateTime.now(),
-                  //             likedUsers: []),
-                  //         onLikedTap: () {},
-                  //       );
-                  //     }),
-                );
-              }
-              if (event is Data) {
-                final list = event.data as List<PostModel>;
-                return Expanded(
+        StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection("posts")
+              .where("groupId",isEqualTo:controller.groupModel.id)
+              .snapshots(includeMetadataChanges: true),
+          builder: (_, snapshot) {
+            if (snapshot.hasError) {
+              return const Expanded(child: Center(child: Text("Something went wrong")));
+            }
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator.adaptive());
+            }
+            if (snapshot.hasData) {
+              final posts = snapshot.data!.docs
+                  .map((e) => PostModel.fromJson(
+                  e.data() as Map<String, dynamic>))
+                  .toList();
+              return
+                Expanded(
                   child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      itemCount: list.length,
-                      shrinkWrap: true,
+                      itemCount: posts.length,
+                      // shrinkWrap: true,
+                      // physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (_, i) {
+                        final isLiked = posts[i].likedUsers.contains(
+                            FirebaseAuth.instance.currentUser?.uid);
+
                         return SinglePostWidget(
-                          postModel: list[i],
-                          onLikedTap: () {},
+                          postModel: posts[i].copyWith(isLiked: isLiked),
+                          isLiked: isLiked,
+                          onLikedTap: () {
+                            controller.toggleLike(posts[i], isLiked);
+                          },
                         );
                       }),
                 );
-              }
-              return const SizedBox();
-            }),
+            }
+            return const SizedBox();
+          },
+        )
+        // GetX<GroupDetailController>(
+        //     autoRemove: false,
+        //     builder: (con) {
+        //       final event = con.groupPostEvents.value;
+        //       if (event is Loading) {
+        //         return const Expanded(
+        //           child: Column(
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             crossAxisAlignment: CrossAxisAlignment.center,
+        //             children: [
+        //               CircularProgressIndicator.adaptive(),
+        //             ],
+        //           ),
+        //         );
+        //       }
+        //
+        //       if (event is Empty) {
+        //         return const Expanded(
+        //           child:Center(child: Text("No Post Yet",style: TextStyle(fontWeight: FontWeight.w500),)),
+        //           // ListView.builder(
+        //           //     padding: const EdgeInsets.symmetric(horizontal: 3),
+        //           //     itemCount: 2,
+        //           //     shrinkWrap: true,
+        //           //     itemBuilder: (_, i) {
+        //           //       return SinglePostWidget(
+        //           //         postModel: PostModel(
+        //           //             text: 'First Dog',
+        //           //             username: 'Tester',
+        //           //             userImage:
+        //           //                 'https://firebasestorage.googleapis.com/v0/b/stroll-b2e07.appspot.com/o/profile%2F1690963975633?alt=media&token=04d7ace0-742f-4793-9684-a4447c5c6330',
+        //           //             imagePath:
+        //           //                 'https://images.unsplash.com/photo-1611003228941-98852ba62227?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3348&q=80',
+        //           //             userid: '1',
+        //           //             id: '2',
+        //           //             created: DateTime.now(),
+        //           //             likedUsers: []),
+        //           //         onLikedTap: () {},
+        //           //       );
+        //           //     }),
+        //         );
+        //       }
+        //       if (event is Data) {
+        //         final list = event.data as List<PostModel>;
+        //         return Expanded(
+        //           child: ListView.builder(
+        //               padding: const EdgeInsets.symmetric(horizontal: 3),
+        //               itemCount: list.length,
+        //               shrinkWrap: true,
+        //               itemBuilder: (_, i) {
+        //                 final isLiked = list[i].likedUsers.contains(
+        //                     FirebaseAuth.instance.currentUser?.uid);
+        //                 return SinglePostWidget(
+        //                   isLiked: isLiked,
+        //                   postModel: list[i].copyWith(isLiked: isLiked),
+        //                   onLikedTap: () {
+        //                     print("i press like button");
+        //                     controller.toggleLike(list[i], isLiked);
+        //                   },
+        //                 );
+        //               }),
+        //         );
+        //       }
+        //       return const SizedBox();
+        //     }),
       ],
     );
   }
@@ -331,9 +383,7 @@ String? userImagePath;
 
   @override
   Widget build(BuildContext context) {
-    print(postModel.text);
-    print(postModel.commentsCount);
-    print("user image");
+    String userName = "";
     return Container(
       color: Constants.colorOnBackground,
       margin: const EdgeInsets.only(top: 5),
@@ -418,7 +468,11 @@ String? userImagePath;
               GestureDetector(
                 onTap: () {
                   onLikedTap.call();
-                },
+                  print(isLiked);
+                  if(FirebaseAuth.instance.currentUser!.uid != postModel.userid && !isLiked ){
+                  FirestoreDatabaseHelper.instance().sendNotification(postModel);
+                }
+                  },
                 child: Icon(
                   isLiked ? Icons.favorite : Icons.favorite_border_outlined,
                   color: isLiked

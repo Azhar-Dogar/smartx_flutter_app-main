@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
-import 'package:smartx_flutter_app/notification_screen.dart';
+import 'package:smartx_flutter_app/ui/main/notifications/notification_screen.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_controller.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_screen.dart';
 import 'package:smartx_flutter_app/ui/auth/dog-profile/dog_profile_controller.dart';
