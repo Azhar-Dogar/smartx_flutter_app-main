@@ -27,13 +27,16 @@ class FirestoreDatabaseHelper {
       _firebaseFirestore.settings = const Settings(persistenceEnabled: true);
     }
   }
-    sendNotification(PostModel post)async{
+    sendNotification(PostModel post,bool isComment)async{
     String uid = FirebaseAuth.instance.currentUser!.uid;
     var doc  = _firebaseFirestore.collection(_USER).doc(post.userid).collection(_NOTIFICATIONS).doc();
     await doc.set({
       "id": doc.id,
       "userId": uid,
       "postId": post.id,
+      "isComment": isComment,
+      "seen": false,
+      "groupId": post.groupId,
       "dateTime" : DateTime.now(),
     });
    }

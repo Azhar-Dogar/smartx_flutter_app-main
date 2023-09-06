@@ -470,7 +470,7 @@ String? userImagePath;
                   onLikedTap.call();
                   print(isLiked);
                   if(FirebaseAuth.instance.currentUser!.uid != postModel.userid && !isLiked ){
-                  FirestoreDatabaseHelper.instance().sendNotification(postModel);
+                  FirestoreDatabaseHelper.instance().sendNotification(postModel,false);
                 }
                   },
                 child: Icon(

@@ -31,6 +31,16 @@ class NotificationController extends GetxController {
     });
   }
 
+  updateNotification(NotificationModel model) async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection(_USER)
+        .doc(uid)
+        .collection(_NOTIFICATIONS)
+        .doc(model.id)
+        .update({"seen": true});
+  }
+
   getCurrentPost(NotificationModel model) async {
     PostModel? postModel;
     final documentReference = await FirebaseFirestore.instance
@@ -41,6 +51,7 @@ class NotificationController extends GetxController {
     return documentReference.docs.map((e) {
       postModel = PostModel.fromJson(e.data());
       if (postModel != null) {
+        updateNotification(model);
         Get.back();
         Get.toNamed(PostDetailScreen.route, arguments: postModel);
       }

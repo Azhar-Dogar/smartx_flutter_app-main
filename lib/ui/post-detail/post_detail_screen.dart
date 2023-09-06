@@ -13,6 +13,7 @@ import 'package:smartx_flutter_app/ui/post-detail/post_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../helper/firestore_database_helper.dart';
 import '../../models/comment_model.dart';
 
 class PostDetailScreen extends StatelessWidget {
@@ -66,6 +67,9 @@ class PostDetailScreen extends StatelessWidget {
                             onLikedTap: () {
                               controller.toggleLike(controller.postModel,
                                  isLiked);
+                              if(FirebaseAuth.instance.currentUser!.uid != controller.postModel.userid && !isLiked ){
+                                FirestoreDatabaseHelper.instance().sendNotification(controller.postModel,false);
+                              }
                             },
                           );
                         }),
@@ -209,7 +213,12 @@ class PostDetailScreen extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 isError: false,
                 hasBorder: false,
-                onSuffixClick: () => controller.uploadComment(),
+                onSuffixClick: (){
+                  controller.uploadComment();
+                  if(FirebaseAuth.instance.currentUser!.uid != controller.postModel.userid){
+                    FirestoreDatabaseHelper.instance().sendNotification(controller.postModel,true);
+                  }
+                  },
                 suffixIcon: const Icon(Icons.send_rounded,
                     color: Constants.colorSecondary),
                 // prefixIcon: Image.asset('assets/attachment.png',

@@ -17,7 +17,9 @@ class NotificationScreen extends StatefulWidget {
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
 }
+
 final controller = Get.put(NotificationController());
+
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
@@ -76,60 +78,76 @@ class _NotificationScreenState extends State<NotificationScreen> {
           if (snapshot.hasData) {
             UserModel user = UserModel.fromJson(snapshot.data.data());
             return InkWell(
-              onTap: (){
+              onTap: () {
                 Functions.showLoaderDialog(context);
                 controller.getCurrentPost(model);
               },
               child: Column(
                 children: [
                   Container(
-                    color: (isRead)
+                    color: (model.seen)
                         ? Colors.white
                         : Constants.unreadNotification.withOpacity(0.1),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 16),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (user.imagePath != null) ...[
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(user.imagePath!),
-                              radius: 25,
-                            ),
-                          ] else ...[
-                            Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: Image.asset(
-                                  'assets/dummy.png',
-                                  height: 40,
-                                ))
+                          if (model.groupId != "") ...[
+                            const Text(
+                              "Community Group",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w500),
+                            )
                           ],
-                          const SizedBox(
-                            width: 10,
+                          const SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              if (user.imagePath != null) ...[
+                                CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(user.imagePath!),
+                                  radius: 25,
+                                ),
+                              ] else ...[
+                                Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle),
+                                    child: Image.asset(
+                                      'assets/dummy.png',
+                                      height: 40,
+                                    ))
+                              ],
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text("${user.firstName} ${user.lastName}",
+                                  style: const TextStyle(
+                                      fontFamily: Constants.workSansMedium,
+                                      color: Constants.colorSecondary)),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                model.isComment
+                                    ? "Comment on your post"
+                                    : 'Liked your post',
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    fontFamily: Constants.workSansLight,
+                                    color: Constants.colorSecondary),
+                              ),
+                              const Spacer(),
+                              Text(
+                                timeago.format(model.dateTime.toDate()),
+                                style: const TextStyle(
+                                    fontFamily: Constants.workSansRegular,
+                                    fontSize: 9),
+                              )
+                            ],
                           ),
-                          Text("${user.firstName} ${user.lastName}",
-                              style: const TextStyle(
-                                  fontFamily: Constants.workSansMedium,
-                                  color: Constants.colorSecondary)),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const Text(
-                            'Liked your post',
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontFamily: Constants.workSansLight,
-                                color: Constants.colorSecondary),
-                          ),
-                          const Spacer(),
-                          Text(
-                            timeago.format(model.dateTime.toDate()),
-                            style: const TextStyle(
-                                fontFamily: Constants.workSansRegular,
-                                fontSize: 9),
-                          )
                         ],
                       ),
                     ),
