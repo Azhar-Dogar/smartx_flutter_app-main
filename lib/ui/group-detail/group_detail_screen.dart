@@ -437,7 +437,7 @@ String? userImagePath;
                 style: const TextStyle(
                     fontFamily: Constants.workSansLight,
                     color: Constants.colorSecondary),
-              ),
+              ),//
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: () =>
