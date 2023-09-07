@@ -69,6 +69,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   Widget notificationItem(NotificationModel model, bool isRead) {
+    String groupText = "";
+    if(model.groupId != ""){
+      groupText = " in community group";
+    }
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("user")
@@ -94,14 +98,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (model.groupId != "") ...[
-                            const Text(
-                              "Community Group",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w500),
-                            )
-                          ],
-                          const SizedBox(height: 5,),
                           Row(
                             children: [
                               if (user.imagePath != null) ...[
@@ -123,28 +119,38 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Text("${user.firstName} ${user.lastName}",
-                                  style: const TextStyle(
-                                      fontFamily: Constants.workSansMedium,
-                                      color: Constants.colorSecondary)),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("${user.firstName} ${user.lastName}",
+                                        style: const TextStyle(
+                                            fontFamily: Constants.workSansMedium,
+                                            color: Constants.colorSecondary)),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      model.isComment
+                                          ? "Comment on your post$groupText"
+                                          : 'Liked your post$groupText',
+                                      style: const TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: Constants.workSansLight,
+                                          color: Constants.colorSecondary),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                model.isComment
-                                    ? "Comment on your post"
-                                    : 'Liked your post',
-                                style: const TextStyle(
-                                    fontSize: 11,
-                                    fontFamily: Constants.workSansLight,
-                                    color: Constants.colorSecondary),
-                              ),
-                              const Spacer(),
-                              Text(
-                                timeago.format(model.dateTime.toDate()),
-                                style: const TextStyle(
-                                    fontFamily: Constants.workSansRegular,
-                                    fontSize: 9),
+                                width: 10,
+                              ),                              Expanded(
+                                child: Text(
+                                  timeago.format(model.dateTime.toDate()),
+                                  style: const TextStyle(
+                                      fontFamily: Constants.workSansRegular,
+                                      fontSize: 9),
+                                ),
                               )
                             ],
                           ),

@@ -80,7 +80,7 @@ class StopWalkScreen extends StatelessWidget {
                 const SizedBox(width: 10),
                 const DottedLineContainer(),
                 const SizedBox(width: 10),
-                 Text(
+                Text(
                   '${controller.totalDistance}',
                   style: const TextStyle(color: Constants.colorOnSurface),
                 ),
@@ -107,13 +107,16 @@ class StopWalkScreen extends StatelessWidget {
                   color: Constants.colorSecondary,
                   borderType: BorderType.Circle,
                   child: IconButton(
-                    onPressed: (){
-                    showDialog(context: context, builder:(_)=>const DogsAlert()).then((value){
-                      if (value != null) {
-                        controller.selectedDogs = value["list"] as List<DogModel>;
-                      }
-                      print(controller.selectedDogs.length);
-                    });
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) => const DogsAlert()).then((value) {
+                        if (value != null) {
+                          controller.selectedDogs =
+                              value["list"] as List<DogModel>;
+                        }
+                        print(controller.selectedDogs.length);
+                      });
                     },
                     icon: const Icon(
                       Icons.add,
@@ -130,7 +133,7 @@ class StopWalkScreen extends StatelessWidget {
                 height: 2,
                 color: Constants.colorTextField),
             const SizedBox(height: 30),
-             SizedBox(
+            SizedBox(
                 height: 50,
                 child: DottedBorderAppTextField(
                     hint: 'Set title',
@@ -183,16 +186,16 @@ class StopWalkScreen extends StatelessWidget {
       ),
     );
   }
-  Future shareDialogue(){
+
+  Future shareDialogue() {
     return Get.defaultDialog(
         title: '',
-        contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 20),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         content: const Text(
           'Your route has been successfully saved  you can also share it in your Activities',
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontFamily: Constants.workSansRegular),
+          style: TextStyle(fontFamily: Constants.workSansRegular),
         ),
         backgroundColor: Colors.white,
         actions: [
@@ -200,34 +203,30 @@ class StopWalkScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () => Get.back(),
+                onTap: () {
+                  Get.back();
+                  Get.back();
+                },
                 child: Container(
-                    margin: const EdgeInsets.only(
-                        right: 20),
+                    margin: const EdgeInsets.only(right: 20),
                     alignment: Alignment.center,
                     height: 50,
                     width: Get.width / 4,
                     decoration: BoxDecoration(
-                        borderRadius:
-                        BorderRadius.circular(10),
-                        border: Border.all(
-                            color: Constants.colorSecondary)),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Constants.colorSecondary)),
                     child: const Text('Close',
-                        style: TextStyle(
-                            color: Constants
-                                .colorSecondary))),
+                        style: TextStyle(color: Constants.colorSecondary))),
               ),
               Padding(
-                padding:
-                const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.only(bottom: 8.0),
                 child: SizedBox(
                   height: 60,
                   width: Get.width / 4,
                   child: AppButton(
                       borderRadius: 10,
                       color: Constants.colorOnSurface,
-                      fontFamily:
-                      Constants.workSansRegular,
+                      fontFamily: Constants.workSansRegular,
                       text: 'Share',
                       onClick: () {}),
                 ),

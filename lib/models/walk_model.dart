@@ -8,11 +8,13 @@ class WalkModel {
   String title;
   int duration;
   double distance;
+  DateTime dateTime;
   List<LatLng> paths = [];
   List<DogModel>? dogs = [];
   WalkModel(
       {this.dogs,
         required this.title,
+        required this.dateTime,
       required this.paths,
       required this.duration,
       required this.distance,
@@ -24,10 +26,12 @@ class WalkModel {
     final duration = json['duration'];
     final distance = json['distance'];
     final paths = json['paths'];
+    final dateTime = json['dateTime'].toDate();
     final dogs = List.generate(json['dogs'].length, (index) => DogModel.fromJson(json['dogs'][index]));
     return WalkModel(
         id: id,
         title: title,
+        dateTime: dateTime,
         duration: duration,
         distance: distance,
         paths: paths.map<LatLng>((dynamic item) {
@@ -44,6 +48,7 @@ class WalkModel {
     data['title'] = title;
     data['duration'] = duration;
     data['distance'] = distance;
+    data['dateTime'] = dateTime;
     data['paths'] = pathsMap();
     data['dogs'] = dogsMap();
     return data;

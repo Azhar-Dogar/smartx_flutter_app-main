@@ -128,7 +128,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
   Widget googleMap(WalkModel model) {
     return GoogleMap(
-      initialCameraPosition:  CameraPosition(
+      initialCameraPosition:   CameraPosition(
           zoom: 25, target: model.paths.first),
       onMapCreated: (GoogleMapController controller) {
         print('changes');

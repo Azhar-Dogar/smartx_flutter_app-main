@@ -180,6 +180,7 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
               GestureDetector(
                 onTap: () {
                   controller.calDistance();
+                  Get.toNamed(StopWalkScreen.route);
                   // controller.hours.value = 0;
                   // controller.minutes.value = 0;
                   // controller.seconds.value = 0;
@@ -188,7 +189,6 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
                   controller.isStart(false);
                   // print(controller.seconds.value);
                   // print("seconds");
-                  Get.toNamed(StopWalkScreen.route);
                 },
                 child: Container(
                   alignment: Alignment.center,

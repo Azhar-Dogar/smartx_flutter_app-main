@@ -12,6 +12,7 @@ import 'package:smartx_flutter_app/ui/auth/dog-profile/dog_profile_screen.dart';
 import 'package:smartx_flutter_app/ui/auth/user-profile/user_profile_screen.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
+import 'package:smartx_flutter_app/ui/user-detail/achievements_screen.dart';
 import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
@@ -195,7 +196,7 @@ class UserDetailScreen extends StatelessWidget {
                                 canPost: true,
                                 userImage: user.imagePath??"",
                               ),
-                              SizedBox(),
+                              AchievementScreen(),
                               DogTabScreen()
                             ],
                           ))

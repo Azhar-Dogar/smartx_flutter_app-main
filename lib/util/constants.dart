@@ -5,6 +5,8 @@ abstract class Constants {
   static const Color colorPrimary = Color(0xffFACA00);
   static const Color colorPrimaryVariant = Color(0xffF00087);
   static const Color colorSecondary = Color(0xff00332E);
+  static const Color redBorder = Color(0xffDE1306);
+  static const Color redShadow = Color(0xffF3A39E);
   static const Color buttonColor = Color(0xff319C49);
   static const Color colorSecondaryVariant = Color(0xffF7E9E2);
   static const Color colorBackground = Color(0xffffffff);
