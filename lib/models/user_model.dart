@@ -11,6 +11,7 @@ class UserModel {
   final String? country;
   final String? imagePath;
   final String? created;
+  final int? userComments;
   final bool isFollowing;
 
   UserModel(
@@ -23,6 +24,7 @@ class UserModel {
         this.bio,
         this.created,
         this.country,
+        this.userComments,
         this.city,
         this.imagePath});
 
@@ -43,7 +45,7 @@ class UserModel {
     final String country =
     json.containsKey('country') ? json['country'] ?? '' : '';
     final String id = json.containsKey('id') ? json['id'] ?? '' : '';
-
+    final int userComments = json.containsKey('userComments') ? json['userComments'] ?? 0 : 0;
     return UserModel(
         firstName: fname,
         lastName: lname,
@@ -55,6 +57,7 @@ class UserModel {
         bio: bio,
         imagePath: imagePath,
         country: country,
+        userComments: userComments,
         city: city);
   }
 

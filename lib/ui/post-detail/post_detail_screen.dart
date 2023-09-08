@@ -215,6 +215,7 @@ class PostDetailScreen extends StatelessWidget {
                 hasBorder: false,
                 onSuffixClick: (){
                   controller.uploadComment();
+                  controller.updateUser();
                   if(FirebaseAuth.instance.currentUser!.uid != controller.postModel.userid){
                     FirestoreDatabaseHelper.instance().sendNotification(controller.postModel,true);
                   }

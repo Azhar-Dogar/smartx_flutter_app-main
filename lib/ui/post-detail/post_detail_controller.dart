@@ -9,12 +9,14 @@ import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/post_model.dart';
+import '../../models/user_model.dart';
 
 class PostDetailController extends GetxController {
   PostModel postModel;
-
-  PostDetailController({required this.postModel});
-
+  Rx<UserModel?> userModel = Rx<UserModel?>(null);
+  PostDetailController({required this.postModel}) {
+    getCurrentUser();
+  }
   TextEditingController commentsTECController = TextEditingController();
   ScrollController commentScroll = ScrollController();
 
@@ -35,6 +37,21 @@ class PostDetailController extends GetxController {
     final res = await http.post(uri, body: data, headers: {
       'Authorization':
           'key=AAAAvPso1_Y:APA91bHL1luhLDH_sHJaZ3YMgsGjWOgvwRSSmn8PcQM1cy_lTVuvzqegG0acMDP8_YwSOTidgunPXvLYz5pAvhuQlqvxVNuNCshG7XxGmHYAHopv6Ub9vq4q_ohHPHDxfcDArCTCzk1l'
+    });
+  }
+
+  getCurrentUser() {
+    print("Here");
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore.instance
+        .collection("user")
+        .doc(uid)
+        .snapshots()
+        .listen((event) {
+      print(event.data());
+      print("event data");
+      final user = UserModel.fromJson(event.data()!);
+      userModel.value = user;
     });
   }
 
@@ -60,6 +77,17 @@ class PostDetailController extends GetxController {
         .collection('posts')
         .doc(post.id)
         .update({'likedUsers': likes, 'totalLikes': likes.length});
+  }
+
+  updateUser() async {
+    if (userModel.value != null) {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection("user").doc(uid).update({
+        "userComments": (userModel.value!.userComments == null)
+            ? 0 + 1
+            : userModel.value!.userComments! + 1
+      });
+    }
   }
 
   uploadComment() async {

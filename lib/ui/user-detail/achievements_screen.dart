@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/models/walk_model.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
@@ -32,52 +33,55 @@ class _AchievementScreenState extends State<AchievementScreen> {
             stream: controller.stream,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
-                List<WalkModel> streakList = [];
-                DateTime currentDate = DateTime.now().add(Duration(days: 1));
-                DateTime weekStart =
-                    currentDate.subtract(const Duration(days: 7));
+                // List<WalkModel> streakList = [];
+                DateTime currentDate = DateTime.now();
+                List<String> badges = [];
                 final walks = snapshot.data!.docs
                     .map((e) =>
                         WalkModel.fromJson(e.data() as Map<String, dynamic>))
                     .toList();
-                for (var i = 0; i < 7; i++) {
-                  print( weekStart.add(Duration(days: i)).day);
-                  print("day");
-                  WalkModel? foundModel = walks.firstWhere(
-                      (model) =>
-                          model.dateTime.day ==
-                          weekStart.add(Duration(days: i)).day,
-                      orElse: () => null);
-                  // for (var element in walks) {
-                  //   if(weekStart.add(Duration(days: i)).day == element.dateTime.day){
-                  //     print("weekday");
-                  //     print(weekStart.add(Duration(days: i)).day);
-                  //     print("element day");
-                  //     print(element.dateTime.day);
-                  if (foundModel != null) {
-                    streakList.add(foundModel);
-                    //   }
+                double totalDistance = 0.0;
+                badges.clear();
+                for(var e in walks){
+                  if(e.dateTime.day == DateTime.now().day){
+                    if(e.dateTime.hour<11 && e.dateTime.hour > 6){
+                      var f = DateFormat.jm().format(e.dateTime);
+                      if(f.contains("PM")){
+                        badges.add("Night Owl");
+                      }else{
+                        badges.add("Early Bird");
+                      }
+                    }
                   }
+                  totalDistance = totalDistance + e.distance;
                 }
-                print(streakList.length);
-                print("streaks");
-                if (streakList.length >= 7) {
-                  print("object");
-                  return item();
+                if(totalDistance*100 >=10000){
+                  badges.add("10k walked");
+                }
+                List<WalkModel> streakList = checkWeekStreak(walks,30);
+                if (streakList.length >= 30) {
+                  badges.add("1 month streak");
                 } else {
-                  // return Expanded(
-                  //   child: GridView.builder(
-                  //       gridDelegate:
-                  //           const SliverGridDelegateWithMaxCrossAxisExtent(
-                  //               maxCrossAxisExtent: 200,
-                  //               childAspectRatio: 4 / 2,
-                  //               crossAxisSpacing: 10,
-                  //               mainAxisSpacing: 10),
-                  //       itemCount: walks.length,
-                  //       itemBuilder: (BuildContext ctx, index) {
-                  //         return Text(walks[index].title);
-                  //       }),
-                  // );
+                  streakList = checkWeekStreak(walks,7);
+                  if(streakList.length>=7){
+                    badges.add("1 week streak");
+                  }
+                  for (var element in controller.badges) {
+                    badges.add(element);
+                  }
+                  return Expanded(
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 125,
+                                childAspectRatio: 3 / 2,
+                                crossAxisSpacing: 0,
+                                mainAxisSpacing: 15),
+                        itemCount: badges.length,
+                        itemBuilder: (BuildContext ctx, index) {
+                          return item(badges[index]);
+                        }),
+                  );
                 }
               }
               return SizedBox();
@@ -86,7 +90,7 @@ class _AchievementScreenState extends State<AchievementScreen> {
     );
   }
 
-  Widget item() {
+  Widget item(String text) {
     return Container(
       // width: width * 0.5,
       height: height * 0.11,
@@ -99,12 +103,24 @@ class _AchievementScreenState extends State<AchievementScreen> {
           border: Border.all(color: Constants.redBorder)),
       child: Center(
           child: Text(
-        "1 week streak",
-        style: const TextStyle(
+        text,
+        style:const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w400,
             color: Constants.redBorder),
       )),
     );
   }
+  List<WalkModel> checkWeekStreak(List walks,int days){
+    List<WalkModel> streakList = [];
+    DateTime currentDate = DateTime.now().add(Duration(days: 15));
+    for (var i = 0; i <= days; i++) {
+      WalkModel? foundModel = walks.firstWhere(
+              (model) =>
+          model.dateTime.day ==
+              currentDate.subtract(Duration(days: i)).day,orElse:()=> null);
+      if(foundModel !=null){
+        streakList.add(foundModel);}
+  }
+  return streakList;}
 }
