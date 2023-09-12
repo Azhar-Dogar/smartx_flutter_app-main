@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
+import 'package:smartx_flutter_app/models/quest_model.dart';
 
 import '../../models/group_model.dart';
 import '../../models/post_model.dart';
@@ -15,7 +16,7 @@ class GroupDetailController extends GetxController {
     getGroupPosts();
   }
   GroupModel groupModel;
-
+ final currentUser = FirebaseAuth.instance.currentUser;
   updateTempPost(PostModel model) {
     if (groupPostEvents.value is Data) {
       final list = (groupPostEvents.value as Data).data as List<PostModel>;
@@ -39,6 +40,13 @@ class GroupDetailController extends GetxController {
     await FirebaseFirestore.instance.collection('posts').doc(post.id).update({
       'likedUsers': likes,
       'totalLikes': likes.length,
+    });
+  }
+  joinQuest(QuestModel questModel){
+    List<String> users = questModel.users;
+    users.add(currentUser!.uid);
+    FirebaseFirestore.instance.collection("quests").doc(questModel.id).update({
+      "users":users
     });
   }
   getGroupPosts() async {

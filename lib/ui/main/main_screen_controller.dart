@@ -11,6 +11,7 @@ import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
+import 'package:smartx_flutter_app/models/quest_model.dart';
 import 'package:smartx_flutter_app/ui/main/navItems/add_screen.dart';
 import 'package:smartx_flutter_app/ui/main/navItems/groups_screen.dart';
 import 'package:smartx_flutter_app/ui/main/navItems/home_screen.dart';
@@ -33,9 +34,11 @@ class MainScreenController extends GetxController {
   final bottomNavigationMap = <PageStorageKey<String>, Widget>{};
   final GlobalKey globalKey = GlobalKey(debugLabel: 'btm_app_bar');
   List posts = [].obs;
+  RxList<QuestModel> userQuests = <QuestModel>[].obs;
+
   ///INDEXED STACK SETUP
   static const _mainAddNavigationItemScreenKey =
-  PageStorageKey(MapWalkScreen.key_title);
+      PageStorageKey(MapWalkScreen.key_title);
   static const _mainhomeNavigationItemScreenKey =
       PageStorageKey(HomeScreen.key_title);
   static const _mainGroupsNavigationItemScreenKey =
@@ -48,11 +51,11 @@ class MainScreenController extends GetxController {
 
   MainScreenController() {
     initData();
-
-    mainNavigationScreenMap[_mainAddNavigationItemScreenKey] =
-    const SizedBox();
+    mainNavigationScreenMap[_mainAddNavigationItemScreenKey] = const SizedBox();
     mainNavigationScreenMap[_mainhomeNavigationItemScreenKey] =
-        const HomeScreen(key: _mainhomeNavigationItemScreenKey,);
+        const HomeScreen(
+      key: _mainhomeNavigationItemScreenKey,
+    );
     mainNavigationScreenMap[_mainGroupsNavigationItemScreenKey] =
         const SizedBox();
     mainNavigationScreenMap[_mainLocationNavigationItemScreenKey] =
@@ -91,7 +94,7 @@ class MainScreenController extends GetxController {
   Widget _navigationItemIndex(int index) {
     switch (index) {
       case 0:
-        return  MapWalkScreen(key: _mainAddNavigationItemScreenKey);
+        return MapWalkScreen(key: _mainAddNavigationItemScreenKey);
       case 1:
         return const HomeScreen(key: _mainhomeNavigationItemScreenKey);
       case 2:
@@ -129,6 +132,25 @@ class MainScreenController extends GetxController {
     final lastDocument = documentSnapshots.value.last;
     final lastDocumentIndex = int.parse(lastDocument.id);
   }
+  static String uid = FirebaseAuth.instance.currentUser!.uid;
+  Stream<QuerySnapshot<Map<String, dynamic>>> questStream =  FirebaseFirestore.instance
+     .collection("quests")
+     .where("users", arrayContains: uid)
+     .snapshots();
+  getUserQuest() {
+    FirebaseFirestore.instance
+        .collection("quests")
+        .where("users", arrayContains: uid)
+        .snapshots()
+        .listen((event) {
+          userQuests = <QuestModel>[].obs;
+      event.docs.forEach((element) {
+        userQuests.value.add(QuestModel.fromJson(element.data()));
+      });
+      print("these are quests");
+      print(userQuests.value.length);
+    });
+  }
 
   Future<void> getGroups() async {
     groupsEvents(const Loading());
@@ -162,7 +184,6 @@ class MainScreenController extends GetxController {
 
   joinGroup(index, GroupModel group) async {
     final appUser = await SharedPreferenceHelper.instance.user;
-
     final state = groupsEvents.value;
     if (state is Data) {
       final list = state.data as List<GroupModel>;

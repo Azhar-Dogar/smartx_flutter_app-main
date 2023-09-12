@@ -12,6 +12,7 @@ import 'package:smartx_flutter_app/models/group_model.dart';
 import 'package:smartx_flutter_app/models/quest_model.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_screen.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_controller.dart';
+import 'package:smartx_flutter_app/ui/main/notifications/notification_screen.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
@@ -111,18 +112,23 @@ class GroupDetailScreen extends StatelessWidget {
   }
 }
 
-class QuestsTabScreen extends StatelessWidget {
+class QuestsTabScreen extends StatefulWidget {
   QuestsTabScreen({super.key, required this.size, required this.group});
   GroupModel group;
   final Size size;
 
   @override
+  State<QuestsTabScreen> createState() => _QuestsTabScreenState();
+}
+
+class _QuestsTabScreenState extends State<QuestsTabScreen> {
+  final controller = Get.find<GroupDetailController>();
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection("groups")
-            .doc(group.id)
             .collection("quests")
+            .where("groupId", isEqualTo: widget.group.id)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
@@ -134,17 +140,22 @@ class QuestsTabScreen extends StatelessWidget {
                 itemCount: quests.length,
                 shrinkWrap: true,
                 itemBuilder: (_, i) {
+                  bool isJoin = false;
+                  if (quests[i]
+                      .users
+                      .contains(FirebaseAuth.instance.currentUser!.uid)) {
+                    isJoin = true;
+                  }
                   return Column(
-                    children: [
-                      questWidget(quests[i])
-                    ],
+                    children: [questWidget(quests[i], isJoin)],
                   );
                 });
           }
           return const SizedBox();
         });
   }
-  Widget questWidget(QuestModel quest){
+
+  Widget questWidget(QuestModel quest, bool isJoin) {
     return Container(
       decoration: BoxDecoration(
           color: Constants.colorOnBackground,
@@ -158,9 +169,14 @@ class QuestsTabScreen extends StatelessWidget {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image(image: NetworkImage(group.profileImage),height: 40,)),
-               const SizedBox(width: 10,),
-               Text(
+                  child: Image(
+                    image: NetworkImage(widget.group.profileImage),
+                    height: 40,
+                  )),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
                 quest.title,
                 style: const TextStyle(
                     fontFamily: Constants.workSansBold,
@@ -170,8 +186,9 @@ class QuestsTabScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-           Text(
-           quest.description, style: const TextStyle(
+          Text(
+            quest.description,
+            style: const TextStyle(
                 fontFamily: Constants.workSansRegular,
                 color: Constants.colorSecondary),
           ),
@@ -183,7 +200,7 @@ class QuestsTabScreen extends StatelessWidget {
                 width: 20,
               ),
               const SizedBox(width: 10),
-               Text(
+              Text(
                 quest.duration,
                 style: const TextStyle(
                     fontFamily: Constants.workSansLight,
@@ -196,10 +213,14 @@ class QuestsTabScreen extends StatelessWidget {
             children: [
               SizedBox(
                   height: 55,
-                  width: size.width / 1.6,
+                  width: widget.size.width / 1.6,
                   child: AppButton(
-                      onClick: () {},
-                      text: 'Join Now',
+                      onClick: () async {
+                        if (!isJoin) {
+                          await controller.joinQuest(quest);
+                        }
+                      },
+                      text: isJoin ? "Joined" : 'Join Now',
                       fontFamily: Constants.workSansRegular,
                       textColor: Constants.colorTextWhite,
                       borderRadius: 10.0,
