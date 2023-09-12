@@ -8,6 +8,8 @@ import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_button.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
+import 'package:smartx_flutter_app/models/group_model.dart';
+import 'package:smartx_flutter_app/models/quest_model.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_screen.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_controller.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
@@ -94,31 +96,11 @@ class GroupDetailScreen extends StatelessWidget {
               Expanded(
                   child: TabBarView(
                 children: [
-                  FeedTabScreen(posts: [
-                    PostModel(
-                        text: 'First Dog',
-                        username: 'Tester',
-                        userImage:
-                            'https://firebasestorage.googleapis.com/v0/b/stroll-b2e07.appspot.com/o/profile%2F1690963975633?alt=media&token=04d7ace0-742f-4793-9684-a4447c5c6330',
-                        imagePath:
-                            'https://images.unsplash.com/photo-1611003228941-98852ba62227?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3348&q=80',
-                        userid: '1',
-                        id: '2',
-                        created: DateTime.now(),
-                        likedUsers: []),
-                    PostModel(
-                        text: 'Second Dog',
-                        username: 'Tester',
-                        userImage:
-                            'https://firebasestorage.googleapis.com/v0/b/stroll-b2e07.appspot.com/o/profile%2F1690963975633?alt=media&token=04d7ace0-742f-4793-9684-a4447c5c6330',
-                        imagePath:
-                            'https://images.unsplash.com/photo-1611003228941-98852ba62227?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3348&q=80',
-                        userid: '1',
-                        id: '2',
-                        created: DateTime.now(),
-                        likedUsers: [])
-                  ]),
-                  QuestsTabScreen(size: size)
+                  const FeedTabScreen(posts: []),
+                  QuestsTabScreen(
+                    size: size,
+                    group: controller.groupModel,
+                  )
                 ],
               ))
             ],
@@ -130,89 +112,104 @@ class GroupDetailScreen extends StatelessWidget {
 }
 
 class QuestsTabScreen extends StatelessWidget {
-  const QuestsTabScreen({
-    super.key,
-    required this.size,
-  });
-
+  QuestsTabScreen({super.key, required this.size, required this.group});
+  GroupModel group;
   final Size size;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: 3,
-        shrinkWrap: true,
-        itemBuilder: (_, i) {
-          return Column(
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("groups")
+            .doc(group.id)
+            .collection("quests")
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            final quests = snapshot.data!.docs
+                .map((e) =>
+                    QuestModel.fromJson(e.data() as Map<String, dynamic>))
+                .toList();
+            return ListView.builder(
+                itemCount: quests.length,
+                shrinkWrap: true,
+                itemBuilder: (_, i) {
+                  return Column(
+                    children: [
+                      questWidget(quests[i])
+                    ],
+                  );
+                });
+          }
+          return const SizedBox();
+        });
+  }
+  Widget questWidget(QuestModel quest){
+    return Container(
+      decoration: BoxDecoration(
+          color: Constants.colorOnBackground,
+          borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Constants.colorOnBackground,
-                    borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Image.asset(
-                              'assets/1.png',
-                              height: 40,
-                            )),
-                        const Text(
-                          'Daily Walk Challenge',
-                          style: TextStyle(
-                              fontFamily: Constants.workSansBold,
-                              fontSize: 16,
-                              color: Constants.colorSecondary),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Commit to taking your dog for a daily walk, exploring different routes and parks to keep things interesting for both of you..',
-                      style: TextStyle(
-                          fontFamily: Constants.workSansRegular,
-                          color: Constants.colorSecondary),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        Image.asset(
-                          'assets/time.png',
-                          width: 20,
-                        ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'July 1, 2023 to July 31, 2023',
-                          style: TextStyle(
-                              fontFamily: Constants.workSansLight,
-                              color: Constants.colorSecondary),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                        height: 55,
-                        width: size.width / 1.6,
-                        child: AppButton(
-                            onClick: () {},
-                            text: 'Join Now',
-                            fontFamily: Constants.workSansRegular,
-                            textColor: Constants.colorTextWhite,
-                            borderRadius: 10.0,
-                            fontSize: 16,
-                            color: Constants.colorSecondary)),
-                  ],
-                ),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image(image: NetworkImage(group.profileImage),height: 40,)),
+               const SizedBox(width: 10,),
+               Text(
+                quest.title,
+                style: const TextStyle(
+                    fontFamily: Constants.workSansBold,
+                    fontSize: 16,
+                    color: Constants.colorSecondary),
+              )
+            ],
+          ),
+          const SizedBox(height: 10),
+           Text(
+           quest.description, style: const TextStyle(
+                fontFamily: Constants.workSansRegular,
+                color: Constants.colorSecondary),
+          ),
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              Image.asset(
+                'assets/time.png',
+                width: 20,
+              ),
+              const SizedBox(width: 10),
+               Text(
+                quest.duration,
+                style: const TextStyle(
+                    fontFamily: Constants.workSansLight,
+                    color: Constants.colorSecondary),
               ),
             ],
-          );
-        });
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                  height: 55,
+                  width: size.width / 1.6,
+                  child: AppButton(
+                      onClick: () {},
+                      text: 'Join Now',
+                      fontFamily: Constants.workSansRegular,
+                      textColor: Constants.colorTextWhite,
+                      borderRadius: 10.0,
+                      fontSize: 16,
+                      color: Constants.colorSecondary)),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -248,10 +245,11 @@ class FeedTabScreen extends StatelessWidget {
                 Expanded(
                     child: InkWell(
                         onTap: () async {
-                          final res = await Get.toNamed(AddPostScreen.route,
-                              arguments: Get.find<GroupDetailController>()
-                                  .groupModel
-                                  .id,);
+                          final res = await Get.toNamed(
+                            AddPostScreen.route,
+                            arguments:
+                                Get.find<GroupDetailController>().groupModel.id,
+                          );
 
                           if (res is PostModel) {
                             Get.find<GroupDetailController>()
@@ -266,39 +264,40 @@ class FeedTabScreen extends StatelessWidget {
         StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection("posts")
-              .where("groupId",isEqualTo:controller.groupModel.id)
+              .where("groupId", isEqualTo: controller.groupModel.id)
               .snapshots(includeMetadataChanges: true),
           builder: (_, snapshot) {
             if (snapshot.hasError) {
-              return const Expanded(child: Center(child: Text("Something went wrong")));
+              return const Expanded(
+                  child: Center(child: Text("Something went wrong")));
             }
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator.adaptive());
             }
             if (snapshot.hasData) {
               final posts = snapshot.data!.docs
-                  .map((e) => PostModel.fromJson(
-                  e.data() as Map<String, dynamic>))
+                  .map((e) =>
+                      PostModel.fromJson(e.data() as Map<String, dynamic>))
                   .toList();
-              return
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: posts.length,
-                      // shrinkWrap: true,
-                      // physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (_, i) {
-                        final isLiked = posts[i].likedUsers.contains(
-                            FirebaseAuth.instance.currentUser?.uid);
+              return Expanded(
+                child: ListView.builder(
+                    itemCount: posts.length,
+                    // shrinkWrap: true,
+                    // physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (_, i) {
+                      final isLiked = posts[i]
+                          .likedUsers
+                          .contains(FirebaseAuth.instance.currentUser?.uid);
 
-                        return SinglePostWidget(
-                          postModel: posts[i].copyWith(isLiked: isLiked),
-                          isLiked: isLiked,
-                          onLikedTap: () {
-                            controller.toggleLike(posts[i], isLiked);
-                          },
-                        );
-                      }),
-                );
+                      return SinglePostWidget(
+                        postModel: posts[i].copyWith(isLiked: isLiked),
+                        isLiked: isLiked,
+                        onLikedTap: () {
+                          controller.toggleLike(posts[i], isLiked);
+                        },
+                      );
+                    }),
+              );
             }
             return const SizedBox();
           },
@@ -377,9 +376,14 @@ class SinglePostWidget extends StatelessWidget {
   final bool isLiked;
   bool? isGroup;
   final VoidCallback onLikedTap;
-String? userImagePath;
-   SinglePostWidget(
-      {super.key,required this.postModel,this.isGroup, this.userImagePath, required this.onLikedTap, this.isLiked = false});
+  String? userImagePath;
+  SinglePostWidget(
+      {super.key,
+      required this.postModel,
+      this.isGroup,
+      this.userImagePath,
+      required this.onLikedTap,
+      this.isLiked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -394,35 +398,38 @@ String? userImagePath;
           Row(
             children: [
               StreamBuilder(
-             stream: FirebaseFirestore.instance
-    .collection("user")
-        .doc(postModel.userid)
-        .snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-               if(snapshot.hasData){
-                 UserModel user =
-                 UserModel.fromJson(snapshot.data!.data()!);
-                return Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                    child: (user.imagePath.toString() == null ||
-                            user.imagePath.toString() == '')
-                        ? Image.asset('assets/4.png', height: 60)
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: CachedNetworkImage(
-                                imageUrl:user.imagePath!,
-                                height: 60,
-                                width: 60,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator.adaptive())),
-                          ));}else{
-               return const CircularProgressIndicator();
-               }
-                }
-              ),
+                  stream: FirebaseFirestore.instance
+                      .collection("user")
+                      .doc(postModel.userid)
+                      .snapshots(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasData) {
+                      UserModel user =
+                          UserModel.fromJson(snapshot.data!.data()!);
+                      return Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50)),
+                          child: (user.imagePath.toString() == null ||
+                                  user.imagePath.toString() == '')
+                              ? Image.asset('assets/4.png', height: 60)
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: CachedNetworkImage(
+                                      imageUrl: user.imagePath!,
+                                      height: 60,
+                                      width: 60,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                              child: CircularProgressIndicator
+                                                  .adaptive())),
+                                ));
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -434,8 +441,8 @@ String? userImagePath;
                         fontFamily: Constants.workSansMedium,
                         color: Constants.colorSecondary),
                   ),
-                  Text(DateFormat('MMMM dd, yyyy')
-                            .format(postModel.created),
+                  Text(
+                    DateFormat('MMMM dd, yyyy').format(postModel.created),
                     style: const TextStyle(
                         fontFamily: Constants.workSansLight,
                         color: Constants.colorSecondary),
@@ -452,8 +459,7 @@ String? userImagePath;
                 color: Constants.colorSecondary),
           ),
           const SizedBox(height: 10),
-          (postModel.imagePath == null ||
-                  postModel.imagePath.toString() == '')
+          (postModel.imagePath == null || postModel.imagePath.toString() == '')
               ? Image.asset('assets/2.png')
               : GestureDetector(
                   onTap: () =>
@@ -469,10 +475,13 @@ String? userImagePath;
                 onTap: () {
                   onLikedTap.call();
                   print(isLiked);
-                  if(FirebaseAuth.instance.currentUser!.uid != postModel.userid && !isLiked ){
-                  FirestoreDatabaseHelper.instance().sendNotification(postModel,false);
-                }
-                  },
+                  if (FirebaseAuth.instance.currentUser!.uid !=
+                          postModel.userid &&
+                      !isLiked) {
+                    FirestoreDatabaseHelper.instance()
+                        .sendNotification(postModel, false);
+                  }
+                },
                 child: Icon(
                   isLiked ? Icons.favorite : Icons.favorite_border_outlined,
                   color: isLiked
@@ -491,7 +500,7 @@ String? userImagePath;
                 style: const TextStyle(
                     fontFamily: Constants.workSansLight,
                     color: Constants.colorSecondary),
-              ),//
+              ), //
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: () =>

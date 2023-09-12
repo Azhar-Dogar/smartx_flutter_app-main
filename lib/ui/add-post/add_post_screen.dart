@@ -30,7 +30,7 @@ class AddPostScreen extends StatelessWidget {
       ..injectContext(context)
       ..showProgressDialog('creating post....');
 
-    final res = await controller.addPost(args??"");
+    final res = await controller.addPost(args ?? "");
     dialogHelper.dismissProgress();
     if (res is PostModel) {
       snackbarHelper.showSnackbar(
@@ -47,7 +47,7 @@ class AddPostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AddPostController());
-    final  args = Get.arguments;
+    final args = Get.arguments;
     print(args);
     print("args");
     return Scaffold(
@@ -72,7 +72,7 @@ class AddPostScreen extends StatelessWidget {
               ])),
           actions: [
             GestureDetector(
-                onTap: () => _addPost(context,args),
+                onTap: () => _addPost(context, args),
                 child: const Padding(
                     padding: EdgeInsets.only(right: 8.0),
                     child: Text('POST',
@@ -89,8 +89,8 @@ class AddPostScreen extends StatelessWidget {
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                        padding:
-                            const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                        padding: const EdgeInsets.only(
+                            top: 20.0, left: 20, right: 20),
                         child: Row(children: [
                           Container(
                               margin: const EdgeInsets.only(right: 10),
@@ -102,7 +102,8 @@ class AddPostScreen extends StatelessWidget {
                                       controller.user.value?.imagePath != null)
                                   ? CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                          controller.user.value?.imagePath ?? ""),
+                                          controller.user.value?.imagePath ??
+                                              ""),
                                       radius: 25,
                                     )
                                   : Image.asset('assets/4.png', height: 50)),
