@@ -6,8 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/models/dog_model.dart';
+import 'package:smartx_flutter_app/models/quest_model.dart';
 import 'package:smartx_flutter_app/models/walk_model.dart';
 
 import '../../models/post_model.dart';
@@ -18,12 +20,13 @@ class MapWalkController extends GetxController {
     getCurrentUser();
     getUserPosts();
     getUserWalks();
+    getAchievement();
   }
-
-  dynamic stream = FirebaseFirestore.instance
-      .collection("user")
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("walks")
+  Stream<QuerySnapshot<Map<String, dynamic>>> stream = FirebaseFirestore
+      .instance
+      .collection(_USER)
+      .doc(userId)
+      .collection(_ACHIEVEMENTS)
       .snapshots();
   static String _USER = "user";
   static String _POSTS = "posts";
@@ -32,14 +35,15 @@ class MapWalkController extends GetxController {
   Rx<bool> isStart = Rx<bool>(false);
   RxList badges = [].obs;
   Rx<UserModel?> userModel = Rx<UserModel?>(null);
-  String userId = FirebaseAuth.instance.currentUser!.uid;
+  static String userId = FirebaseAuth.instance.currentUser!.uid;
   List<LatLng> pathPoints = [];
   RxDouble totalDistance = 0.0.obs;
   DateTime modified = DateTime.now();
   RxInt minutes = 0.obs;
   RxInt seconds = 0.obs;
   RxInt hours = 0.obs;
-  RxList userWalks = [].obs;
+  RxList<WalkModel> userWalks = <WalkModel>[].obs;
+  RxList<AchievementModel> achievements = <AchievementModel>[].obs;
   RxList streakList = [].obs;
   RxList userPosts = [].obs;
   DateTime time = DateTime.now();
@@ -47,10 +51,14 @@ class MapWalkController extends GetxController {
   List<DogModel> selectedDogs = [];
   Timer? timer;
   final titleController = TextEditingController();
-  getCurrentUser(){
+  getCurrentUser() {
     print("Here");
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    FirebaseFirestore.instance.collection("user").doc(uid).snapshots().listen((event) {
+    FirebaseFirestore.instance
+        .collection("user")
+        .doc(uid)
+        .snapshots()
+        .listen((event) {
       print(event.data());
       print("event data");
       final user = UserModel.fromJson(event.data()!);
@@ -58,15 +66,46 @@ class MapWalkController extends GetxController {
       if (userModel.value != null) {
         if (userModel.value!.userComments != null) {
           if (userModel.value!.userComments! >= 2) {
-        badges.add("20 Comments");
+            badges.add("20 Comments");
           }
         }
       }
       // print(user.value?.firstName);
       // print("first name");
     });
-
   }
+
+  getAchievement() {
+    stream.listen((event) {
+      achievements = <AchievementModel>[].obs;
+      event.docs.forEach((element) {
+        achievements.add(AchievementModel.fromJson(element.data()));
+      });
+      achievements.obs;
+      print("achievements");
+      print(achievements.length);
+      update();
+    });
+  }
+
+  addQuestStreak(QuestModel questModel) async {
+    double totalDistance = 0.0;
+    List<WalkModel> questWalks = [];
+    for (var i = 0; i < questModel.duration; i++) {
+      DateTime date = DateTime.now().subtract(Duration(days: i));
+      var e =
+          userWalks.firstWhere((element) => element.dateTime.day == date.day);
+      questWalks.add(e);
+    }
+    if (questWalks.length == questModel.duration) {
+      await addAchievement(questModel.title);
+    }
+    for (var element in userWalks) {
+      totalDistance = totalDistance + element.distance;
+    }
+    print(totalDistance);
+  }
+
   double calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var a = 0.5 -
@@ -101,36 +140,39 @@ class MapWalkController extends GetxController {
       hours.value = modified.hour;
     });
   }
-  getUserPosts(){
+
+  getUserPosts() {
     userPosts = [].obs;
     FirebaseFirestore.instance
         .collection(_POSTS)
-        .where("userid",isEqualTo: userId).snapshots().listen((event) {
-          // userPosts = [].obs;
-          for (var element in event.docs) {
-            userPosts.add(PostModel.fromJson(element.data()));
-          }
-          if(userPosts.length >= 3){
-            badges.add("20 Posts");
-          }
+        .where("userid", isEqualTo: userId)
+        .snapshots()
+        .listen((event) {
+      // userPosts = [].obs;
+      for (var element in event.docs) {
+        userPosts.add(PostModel.fromJson(element.data()));
+      }
+      if (userPosts.length >= 3) {
+        badges.add("20 Posts");
+      }
     });
   }
-  getUserComments(){
 
-  }
+  getUserComments() {}
   getUserWalks() {
-    userWalks = [].obs;
+    userWalks = <WalkModel>[].obs;
     streakList = [].obs;
     FirebaseFirestore.instance
         .collection(_USER)
         .doc(userId)
-        .collection(_WALKS).orderBy("dateTime", descending: true)
+        .collection(_WALKS)
+        .orderBy("dateTime", descending: true)
         .snapshots()
         .listen((event) {
-          // RxList tempWalks = [].obs;
-          streakList = [].obs;
-          DateTime currentDate = DateTime.now();
-          DateTime weekStart = currentDate.subtract(const Duration(days: 6));
+      // RxList tempWalks = [].obs;
+      streakList = [].obs;
+      DateTime currentDate = DateTime.now();
+      DateTime weekStart = currentDate.subtract(const Duration(days: 6));
       for (var element in event.docs) {
         userWalks.add(WalkModel.fromJson(element.data()));
       }
@@ -154,16 +196,18 @@ class MapWalkController extends GetxController {
       // print(streakList.length);
     });
   }
-  addAchievement(){
+
+  addAchievement(String title) async {
     CollectionReference ref = FirebaseFirestore.instance
         .collection(_USER)
         .doc(userId)
         .collection(_ACHIEVEMENTS);
     var doc = ref.doc();
-    doc.set(AchievementModel(title: "1 week streak", id: doc.id).toJson());
+    await doc.set(AchievementModel(title: title, id: doc.id).toJson());
   }
+
   addWalk() async {
-    userWalks = [].obs;
+    userWalks = <WalkModel>[].obs;
     CollectionReference ref = FirebaseFirestore.instance
         .collection("user")
         .doc(userId)
@@ -173,11 +217,59 @@ class MapWalkController extends GetxController {
             title: titleController.text,
             dogs: selectedDogs,
             paths: pathPoints,
-            dateTime: DateTime.now().add(const Duration(days: 16)),
+            dateTime: DateTime.now(),
             duration: hours.value * 3600 + minutes.value * 60 + seconds.value,
             distance: totalDistance.value,
             id: doc.id)
         .toJson());
+    if (DateTime.now().hour >= 20) {
+      List tempList =
+          achievements.where((p0) => p0.title == "Night Owl").toList();
+      if (tempList.isEmpty) {
+        addAchievement("Night Owl");
+      }
+    } else if (DateTime.now().hour <= 7) {
+      List tempList =
+          achievements.where((p0) => p0.title == "Early Bird").toList();
+      if (tempList.isEmpty) {
+        addAchievement("Early Bird");
+      }
+    }
+    List tempWeek =
+        achievements.where((p0) => p0.title == "1 week streak").toList();
+    if (tempWeek.isEmpty) {
+      List walks = checkStreak(7);
+      if (walks.length >= 7) {
+        addAchievement("1 week streak");
+      }
+    }
+    List tempMonth =
+        achievements.where((p0) => p0.title == "1 month streak").toList();
+    if (tempMonth.isEmpty) {
+      List walks = checkStreak(30);
+      if (walks.length >= 30) {
+        addAchievement("1 month streak");
+      }
+    }
+  }
+
+  List<WalkModel> checkStreak(int days) {
+    List<WalkModel> streakList = [];
+    DateTime currentDate = DateTime.now();
+    for (var i = 0; i <= days; i++) {
+      List<WalkModel> tempList = userWalks
+          .where((p0) =>
+              p0.dateTime.day == currentDate.subtract(Duration(days: i)).day)
+          .toList();
+      // var foundModel = userWalks.firstWhere(
+      //     (model) =>
+      //         model.dateTime.day == currentDate.subtract(Duration(days: i)).day,
+      //     orElse: () => null);
+      if (tempList.isNotEmpty) {
+        streakList.add(tempList.first);
+      }
+    }
+    return streakList;
   }
 
   String formatSecondsToHMS(int seconds) {

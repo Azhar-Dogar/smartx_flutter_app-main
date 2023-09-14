@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,6 +67,16 @@ class AddPostController extends GetxController {
       return res;
     } catch (_) {
       return null;
+    }
+  }
+  updateUser() async {
+    if (user.value != null) {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection("user").doc(uid).update({
+        "userPosts": (user.value!.userComments == null)
+            ? 0 + 1
+            : user.value!.userComments! + 1
+      });
     }
   }
 }

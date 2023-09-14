@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_button.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
+import 'package:smartx_flutter_app/common/questWidget.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
 import 'package:smartx_flutter_app/ui/main/notifications/notification_screen.dart';
@@ -18,6 +19,7 @@ import 'package:smartx_flutter_app/util/constants.dart';
 
 import '../../../models/post_model.dart';
 import '../../../models/quest_model.dart';
+import '../../map-walk/map_walk_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String key_title = '/home_screen_title';
@@ -29,13 +31,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final mapWalkController = Get.put(MapWalkController());
   late Size size;
   @override
   Widget build(BuildContext context) {
     size = context.screenSize;
     final controller = Get.put(MainScreenController());
-    print(controller.userQuests.length);
-    print("home screen");
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -110,11 +111,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 250,
                           width: size.width,
                           child: ListView.builder(
-                            itemCount: quests.length,
-                            // shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (_, i) => quest(quests[i]),
-                          ),
+                              itemCount: quests.length,
+                              // shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (_, i) {
+                                return QuestWidget(model: quests[i]);
+                              }),
                         )
                       ],
                     );
@@ -194,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 
-  Widget quest(QuestModel model) {
+  Widget quest(QuestModel model, bool isComplete) {
     return Container(
       height: 250,
       width: size.width - 50,
@@ -243,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(width: 10),
               Text(
-                model.duration,
+                "${model.duration} days",
                 style: const TextStyle(
                   fontFamily: Constants.workSansLight,
                 ),
@@ -260,8 +262,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 55,
                   width: size.width / 1.6,
                   child: AppButton(
-                      onClick: () {},
-                      text: 'Mark as complete',
+                      onClick: () {
+                        if (!isComplete) {
+                          mapWalkController.addQuestStreak(model);
+                        }
+                      },
+                      text: isComplete ? "Completed" : 'Mark as complete',
                       fontFamily: Constants.workSansRegular,
                       textColor: Constants.colorTextWhite,
                       borderRadius: 10.0,

@@ -2,7 +2,7 @@ class QuestModel {
   String id;
   String title;
   String description;
-  String duration;
+  int duration;
   String groupImage;
   List<String> users;
   QuestModel(

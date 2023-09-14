@@ -167,9 +167,9 @@ class StopWalkScreen extends StatelessWidget {
                           color: Constants.colorOnSurface,
                           fontFamily: Constants.workSansRegular,
                           text: 'Save',
-                          onClick: () {
+                          onClick: () async {
                             Functions.showLoaderDialog(context);
-                            controller.addWalk();
+                            await controller.addWalk();
                             Get.back();
                             shareDialogue();
                           }),

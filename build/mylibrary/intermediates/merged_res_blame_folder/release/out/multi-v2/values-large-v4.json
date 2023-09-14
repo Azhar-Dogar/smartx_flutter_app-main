@@ -4,7 +4,7 @@
             "outputFile": "com.example.mylibrary-mergeReleaseResources-28:/values-large-v4/values-large-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\dea76c19863d8ed27f4caf2239860e20\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\662809ef2accf1f14a9ed04d3c9192d6\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\b4b63ffa9dc77147a649ea9d1f9ad1de\\transformed\\material-1.9.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\e7990482ab6bdf0ab19597a5d7a02630\\transformed\\material-1.9.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,10",
                         "startColumns": "4,4,4,4",
@@ -38,7 +38,7 @@
             "outputFile": "com.example.mylibrary-merged_res-30:/values-large-v4/values-large-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\dea76c19863d8ed27f4caf2239860e20\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\662809ef2accf1f14a9ed04d3c9192d6\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -48,7 +48,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\b4b63ffa9dc77147a649ea9d1f9ad1de\\transformed\\material-1.9.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\e7990482ab6bdf0ab19597a5d7a02630\\transformed\\material-1.9.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,10",
                         "startColumns": "4,4,4,4",

@@ -7,6 +7,7 @@ import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
+import 'package:smartx_flutter_app/ui/auth/reset_password.dart';
 import 'package:smartx_flutter_app/ui/find-and-view/find_and_view_screen.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/ui/user-detail/user_detail_screen.dart';
@@ -33,23 +34,6 @@ class ProfileScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Align(
-              alignment: Alignment.topLeft,
-              child: InkWell(
-                child: Row(
-                  children: [
-                    Icon(Icons.arrow_back, color: Constants.colorOnSurface),
-                    Text(
-                      'Back',
-                      style: TextStyle(
-                          fontFamily: Constants.workSansRegular,
-                          color: Constants.colorOnSurface,
-                          fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(height: 50),
             StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -111,7 +95,9 @@ class ProfileScreen extends StatelessWidget {
             SIngleCard(
                 imagePath: 'assets/Lock.png',
                 title: 'Reset Password',
-                onClick: () {}),
+                onClick: () {
+                  Get.to(const ResetPassword());
+                }),
             const SizedBox(height: 20),
             SIngleCard(
                 imagePath: 'assets/Lock.png',

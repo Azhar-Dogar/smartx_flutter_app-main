@@ -12,6 +12,7 @@ class UserModel {
   final String? imagePath;
   final String? created;
   final int? userComments;
+  final int? userPosts;
   final bool isFollowing;
 
   UserModel(
@@ -19,6 +20,7 @@ class UserModel {
         required this.lastName,
         required this.email,
         required this.id,
+        this.userPosts,
         required this.fcmToken,
         this.isFollowing = false,
         this.bio,
@@ -46,6 +48,7 @@ class UserModel {
     json.containsKey('country') ? json['country'] ?? '' : '';
     final String id = json.containsKey('id') ? json['id'] ?? '' : '';
     final int userComments = json.containsKey('userComments') ? json['userComments'] ?? 0 : 0;
+    final int userPosts = json.containsKey('userPosts') ? json['userPosts'] ?? 0 : 0;
     return UserModel(
         firstName: fname,
         lastName: lname,
@@ -55,6 +58,7 @@ class UserModel {
         id: id,
         created: created,
         bio: bio,
+        userPosts: userPosts,
         imagePath: imagePath,
         country: country,
         userComments: userComments,

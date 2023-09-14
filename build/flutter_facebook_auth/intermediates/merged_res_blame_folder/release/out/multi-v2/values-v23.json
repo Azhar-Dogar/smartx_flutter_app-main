@@ -4,7 +4,7 @@
             "outputFile": "app.meedu.flutter_facebook_auth-mergeReleaseResources-20:/values-v23/values-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\82ce5b33de156ef4c0f8d981113a96f8\\transformed\\appcompat-1.1.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\e016467c2494b57d5dd463d5d03493a4\\transformed\\appcompat-1.1.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,20,34,35,36,37,41,42,43,44",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\75c55c8f4d0c4c0d85a626830c2d13c8\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\45a27f1cbff0e6856c5c75b0b231dddc\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -47,7 +47,7 @@
             "outputFile": "app.meedu.flutter_facebook_auth-merged_res-22:/values-v23/values-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\82ce5b33de156ef4c0f8d981113a96f8\\transformed\\appcompat-1.1.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\e016467c2494b57d5dd463d5d03493a4\\transformed\\appcompat-1.1.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,20,34,35,36,37,41,42,43,44",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -66,7 +66,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\75c55c8f4d0c4c0d85a626830c2d13c8\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\45a27f1cbff0e6856c5c75b0b231dddc\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

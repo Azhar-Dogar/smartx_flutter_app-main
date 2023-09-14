@@ -107,7 +107,7 @@ class PostModel {
     'userImage': userImage,
     'id': id,
     'imagePath': imagePath,
-    'created': FieldValue.serverTimestamp()
+    'created': created
   };
 
   @override

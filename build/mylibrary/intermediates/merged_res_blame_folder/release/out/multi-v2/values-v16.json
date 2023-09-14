@@ -4,7 +4,7 @@
             "outputFile": "com.example.mylibrary-merged_res-30:/values-v16/values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\9c352cd3718cbc4799f21f36cb242487\\transformed\\core-1.8.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\0c1a61f67530d3b624473266751ca90d\\transformed\\core-1.8.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\dea76c19863d8ed27f4caf2239860e20\\transformed\\appcompat-1.5.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\662809ef2accf1f14a9ed04d3c9192d6\\transformed\\appcompat-1.5.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -38,7 +38,7 @@
             "outputFile": "com.example.mylibrary-mergeReleaseResources-28:/values-v16/values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\9c352cd3718cbc4799f21f36cb242487\\transformed\\core-1.8.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\0c1a61f67530d3b624473266751ca90d\\transformed\\core-1.8.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -48,7 +48,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\dea76c19863d8ed27f4caf2239860e20\\transformed\\appcompat-1.5.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\662809ef2accf1f14a9ed04d3c9192d6\\transformed\\appcompat-1.5.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

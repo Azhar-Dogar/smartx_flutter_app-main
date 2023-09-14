@@ -4,7 +4,7 @@
             "outputFile": "com.example.mylibrary-merged_res-30:/values-ka/values-ka.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\b4b63ffa9dc77147a649ea9d1f9ad1de\\transformed\\material-1.9.0\\res\\values-ka\\values-ka.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\e7990482ab6bdf0ab19597a5d7a02630\\transformed\\material-1.9.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\dea76c19863d8ed27f4caf2239860e20\\transformed\\appcompat-1.5.0\\res\\values-ka\\values-ka.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\662809ef2accf1f14a9ed04d3c9192d6\\transformed\\appcompat-1.5.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -40,7 +40,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\9c352cd3718cbc4799f21f36cb242487\\transformed\\core-1.8.0\\res\\values-ka\\values-ka.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\0c1a61f67530d3b624473266751ca90d\\transformed\\core-1.8.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -62,7 +62,7 @@
             "outputFile": "com.example.mylibrary-mergeReleaseResources-28:/values-ka/values-ka.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\b4b63ffa9dc77147a649ea9d1f9ad1de\\transformed\\material-1.9.0\\res\\values-ka\\values-ka.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\e7990482ab6bdf0ab19597a5d7a02630\\transformed\\material-1.9.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -81,7 +81,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\dea76c19863d8ed27f4caf2239860e20\\transformed\\appcompat-1.5.0\\res\\values-ka\\values-ka.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\662809ef2accf1f14a9ed04d3c9192d6\\transformed\\appcompat-1.5.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -98,7 +98,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\9c352cd3718cbc4799f21f36cb242487\\transformed\\core-1.8.0\\res\\values-ka\\values-ka.xml",
+                    "source": "C:\\Users\\PC\\.gradle\\caches\\transforms-3\\0c1a61f67530d3b624473266751ca90d\\transformed\\core-1.8.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

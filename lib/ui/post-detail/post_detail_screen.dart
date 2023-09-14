@@ -8,7 +8,9 @@ import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/common/stream_comments_wrapper.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/models/post_model.dart';
+import 'package:smartx_flutter_app/models/user_model.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
+import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -24,6 +26,7 @@ class PostDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<PostDetailController>();
+    final mapWalkController = Get.find<MapWalkController>();
     final size = context.screenSize;
     PostModel args = Get.arguments;
     print(args);
@@ -57,18 +60,22 @@ class PostDetailScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GetBuilder<PostDetailController>(builder: (con) {
-                          final isLiked = controller.postModel.likedUsers.contains(
-                              FirebaseAuth.instance.currentUser?.uid);
+                          final isLiked = controller.postModel.likedUsers
+                              .contains(FirebaseAuth.instance.currentUser?.uid);
                           print("comments");
                           print(controller.postModel.commentsCount);
                           return SinglePostWidget(
                             postModel: controller.postModel,
                             isLiked: isLiked,
                             onLikedTap: () {
-                              controller.toggleLike(controller.postModel,
-                                 isLiked);
-                              if(FirebaseAuth.instance.currentUser!.uid != controller.postModel.userid && !isLiked ){
-                                FirestoreDatabaseHelper.instance().sendNotification(controller.postModel,false);
+                              controller.toggleLike(
+                                  controller.postModel, isLiked);
+                              if (FirebaseAuth.instance.currentUser!.uid !=
+                                      controller.postModel.userid &&
+                                  !isLiked) {
+                                FirestoreDatabaseHelper.instance()
+                                    .sendNotification(
+                                        controller.postModel, false);
                               }
                             },
                           );
@@ -151,7 +158,9 @@ class PostDetailScreen extends StatelessWidget {
                                                                 fontSize: 16,
                                                                 color: Constants
                                                                     .colorSecondary)),
-                                                        const SizedBox(width: 5,),
+                                                        const SizedBox(
+                                                          width: 5,
+                                                        ),
                                                         Expanded(
                                                           child: Text(
                                                               timeago.format(
@@ -202,29 +211,44 @@ class PostDetailScreen extends StatelessWidget {
                                       ]));
                             })
                       ]))),
-          Container(
-              margin: const EdgeInsets.only(top: 10),
-              color: Constants.colorSecondaryVariant,
-              child: AppTextField(
-                height: 40,
-                controller: controller.commentsTECController,
-                hint: 'write comment',
-                textInputType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                isError: false,
-                hasBorder: false,
-                onSuffixClick: (){
-                  controller.uploadComment();
-                  controller.updateUser();
-                  if(FirebaseAuth.instance.currentUser!.uid != controller.postModel.userid){
-                    FirestoreDatabaseHelper.instance().sendNotification(controller.postModel,true);
-                  }
-                  },
-                suffixIcon: const Icon(Icons.send_rounded,
-                    color: Constants.colorSecondary),
-                // prefixIcon: Image.asset('assets/attachment.png',
-                //     color: Constants.colorSecondary, width: 20)
-              ))
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("user")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if(snapshot.hasData){
+                  UserModel user = UserModel.fromJson(snapshot.data.data());
+                return Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    color: Constants.colorSecondaryVariant,
+                    child: AppTextField(
+                      height: 40,
+                      controller: controller.commentsTECController,
+                      hint: 'write comment',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      isError: false,
+                      hasBorder: false,
+                      onSuffixClick: () async {
+                        await controller.uploadComment();
+                        await controller.updateUser();
+                        if(user.userComments == 5){
+                          await mapWalkController.addAchievement("20 comments");
+                        }
+                        if (FirebaseAuth.instance.currentUser!.uid !=
+                            controller.postModel.userid) {
+                        await  FirestoreDatabaseHelper.instance()
+                              .sendNotification(controller.postModel, true);
+                        }
+                      },
+                      suffixIcon: const Icon(Icons.send_rounded,
+                          color: Constants.colorSecondary),
+                      // prefixIcon: Image.asset('assets/attachment.png',
+                      //     color: Constants.colorSecondary, width: 20)
+                    ));}
+                return const SizedBox();
+              })
         ],
       ),
     );

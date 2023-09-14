@@ -138,7 +138,7 @@ class _QuestsTabScreenState extends State<QuestsTabScreen> {
                 .toList();
             return ListView.builder(
                 itemCount: quests.length,
-                shrinkWrap: true,
+                // shrinkWrap: true,
                 itemBuilder: (_, i) {
                   bool isJoin = false;
                   if (quests[i]
@@ -201,7 +201,7 @@ class _QuestsTabScreenState extends State<QuestsTabScreen> {
               ),
               const SizedBox(width: 10),
               Text(
-                quest.duration,
+                "${quest.duration} days",
                 style: const TextStyle(
                     fontFamily: Constants.workSansLight,
                     color: Constants.colorSecondary),
