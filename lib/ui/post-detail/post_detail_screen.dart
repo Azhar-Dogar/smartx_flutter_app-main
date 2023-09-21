@@ -233,7 +233,7 @@ class PostDetailScreen extends StatelessWidget {
                       onSuffixClick: () async {
                         await controller.uploadComment();
                         await controller.updateUser();
-                        if(user.userComments == 5){
+                        if(user.userComments! >= 5){
                           await mapWalkController.addAchievement("20 comments");
                         }
                         if (FirebaseAuth.instance.currentUser!.uid !=

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 import 'package:smartx_flutter_app/extension/string_extention.dart';
 
+import '../../../models/achievement_model.dart';
 import '../../../models/user_model.dart';
 
 class SignUpController extends GetxController {
@@ -63,7 +65,7 @@ class SignUpController extends GetxController {
         await _sharedPreferenceHelper.insertUser(userData);
         await _sharedPreferenceHelper.savePassword(password);
       }
-
+      addAchievement("New Bie");
       return '';
     } on FirebaseAuthException catch (e) {
       return _firebaseAuthHelper
@@ -72,5 +74,14 @@ class SignUpController extends GetxController {
     } catch (e) {
       return null;
     }
+  }
+  addAchievement(String title) async {
+    var userId = FirebaseAuth.instance.currentUser!.uid;
+    CollectionReference ref = FirebaseFirestore.instance
+        .collection("user")
+        .doc(userId)
+        .collection("achievements");
+    var doc = ref.doc();
+    await doc.set(AchievementModel(title: title, id: doc.id).toJson());
   }
 }

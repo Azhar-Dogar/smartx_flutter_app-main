@@ -79,7 +79,7 @@ class AddPostScreen extends StatelessWidget {
                   onTap: () async {
                     await _addPost(context, args);
                       await controller.updateUser();
-                      if(controller.user.value?.userPosts==5){
+                      if(controller.user.value!.userPosts! >= 5){
                         mapWalkController.addAchievement("20 posts");
                       }
                     },

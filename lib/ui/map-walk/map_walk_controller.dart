@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
-
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
+import 'package:geolocator/geolocator.dart' as geo_locator;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +15,15 @@ import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/models/dog_model.dart';
 import 'package:smartx_flutter_app/models/quest_model.dart';
 import 'package:smartx_flutter_app/models/walk_model.dart';
+import 'package:smartx_flutter_app/models/weather_model.dart';
 
 import '../../models/post_model.dart';
 import '../../models/user_model.dart';
+import 'package:http/http.dart' as http;
 
 class MapWalkController extends GetxController {
   MapWalkController() {
+    _requestLocationPermission();
     getCurrentUser();
     getUserPosts();
     getUserWalks();
@@ -43,6 +50,7 @@ class MapWalkController extends GetxController {
   RxInt seconds = 0.obs;
   RxInt hours = 0.obs;
   RxList<WalkModel> userWalks = <WalkModel>[].obs;
+  RxList<WeatherModel> hourlyWeather = <WeatherModel>[].obs;
   RxList<AchievementModel> achievements = <AchievementModel>[].obs;
   RxList streakList = [].obs;
   RxList userPosts = [].obs;
@@ -158,6 +166,19 @@ class MapWalkController extends GetxController {
     });
   }
 
+  getWeatherInfo(LatLng location) async {
+    var res = await http.get(Uri.parse(
+        "https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&hourly=rain"));
+    if (res.statusCode == 200) {
+      var jsonData = jsonDecode(res.body);
+      for (var i = 0; i < jsonData["hourly"]["time"].length; i++) {
+        hourlyWeather.add(WeatherModel(
+            time: jsonData["hourly"]["time"][i],
+            waterRange: jsonData["hourly"]["rain"][i]));
+      }
+    }
+  }
+
   getUserComments() {}
   getUserWalks() {
     userWalks = <WalkModel>[].obs;
@@ -176,24 +197,8 @@ class MapWalkController extends GetxController {
       for (var element in event.docs) {
         userWalks.add(WalkModel.fromJson(element.data()));
       }
-      // print("walks");
-      // print(userWalks.length);
-      //     AchievementModel? foundModel = achievements.firstWhere((model) => model.title == "1 week streak", orElse: () => null);
-      // userWalks = tempWalks;
-      //     if(foundModel == null){
-      // for(var i = 0; i<7 ; i++ ){
-      // for (var element in userWalks) {
-      //   if(weekStart.add(Duration(days: i)).day == element.dateTime.day){
-      //     print("match");
-      //      streakList.add(element);
-      //   }
-      // }}
-      // if(streakList.length>= 4){
-      //   // addAchievement();
-      // }}
-      // print("streak");
-      // print(userWalks.length);
-      // print(streakList.length);
+      print("here is user walks");
+      print(userWalks.length);
     });
   }
 
@@ -222,37 +227,24 @@ class MapWalkController extends GetxController {
             distance: totalDistance.value,
             id: doc.id)
         .toJson());
+    if(userWalks.length <= 1){
+      addFirstWalkBadge();
+    }
     if (DateTime.now().hour >= 20) {
-      List tempList =
-          achievements.where((p0) => p0.title == "Night Owl").toList();
-      if (tempList.isEmpty) {
-        addAchievement("Night Owl");
-      }
+      addNightOwl();
     } else if (DateTime.now().hour <= 7) {
-      List tempList =
-          achievements.where((p0) => p0.title == "Early Bird").toList();
-      if (tempList.isEmpty) {
-        addAchievement("Early Bird");
-      }
+      addEarlyBird();
     }
-    List tempWeek =
-        achievements.where((p0) => p0.title == "1 week streak").toList();
-    if (tempWeek.isEmpty) {
-      List walks = checkStreak(7);
-      if (walks.length >= 7) {
-        addAchievement("1 week streak");
-      }
-    }
-    List tempMonth =
-        achievements.where((p0) => p0.title == "1 month streak").toList();
-    if (tempMonth.isEmpty) {
-      List walks = checkStreak(30);
-      if (walks.length >= 30) {
-        addAchievement("1 month streak");
-      }
-    }
+    addRainyBadge();
+    addWeeklyBadge();
+    addMonthlyBadge();
   }
-
+  addFirstWalkBadge(){
+    List tempList =
+    achievements.where((p0) => p0.title == "First Walk").toList();
+    if(tempList.isEmpty){
+      addAchievement("First Walk");
+  }}
   List<WalkModel> checkStreak(int days) {
     List<WalkModel> streakList = [];
     DateTime currentDate = DateTime.now();
@@ -282,5 +274,83 @@ class MapWalkController extends GetxController {
     String secondsString = remainingSeconds.toString().padLeft(2, '0');
 
     return '$hoursString:$minutesString:$secondsString';
+  }
+
+  addNightOwl() {
+    List tempList =
+        achievements.where((p0) => p0.title == "Night Owl").toList();
+    if (tempList.isEmpty) {
+      addAchievement("Night Owl");
+    }
+  }
+
+  addEarlyBird() {
+    List tempList =
+        achievements.where((p0) => p0.title == "Early Bird").toList();
+    if (tempList.isEmpty) {
+      addAchievement("Early Bird");
+    }
+  }
+
+  addWeeklyBadge() {
+    List tempWeek =
+        achievements.where((p0) => p0.title == "1 week streak").toList();
+    if (tempWeek.isEmpty) {
+      List walks = checkStreak(7);
+      if (walks.length >= 7) {
+        addAchievement("1 week streak");
+      }
+    }
+  }
+
+  addMonthlyBadge() {
+    List tempMonth =
+        achievements.where((p0) => p0.title == "1 month streak").toList();
+    if (tempMonth.isEmpty) {
+      List walks = checkStreak(30);
+      if (walks.length >= 30) {
+        addAchievement("1 month streak");
+      }
+    }
+  }
+  addRainyBadge() async {
+    bool match = false;
+    List tempList =
+    achievements.where((p0) => p0.title == "Rainy Walk").toList();
+    if(tempList.isEmpty){
+    for (var element in hourlyWeather) {
+      DateTime dateTime = DateTime.parse(element.time);
+      if(dateTime.day == DateTime.now().day && dateTime.hour == DateTime.now().hour){
+        if(element.waterRange != 0.0){
+         match = true;
+        }
+        if(match){
+          await addAchievement("Rainy Walk");
+          return;
+        }
+      }
+    }}
+   }
+  Future<void> _requestLocationPermission() async {
+    final permission_handler.PermissionStatus status =
+        await permission_handler.Permission.location.request();
+    if (status.isGranted) {
+      var location = await _getLocation();
+      if (location != null) {
+        await getWeatherInfo(location);
+      }
+    } else {}
+  }
+
+  Future<LatLng?> _getLocation() async {
+    try {
+      geo_locator.Position position =
+          await geo_locator.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo_locator.LocationAccuracy.high,
+      );
+      return LatLng(position.latitude, position.longitude);
+    } catch (e) {
+      return null;
+    }
   }
 }

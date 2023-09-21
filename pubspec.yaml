@@ -54,7 +54,7 @@ dependencies:
   flutter_spinkit: ^5.2.0
   firebase_messaging: ^14.6.5
   flutter_local_notifications: ^15.1.0+1
-  http:
+  http: ^1.1.0
   intl: 
   curved_navigation_bar: ^1.0.3
   geolocator: ^10.0.0
@@ -89,6 +89,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/badges/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

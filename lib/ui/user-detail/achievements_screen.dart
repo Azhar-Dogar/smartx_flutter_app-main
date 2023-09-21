@@ -107,7 +107,22 @@ class _AchievementScreenState extends State<AchievementScreen> {
   }
 
   Widget item(String text) {
-    return Container(
+    String imagePath = "";
+    if(text == "1 week streak"){
+    imagePath = "assets/1_week.png";
+    }else if(text == "Night Owl"){
+      imagePath = "assets/night_owl.png";
+    }else if(text == "Early Bird"){
+      imagePath = "assets/early_bird.png";
+    }else if(text == "Rainy Walk"){
+      imagePath = "assets/badges/rainy_walk.png";
+    }else if(text == "New Bie"){
+      imagePath = "assets/new_bie.png";
+    }else if(text == "First Walk"){
+      imagePath = "assets/first_walk.png";
+    }
+    return (imagePath != "")?Image(image: AssetImage(imagePath))
+      :Container(
       // width: width * 0.5,
       height: height * 0.11,
       decoration: BoxDecoration(

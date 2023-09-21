@@ -21,12 +21,15 @@ class AddPostController extends GetxController {
   }
 
   getUser() async {
-    user.value = await SharedPreferenceHelper.instance.user;
-    update();
-    print("this is user");
-    print(user.value?.firstName);
-    print(user.value?.lastName);
-    print(user.value?.imagePath);
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore.instance
+        .collection("user")
+        .doc(uid)
+        .snapshots()
+        .listen((event) {
+      final userModel = UserModel.fromJson(event.data()!);
+      user.value = userModel;
+    });
   }
 
   Rx<UserModel?> user = Rx<UserModel?>(null);
@@ -73,9 +76,9 @@ class AddPostController extends GetxController {
     if (user.value != null) {
       final uid = FirebaseAuth.instance.currentUser!.uid;
       await FirebaseFirestore.instance.collection("user").doc(uid).update({
-        "userPosts": (user.value!.userComments == null)
-            ? 0 + 1
-            : user.value!.userComments! + 1
+        "userPosts": (user.value!.userPosts == null)
+            ? 1
+            : user.value!.userPosts! + 1
       });
     }
   }
