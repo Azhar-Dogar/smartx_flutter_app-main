@@ -65,11 +65,9 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
   Future<void> _setMyLocation() async {
     final Location location = Location();
     location.onLocationChanged.listen((LocationData newLocation) {
-      setState(() {
         _myLocation = newLocation;
         controller.pathPoints
             .add(LatLng(newLocation.latitude!, newLocation.longitude!));
-      });
       if (controller.isStart.value) {
         Future.delayed(const Duration(seconds: 5)).then((value) {
           setState(() {

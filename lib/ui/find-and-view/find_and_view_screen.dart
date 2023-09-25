@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
@@ -109,6 +110,13 @@ class _SingleRowCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<FindAndViewController>();
+    RegExp regExp = RegExp(r'seconds=(\d+), nanoseconds=(\d+)');
+    Match match = regExp.firstMatch(user.created!) as Match;
+      int seconds = int.parse(match.group(1)!);
+      int nanoseconds = int.parse(match.group(2)!);
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true)
+          .add(Duration(microseconds: nanoseconds ~/ 1000));
+    String formattedDate = DateFormat.yMMMMd().format(dateTime);
     return Column(
       children: [
         Row(
@@ -141,8 +149,8 @@ class _SingleRowCard extends StatelessWidget {
                               fontFamily: Constants.workSansMedium,
                               fontSize: 16,
                               color: Constants.colorSecondary)),
-                      const Text('June 30, 2023',
-                          style: TextStyle(
+                       Text(formattedDate,
+                          style: const TextStyle(
                               fontFamily: Constants.workSansLight,
                               color: Constants.colorSecondary))
                     ])),

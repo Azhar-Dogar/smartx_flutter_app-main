@@ -66,7 +66,7 @@ class FirestoreDatabaseHelper {
   }
 
   Future<DogModel?> addDogProfile(DogModel dog) async {
-    String docId = _firebaseFirestore.collection(_POSTS).doc().id;
+    String docId = _firebaseFirestore.collection(_DOGS).doc().id;
 
     await _firebaseFirestore
         .collection(_DOGS)
@@ -75,7 +75,14 @@ class FirestoreDatabaseHelper {
         .timeout(_timeoutDuration);
     return dog.copyWith(id: dog.id);
   }
-
+  Future<DogModel?> editDogProfile(DogModel dog) async {
+    await _firebaseFirestore
+        .collection(_DOGS)
+        .doc(dog.id)
+        .set(dog.toJson())
+        .timeout(_timeoutDuration);
+    return dog.copyWith(id: dog.id);
+  }
   Future<void> followUserID(appUser, userid) async {
     await _firebaseFirestore
         .collection(_USER)

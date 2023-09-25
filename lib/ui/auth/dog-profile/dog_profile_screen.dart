@@ -354,7 +354,13 @@ class DogProfileScreen extends StatelessWidget {
                       height: 65,
                       width: size.width,
                       child: AppButton(
-                          onClick: () => _addDog(context),
+                          onClick: () {
+                            if (controller.dogModel == null) {
+                              _addDog(context);
+                            } else {
+                              controller.updateDogProfile(context);
+                            }
+                          },
                           text:
                               controller.dogModel == null ? 'Add Dog' : 'Saved',
                           fontFamily: Constants.workSansRegular,

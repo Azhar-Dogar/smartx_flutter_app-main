@@ -33,7 +33,8 @@ class GroupsScreen extends StatelessWidget {
         }
         if (event is Data) {
           final list = event.data as List<GroupModel>;
-          print(list.length);
+          List userGroups = list.where((element) => element.users.contains(mainController.user!.id)).toList();
+          List recommendedGroups = list.where((element) => !element.users.contains(mainController.user!.id)).toList();
           return SingleChildScrollView(
             padding: EdgeInsets.only(bottom: 30),
             child: Column(
@@ -58,7 +59,7 @@ class GroupsScreen extends StatelessWidget {
                             height: 150,
                             width: size.width,
                             child: ListView.builder(
-                                itemCount: list.length,
+                                itemCount: userGroups.length,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (_, i) {
                                   return GetX<MainScreenController>(
@@ -83,7 +84,7 @@ class GroupsScreen extends StatelessWidget {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   child: Image.network(
-                                                      list[i].profileImage,
+                                                      userGroups[i].profileImage,
                                                       fit: BoxFit.cover,
                                                       width: 130))));
                                     }
@@ -102,7 +103,7 @@ class GroupsScreen extends StatelessWidget {
                                           child: Stack(
                                             children: [
                                               Image.network(
-                                                list[i].profileImage,
+                                                userGroups[i].profileImage,
                                                 fit: BoxFit.cover,
                                                 height: 150,
                                                 width: 100,
@@ -131,7 +132,7 @@ class GroupsScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              list[mainController.selectedSliderIndex.value]
+                              userGroups[mainController.selectedSliderIndex.value]
                                       .title ??
                                   'A Dog Lovers\nCommunity',
                               style: TextStyle(
@@ -140,7 +141,7 @@ class GroupsScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              list[mainController.selectedSliderIndex.value]
+                              userGroups[mainController.selectedSliderIndex.value]
                                       .description ??
                                   'Welcome to our dog loving community! this social media group is a haven for passionate dog lovers from all walks of life. Join us to connect with fellow dog enthusiasts, share heartwarming stories, exchange training tips, and showcase adorable pictures of our furry friends. ',
                               maxLines: 4,
@@ -156,27 +157,28 @@ class GroupsScreen extends StatelessWidget {
                                 width: size.width,
                                 child: AppButton(
                                     onClick: () {
-                                      if (list[mainController
+                                      if (userGroups[mainController
                                               .selectedSliderIndex.value]
                                           .isJoined) {
                                         Get.toNamed(GroupDetailScreen.route,
-                                            arguments: list[mainController
+                                            arguments: userGroups[mainController
                                                 .selectedSliderIndex.value]);
                                       } else {
                                         Get.find<MainScreenController>()
                                             .joinGroup(
                                                 mainController
                                                     .selectedSliderIndex.value,
-                                                list[mainController
+                                                userGroups[mainController
                                                     .selectedSliderIndex
                                                     .value]);
                                       }
                                     },
-                                    text: list[mainController
-                                                .selectedSliderIndex.value]
-                                            .isJoined
-                                        ? 'Explore'
-                                        : 'Join Now',
+                                    text:
+                                    // userGroups[mainController
+                                    //             .selectedSliderIndex.value]
+                                    //         .isJoined ?
+                                    'Explore',
+                                        // : 'Join Now',
                                     fontFamily: Constants.workSansRegular,
                                     textColor: Constants.colorTextWhite,
                                     borderRadius: 10.0,
@@ -208,15 +210,18 @@ class GroupsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                if(recommendedGroups.isEmpty)...[
+                  Text("No Group to show")
+                ]else...[
                 SizedBox(
                   height: 220,
                   width: size.width,
                   child: ListView.builder(
-                      itemCount: list.length,
+                      itemCount: recommendedGroups.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (_, i) => SingleGroupCardWidget(
-                          index: i, size: size, groupModel: list[i])),
-                )
+                          index: i, size: size, groupModel: recommendedGroups[i])),
+                )]
               ],
             ),
           );
@@ -388,7 +393,7 @@ class SingleGroupCardWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       height: 200,
-      width: size.width * 0.8,
+      width: size.width * 0.85,
       decoration: BoxDecoration(
           color: Constants.colorOnBackground,
           borderRadius: BorderRadius.circular(15)),
@@ -450,13 +455,13 @@ class SingleGroupCardWidget extends StatelessWidget {
                 width: size.width / 1.8,
                 child: AppButton(
                     onClick: () {
-                      if (groupModel.isJoined) {
-                      } else {
+                      // if (groupModel.isJoined) {
+                      // } else {
                         Get.find<MainScreenController>()
                             .joinGroup(index, groupModel);
-                      }
+                      // }
                     },
-                    text: groupModel.isJoined ? 'Explore' : 'Join Now',
+                    text: 'Join Now',
                     fontFamily: Constants.workSansRegular,
                     textColor: Constants.colorTextWhite,
                     borderRadius: 10.0,

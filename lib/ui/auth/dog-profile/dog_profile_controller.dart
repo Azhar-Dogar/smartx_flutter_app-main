@@ -6,9 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/helper/firebase_storage_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
+import 'package:smartx_flutter_app/util/functions.dart';
 
 import '../../../helper/shared_preference_helpert.dart';
 import '../../../models/dog_model.dart';
+import '../../user-detail/user_detail_controller.dart';
 
 class DogProfileController extends GetxController {
   bool isFromStart;
@@ -65,10 +67,11 @@ class DogProfileController extends GetxController {
     }
   }
 
-  Future<void> updateDogProfile() async {
+  Future<void> updateDogProfile(BuildContext context) async {
     final user = await SharedPreferenceHelper.instance.user;
     if (user == null) return;
-
+    Functions.showLoaderDialog(context);
+    final controller = Get.find<UserDetailController>();
     try {
       String? url;
       if (fileImage.value != null) {
@@ -85,8 +88,17 @@ class DogProfileController extends GetxController {
           isGoodWithKids: isGoodWithKids.value,
           isNeutered: isNeutered.value,
           gender: genderController.text, isSelected: false);
-      final res = await _firestoreDatabaseHelper.updateDogProfile(dog);
-    } catch (_) {
+      final res = await _firestoreDatabaseHelper.editDogProfile(dog);
+      if(res is DogModel){
+        controller.getUserDogs();
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Functions.showSnackBar(context, "Dog updated successfully");
+      // Get.back();
+    }else{
+        Get.back();
+        Functions.showSnackBar(context, "Something went wrong");
+      }} catch (_) {
       return;
     }
   }

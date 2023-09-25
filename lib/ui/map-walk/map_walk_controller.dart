@@ -17,24 +17,27 @@ import 'package:smartx_flutter_app/models/quest_model.dart';
 import 'package:smartx_flutter_app/models/walk_model.dart';
 import 'package:smartx_flutter_app/models/weather_model.dart';
 
+import '../../helper/meta_data.dart';
 import '../../models/post_model.dart';
 import '../../models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class MapWalkController extends GetxController {
-  MapWalkController() {
+  String? uid;
+  MapWalkController({this.uid}) {
     _requestLocationPermission();
     getCurrentUser();
     getUserPosts();
     getUserWalks();
     getAchievement();
   }
-  Stream<QuerySnapshot<Map<String, dynamic>>> stream = FirebaseFirestore
+  Rx<DataEvent> userAchievements = Rx<DataEvent>(const Initial());
+  CollectionReference stream = FirebaseFirestore
       .instance
-      .collection(_USER)
-      .doc(userId)
-      .collection(_ACHIEVEMENTS)
-      .snapshots();
+      .collection(_USER);
+      // .doc(_uid??userId)
+      // .collection(_ACHIEVEMENTS)
+      // .snapshots();
   static String _USER = "user";
   static String _POSTS = "posts";
   static String _WALKS = "walks";
@@ -82,18 +85,18 @@ class MapWalkController extends GetxController {
       // print("first name");
     });
   }
-
-  getAchievement() {
-    stream.listen((event) {
-      achievements = <AchievementModel>[].obs;
-      event.docs.forEach((element) {
+  getAchievement({String? uid}) async {
+    achievements = <AchievementModel>[].obs;
+    final documents = await stream.doc(uid??userId).collection(_ACHIEVEMENTS).get();
+        // .listen((event) {
+      documents.docs.forEach((element) {
         achievements.add(AchievementModel.fromJson(element.data()));
       });
       achievements.obs;
       print("achievements");
       print(achievements.length);
       update();
-    });
+    // });
   }
 
   addQuestStreak(QuestModel questModel) async {
@@ -212,6 +215,7 @@ class MapWalkController extends GetxController {
   }
 
   addWalk() async {
+    await getAchievement();
     userWalks = <WalkModel>[].obs;
     CollectionReference ref = FirebaseFirestore.instance
         .collection("user")

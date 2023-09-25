@@ -6,21 +6,24 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/models/walk_model.dart';
+import 'package:smartx_flutter_app/ui/main/notifications/notification_screen.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
 class AchievementScreen extends StatefulWidget {
-  const AchievementScreen({super.key});
-
+    AchievementScreen({super.key,required this.userId});
+   String userId;
   @override
   State<AchievementScreen> createState() => _AchievementScreenState();
 }
 
 class _AchievementScreenState extends State<AchievementScreen> {
-  final controller = Get.put(MapWalkController());
   late double width, height;
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(MapWalkController(uid: widget.userId));
+    controller.getAchievement(uid:widget.userId);
+    // controller.achievements = <AchievementModel>[].obs;
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return GetX<MapWalkController>(
@@ -31,6 +34,13 @@ class _AchievementScreenState extends State<AchievementScreen> {
           const SizedBox(
             height: 20,
           ),
+          if(controller.achievements.isEmpty)...[
+            const Expanded(
+              child: Center(
+                child: Text("No Achievement Yet",style:TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
+              ),
+            ),
+          ]else...[
           Expanded(
             child: GridView.builder(
                 gridDelegate:
@@ -43,7 +53,7 @@ class _AchievementScreenState extends State<AchievementScreen> {
                 itemBuilder: (BuildContext ctx, index) {
                   return item(controller.achievements[index].title);
                 }),
-          )
+          )]
           // StreamBuilder(
           //     stream: controller.stream,
           //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {

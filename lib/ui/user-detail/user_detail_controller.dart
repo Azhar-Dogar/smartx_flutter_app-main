@@ -16,8 +16,6 @@ List<DogModel> dogs = [];
   UserDetailController({required this.mapEntry}) {
     getUserPosts();
    getUserDogs();
-   print("user dogs");
-   print(dogs.length);
   }
 
   Rx<int> tabIndex = Rx<int>(0);
@@ -64,6 +62,7 @@ List<DogModel> dogs = [];
   Future<DataEvent?> getUserDogs() async {
     userDogEvents(const Loading());
     try {
+      var id = (mapEntry.value as UserModel).id;
       final res = await FirestoreDatabaseHelper.instance()
           .getUserDogs((mapEntry.value as UserModel).id);
       if (res == null) {

@@ -21,24 +21,51 @@ import '../../models/dog_model.dart';
 import '../../models/post_model.dart';
 import '../../models/user_model.dart';
 
-class UserDetailScreen extends StatelessWidget {
+class UserDetailScreen extends StatefulWidget {
   static const String route = '/user_detai_screen_route';
 
   const UserDetailScreen({super.key});
 
   @override
+  State<UserDetailScreen> createState() => _UserDetailScreenState();
+}
+
+class _UserDetailScreenState extends State<UserDetailScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController tabController;
+  int index = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    tabController = TabController(length: 3, vsync: this);
+    tabController.addListener(() {
+      setState(() {
+        index = tabController.index;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
     final controller = Get.find<UserDetailController>();
+    final user = Get.arguments;
+    print("user is here");
+    print(user.value);
     String userImagePath = "";
     return SafeArea(
-      bottom: false,
-      child: DefaultTabController(
-        length: 3,
+        bottom: false,
         child: Scaffold(
           floatingActionButton: GetX<UserDetailController>(
             builder: (con) {
-              if (con.tabIndex.value == 2) {
+              if (controller.tabIndex.value == 2 || index == 2) {
                 return (controller.mapEntry.key as bool)
                     ? FloatingActionButton(
                         backgroundColor: Constants.colorOnSurface,
@@ -58,37 +85,42 @@ class UserDetailScreen extends StatelessWidget {
             },
           ),
           backgroundColor: Constants.colorSecondaryVariant,
-          body:  StreamBuilder(
+          body: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection("user")
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .doc(user.value.id ?? FirebaseAuth.instance.currentUser!.uid)
                   .snapshots(),
               builder: (_, snapshot) {
                 if (!snapshot.hasData) {
                   return const SizedBox();
                 }
-                UserModel user =
-                UserModel.fromJson(snapshot.data!.data()!);
-                // final user = controller.mapEntry.value as UserModel;
-                return Column(
-              children: [
-                Container(
-                  color: Constants.colorSecondary,
-                  padding: const EdgeInsets.only(top: 20.0, left: 30, right: 30),
-                  child: Column(
+                if (snapshot.data!.data() != null) {
+                  UserModel user = UserModel.fromJson(snapshot.data!.data()!);
+                  bool canPost = false;
+                  if (user.id == FirebaseAuth.instance.currentUser!.uid) {
+                    canPost = true;
+                  }
+                  // final user = controller.mapEntry.value as UserModel;
+                  return Column(
                     children: [
-                      InkWell(
-                          onTap: () => Get.back(),
-                          child: const Row(children: [
-                            Icon(Icons.arrow_back,
-                                color: Constants.colorOnBackground),
-                            Text('Back',
-                                style: TextStyle(
-                                    fontFamily: Constants.workSansRegular,
-                                    color: Constants.colorOnBackground,
-                                    fontSize: 16))
-                          ])),
-                      Column(
+                      Container(
+                        color: Constants.colorSecondary,
+                        padding: const EdgeInsets.only(
+                            top: 20.0, left: 30, right: 30),
+                        child: Column(
+                          children: [
+                            InkWell(
+                                onTap: () => Get.back(),
+                                child: const Row(children: [
+                                  Icon(Icons.arrow_back,
+                                      color: Constants.colorOnBackground),
+                                  Text('Back',
+                                      style: TextStyle(
+                                          fontFamily: Constants.workSansRegular,
+                                          color: Constants.colorOnBackground,
+                                          fontSize: 16))
+                                ])),
+                            Column(
                               children: [
                                 const SizedBox(height: 20),
                                 Row(
@@ -96,7 +128,8 @@ class UserDetailScreen extends StatelessWidget {
                                   children: [
                                     (user.imagePath.toString() == 'null' ||
                                             user.imagePath.toString() == '')
-                                        ? Image.asset('assets/3.png', height: 60)
+                                        ? Image.asset('assets/3.png',
+                                            height: 60)
                                         : ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -120,22 +153,28 @@ class UserDetailScreen extends StatelessWidget {
                                         Text(
                                           '${user.firstName} ${user.lastName}',
                                           style: const TextStyle(
-                                              color: Constants.colorOnBackground,
-                                              fontFamily: Constants.workSansBold,
+                                              color:
+                                                  Constants.colorOnBackground,
+                                              fontFamily:
+                                                  Constants.workSansBold,
                                               fontSize: 20),
                                         ),
                                         Text(
                                           user.email ?? 'email@rmail.com',
                                           style: const TextStyle(
-                                              color: Constants.colorOnBackground,
-                                              fontFamily: Constants.workSansLight,
+                                              color:
+                                                  Constants.colorOnBackground,
+                                              fontFamily:
+                                                  Constants.workSansLight,
                                               fontSize: 12),
                                         ),
                                         const Text(
                                           '+1234567890',
                                           style: TextStyle(
-                                              color: Constants.colorOnBackground,
-                                              fontFamily: Constants.workSansLight,
+                                              color:
+                                                  Constants.colorOnBackground,
+                                              fontFamily:
+                                                  Constants.workSansLight,
                                               fontSize: 12),
                                         ),
                                       ],
@@ -149,7 +188,8 @@ class UserDetailScreen extends StatelessWidget {
                                         onClick: () {
                                           if (controller.mapEntry.key as bool) {
                                             Get.toNamed(UserProfileScreen.route,
-                                                arguments: MapEntry(false, user));
+                                                arguments:
+                                                    MapEntry(false, user));
                                           }
                                         },
                                         text: (controller.mapEntry.key as bool)
@@ -163,101 +203,107 @@ class UserDetailScreen extends StatelessWidget {
                                 const SizedBox(height: 20),
                               ],
                             )
-
-                    ],
-                  ),
-          ),
-
-                Expanded(
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Constants.colorOnBackground,
-                        child: TabBar(
-                          indicatorColor: Constants.colorOnSurface,
-                          onTap: (i) {
-                            controller.tabIndex(i);
-                          },
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          labelColor: Constants.colorOnSurface,
-                          unselectedLabelColor: Constants.colorOnSurface,
-                          tabs: const [
-                            Tab(text: "Activities"),
-                            Tab(text: 'Achievements'),
-                            Tab(text: 'Dogs'),
                           ],
                         ),
                       ),
-                      Expanded(
-                          child: TabBarView(
-                            children: [
-                              UserFeedTabScreen(
 
-                                canPost: true,
-                                userImage: user.imagePath??"",
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              color: Constants.colorOnBackground,
+                              child: TabBar(
+                                controller: tabController,
+                                indicatorColor: Constants.colorOnSurface,
+                                onTap: (i) {
+                                  controller.tabIndex(i);
+                                },
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                labelColor: Constants.colorOnSurface,
+                                unselectedLabelColor: Constants.colorOnSurface,
+                                tabs: const [
+                                  Tab(text: "Activities"),
+                                  Tab(text: 'Achievements'),
+                                  Tab(text: 'Dogs'),
+                                ],
                               ),
-                              AchievementScreen(),
-                              DogTabScreen()
-                            ],
-                          ))
+                            ),
+                            Expanded(
+                                child: TabBarView(
+                              controller: tabController,
+                              children: [
+                                UserFeedTabScreen(
+                                  userId: user.id,
+                                  canPost: canPost,
+                                  userImage: user.imagePath ?? "",
+                                ),
+                                AchievementScreen(
+                                  userId: user.id,
+                                ),
+                                DogTabScreen(
+                                  canEdit: canPost,
+                                )
+                              ],
+                            ))
+                          ],
+                        ),
+                      )
+                      // FutureBuilder<UserModel?>(
+                      //     future: SharedPreferenceHelper.instance.user,
+                      //     builder: (_, snapshot) {
+                      //       if (snapshot.hasData) {
+                      //         print("second path");
+                      //         print(userImagePath);
+                      //         return Expanded(
+                      //           child: Column(
+                      //             children: [
+                      //               Container(
+                      //                 color: Constants.colorOnBackground,
+                      //                 child: TabBar(
+                      //                   indicatorColor: Constants.colorOnSurface,
+                      //                   onTap: (i) {
+                      //                     controller.tabIndex(i);
+                      //                   },
+                      //                   indicatorSize: TabBarIndicatorSize.tab,
+                      //                   labelColor: Constants.colorOnSurface,
+                      //                   unselectedLabelColor: Constants.colorOnSurface,
+                      //                   tabs: const [
+                      //                     Tab(text: "Activities"),
+                      //                     Tab(text: 'Achievements'),
+                      //                     Tab(text: 'Dogs'),
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //               Expanded(
+                      //                   child: TabBarView(
+                      //                 children: [
+                      //                   UserFeedTabScreen(
+                      //
+                      //                     canPost: true,
+                      //                     userImage: userImagePath,
+                      //                   ),
+                      //                   SizedBox(),
+                      //                   DogTabScreen()
+                      //                 ],
+                      //               ))
+                      //             ],
+                      //           ),
+                      //         );
+                      //       }
+                      //       return const CircularProgressIndicator();
+                      //     }),
                     ],
-                  ),
-                )
-              // FutureBuilder<UserModel?>(
-              //     future: SharedPreferenceHelper.instance.user,
-              //     builder: (_, snapshot) {
-              //       if (snapshot.hasData) {
-              //         print("second path");
-              //         print(userImagePath);
-              //         return Expanded(
-              //           child: Column(
-              //             children: [
-              //               Container(
-              //                 color: Constants.colorOnBackground,
-              //                 child: TabBar(
-              //                   indicatorColor: Constants.colorOnSurface,
-              //                   onTap: (i) {
-              //                     controller.tabIndex(i);
-              //                   },
-              //                   indicatorSize: TabBarIndicatorSize.tab,
-              //                   labelColor: Constants.colorOnSurface,
-              //                   unselectedLabelColor: Constants.colorOnSurface,
-              //                   tabs: const [
-              //                     Tab(text: "Activities"),
-              //                     Tab(text: 'Achievements'),
-              //                     Tab(text: 'Dogs'),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Expanded(
-              //                   child: TabBarView(
-              //                 children: [
-              //                   UserFeedTabScreen(
-              //
-              //                     canPost: true,
-              //                     userImage: userImagePath,
-              //                   ),
-              //                   SizedBox(),
-              //                   DogTabScreen()
-              //                 ],
-              //               ))
-              //             ],
-              //           ),
-              //         );
-              //       }
-              //       return const CircularProgressIndicator();
-              //     }),
-            ],
-          );}
-        ),
-      ),
-    ));
+                  );
+                }
+                return const SizedBox();
+              }),
+        ));
   }
 }
 
 class DogTabScreen extends StatelessWidget {
-  const DogTabScreen({super.key});
-
+  DogTabScreen({super.key, required this.canEdit});
+  bool canEdit;
   @override
   Widget build(BuildContext context) {
     return GetX<UserDetailController>(
@@ -275,7 +321,11 @@ class DogTabScreen extends StatelessWidget {
             );
           }
           if (event is Empty) {
-            return const Center(child: Text('no dog profile added yet'));
+            return const Center(
+                child: Text(
+              'no dog profile added yet',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ));
           }
           if (event is Data) {
             final list = event.data as List<DogModel>;
@@ -284,7 +334,10 @@ class DogTabScreen extends StatelessWidget {
                 itemCount: list.length,
                 shrinkWrap: true,
                 itemBuilder: (_, i) {
-                  return SingleDogWidget(dogModel: list[i]);
+                  return SingleDogWidget(
+                    dogModel: list[i],
+                    canEdit: canEdit,
+                  );
                 });
           }
           return const SizedBox();
@@ -293,8 +346,8 @@ class DogTabScreen extends StatelessWidget {
 }
 
 class SingleDogWidget extends StatelessWidget {
-  const SingleDogWidget({required this.dogModel, super.key});
-
+  SingleDogWidget({required this.dogModel, required this.canEdit, super.key});
+  bool canEdit;
   final DogModel dogModel;
 
   @override
@@ -346,11 +399,13 @@ class SingleDogWidget extends StatelessWidget {
                           color: Constants.colorOnSurface))
                 ]),
             const Spacer(),
-            GestureDetector(
-                onTap: () => Get.toNamed(DogProfileScreen.route,
-                    arguments: MapEntry(false, dogModel)),
-                child: const Icon(Icons.edit_outlined,
-                    color: Constants.colorOnSurface))
+            if (canEdit) ...[
+              GestureDetector(
+                  onTap: () => Get.toNamed(DogProfileScreen.route,
+                      arguments: MapEntry(false, dogModel)),
+                  child: const Icon(Icons.edit_outlined,
+                      color: Constants.colorOnSurface))
+            ]
           ],
         ),
         const SizedBox(height: 10),
@@ -404,10 +459,12 @@ class _SingleRow extends StatelessWidget {
 class UserFeedTabScreen extends StatelessWidget {
   final bool canPost;
   final Color color;
+  String userId;
   String userImage;
   UserFeedTabScreen(
       {this.canPost = true,
       required this.userImage,
+      required this.userId,
       this.color = Constants.colorSecondary,
       super.key});
 
@@ -470,7 +527,11 @@ class UserFeedTabScreen extends StatelessWidget {
               if (event is Empty) {
                 return const Expanded(
                   child: Center(
-                    child: Text("No Post Yet",style:TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
+                    child: Text(
+                      "No Post Yet",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    ),
                   ),
                 );
               }
@@ -482,8 +543,9 @@ class UserFeedTabScreen extends StatelessWidget {
                       itemCount: list.length,
                       // shrinkWrap: true,
                       itemBuilder: (_, i) {
-                        final isLiked = list[i].likedUsers.contains(
-                            FirebaseAuth.instance.currentUser?.uid);
+                        final isLiked = list[i]
+                            .likedUsers
+                            .contains(FirebaseAuth.instance.currentUser?.uid);
                         return SinglePostWidget(
                           userImagePath: userImage,
                           postModel: list[i],
