@@ -1,4 +1,4 @@
-#Thu Sep 21 17:32:36 PKT 2023
+#Mon Sep 25 18:45:22 PKT 2023
 base.0=C\:\\Users\\PC\\StudioProjects\\smartx_flutter_app-main\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

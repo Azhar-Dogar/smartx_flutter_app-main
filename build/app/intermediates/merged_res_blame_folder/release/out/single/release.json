@@ -1108,6 +1108,10 @@
         "source": "com.example.smartx_flutter_app-appcompat-1.4.1-5:/drawable/abc_list_selector_background_transition_holo_light.xml"
     },
     {
+        "merged": "com.example.smartx_flutter_app-merged_res-43:/xml_flutter_share_file_paths.xml.flat",
+        "source": "com.example.smartx_flutter_app-packaged_res-60:/xml/flutter_share_file_paths.xml"
+    },
+    {
         "merged": "com.example.smartx_flutter_app-merged_res-43:/drawable-watch-v20_common_google_signin_btn_text_disabled.xml.flat",
         "source": "com.example.smartx_flutter_app-jetified-play-services-auth-20.6.0-10:/drawable-watch-v20/common_google_signin_btn_text_disabled.xml"
     },

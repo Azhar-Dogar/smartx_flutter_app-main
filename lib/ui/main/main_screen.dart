@@ -182,7 +182,8 @@ class _MainScreenState extends State<MainScreen> {
             isSelected: controller.indexState.value == 3),
         BottomNavItem(
             index: 4,
-            image: 'assets/profile.png',
+            isProfile: (controller.user !=null)?true:false,
+            image: (controller.user!=null)?controller.user!.imagePath!:"assets/profile.png",
             isSelected: controller.indexState.value == 4),
       ],
       onSelect: (index) {

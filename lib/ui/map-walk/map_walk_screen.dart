@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo_locator;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permission_handler;
+import 'package:screenshot/screenshot.dart';
 import 'package:smartx_flutter_app/common/margin_widget.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
@@ -87,7 +91,7 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
       }
     });
   }
-
+  ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -131,7 +135,9 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
                     Expanded(
                       child: Stack(
                         children: [
-                          googleMap(),
+                          Screenshot(
+                              controller: screenshotController,
+                              child: googleMap()),
                           if (controller.isStart.value) ...[
                             stopButton()
                           ] else ...[
@@ -175,18 +181,28 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
                 isHorizontal: true,
               ),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  late File imagePath;
+                  try{
+                    var e = await _controller!.takeSnapshot().
+                  then((Uint8List? image) async {
+                    print("here we know");
+                    if (image != null) {
+                       final directory = await getTemporaryDirectory();
+                       imagePath = await File('${directory.path}/image.png').create();
+                      var e = await imagePath.writeAsBytes(image);
+                       }
+                  });}
+                  catch(e){
+                    print("error ");
+                    print(e);
+                  };
                   controller.calDistance();
-                  Get.toNamed(StopWalkScreen.route);
-                  // controller.hours.value = 0;
-                  // controller.minutes.value = 0;
-                  // controller.seconds.value = 0;
+                  Get.toNamed(StopWalkScreen.route,arguments: MapEntry(false,imagePath.path));
                   controller.pathPoints = [];
                   controller.timer!.cancel();
                   controller.isStart(false);
-                  // print(controller.seconds.value);
-                  // print("seconds");
-                },
+                  },
                 child: Container(
                   alignment: Alignment.center,
                   height: 110,

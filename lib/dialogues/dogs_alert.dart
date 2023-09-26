@@ -61,14 +61,17 @@ class _DogsAlertState extends State<DogsAlert> {
                     itemBuilder: (_, i) {
                       return
                           // Text("data");
-                          DogCheckBox(
-                              check: list[i].isSelected,
-                              onChanged: (v) {
-                                setState(() {
-                                  list[i].isSelected = !list[i].isSelected;
-                                });
-                              },
-                              model: list[i]);
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: DogCheckBox(
+                                check: list[i].isSelected,
+                                onChanged: (v) {
+                                  setState(() {
+                                    list[i].isSelected = !list[i].isSelected;
+                                  });
+                                },
+                                model: list[i]),
+                          );
                     }),
               )
             ],

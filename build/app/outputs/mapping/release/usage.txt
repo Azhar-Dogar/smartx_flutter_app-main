@@ -25342,6 +25342,24 @@ com.zhj.bluetooth.zhjbluetoothsdk.util.StringUtils:
     public static boolean validateInt(java.lang.String)
 com.zhj.bluetooth.zhjbluetoothsdk.util.ThreadUtil
 com.zhj.bluetooth.zhjbluetoothsdk.util.ToastUtil
+dev.fluttercommunity.plus.share.BuildConfig
+dev.fluttercommunity.plus.share.R$attr
+dev.fluttercommunity.plus.share.R$color
+dev.fluttercommunity.plus.share.R$dimen
+dev.fluttercommunity.plus.share.R$drawable
+dev.fluttercommunity.plus.share.R$id
+dev.fluttercommunity.plus.share.R$integer
+dev.fluttercommunity.plus.share.R$layout
+dev.fluttercommunity.plus.share.R$string
+dev.fluttercommunity.plus.share.R$style
+dev.fluttercommunity.plus.share.R$styleable
+dev.fluttercommunity.plus.share.R$xml
+dev.fluttercommunity.plus.share.R
+dev.fluttercommunity.plus.share.SharePlusPlugin:
+    private static final java.lang.String CHANNEL
+dev.fluttercommunity.plus.share.ShareSuccessManager:
+    public static final int ACTIVITY_CODE
+    public static final java.lang.String RESULT_UNAVAILABLE
 firebase.com.protolitewrapper.BuildConfig
 firebase.com.protolitewrapper.R
 io.flutter.BuildConfig
@@ -31185,16 +31203,41 @@ kotlin.internal.jdk8.JDK8PlatformImplementations:
     public kotlin.text.MatchGroup getMatchResultNamedGroup(java.util.regex.MatchResult,java.lang.String)
 kotlin.io.AccessDeniedException
 kotlin.io.ByteStreamsKt$iterator$1
-kotlin.io.ByteStreamsKt
+kotlin.io.ByteStreamsKt:
+    private static final java.io.BufferedInputStream buffered(java.io.InputStream,int)
+    private static final java.io.BufferedOutputStream buffered(java.io.OutputStream,int)
+    static synthetic java.io.BufferedInputStream buffered$default(java.io.InputStream,int,int,java.lang.Object)
+    static synthetic java.io.BufferedOutputStream buffered$default(java.io.OutputStream,int,int,java.lang.Object)
+    private static final java.io.BufferedReader bufferedReader(java.io.InputStream,java.nio.charset.Charset)
+    static synthetic java.io.BufferedReader bufferedReader$default(java.io.InputStream,java.nio.charset.Charset,int,java.lang.Object)
+    private static final java.io.BufferedWriter bufferedWriter(java.io.OutputStream,java.nio.charset.Charset)
+    static synthetic java.io.BufferedWriter bufferedWriter$default(java.io.OutputStream,java.nio.charset.Charset,int,java.lang.Object)
+    private static final java.io.ByteArrayInputStream byteInputStream(java.lang.String,java.nio.charset.Charset)
+    static synthetic java.io.ByteArrayInputStream byteInputStream$default(java.lang.String,java.nio.charset.Charset,int,java.lang.Object)
+    public static synthetic long copyTo$default(java.io.InputStream,java.io.OutputStream,int,int,java.lang.Object)
+    private static final java.io.ByteArrayInputStream inputStream(byte[])
+    private static final java.io.ByteArrayInputStream inputStream(byte[],int,int)
+    public static final kotlin.collections.ByteIterator iterator(java.io.BufferedInputStream)
+    public static final byte[] readBytes(java.io.InputStream)
+    public static final byte[] readBytes(java.io.InputStream,int)
+    public static synthetic byte[] readBytes$default(java.io.InputStream,int,int,java.lang.Object)
+    private static final java.io.InputStreamReader reader(java.io.InputStream,java.nio.charset.Charset)
+    static synthetic java.io.InputStreamReader reader$default(java.io.InputStream,java.nio.charset.Charset,int,java.lang.Object)
+    private static final java.io.OutputStreamWriter writer(java.io.OutputStream,java.nio.charset.Charset)
+    static synthetic java.io.OutputStreamWriter writer$default(java.io.OutputStream,java.nio.charset.Charset,int,java.lang.Object)
 kotlin.io.CloseableKt:
     private static final java.lang.Object use(java.io.Closeable,kotlin.jvm.functions.Function1)
 kotlin.io.ConsoleKt
 kotlin.io.ConstantsKt
-kotlin.io.ExceptionsKt
 kotlin.io.ExposingBufferByteArrayOutputStream
-kotlin.io.FileAlreadyExistsException
+kotlin.io.FileAlreadyExistsException:
+    public synthetic void <init>(java.io.File,java.io.File,java.lang.String,int,kotlin.jvm.internal.DefaultConstructorMarker)
 kotlin.io.FilePathComponents
-kotlin.io.FileSystemException
+kotlin.io.FileSystemException:
+    public synthetic void <init>(java.io.File,java.io.File,java.lang.String,int,kotlin.jvm.internal.DefaultConstructorMarker)
+    public final java.io.File getFile()
+    public final java.io.File getOther()
+    public final java.lang.String getReason()
 kotlin.io.FileTreeWalk$DirectoryState
 kotlin.io.FileTreeWalk$FileTreeWalkIterator$BottomUpDirectoryState
 kotlin.io.FileTreeWalk$FileTreeWalkIterator$SingleFileState
@@ -31204,18 +31247,87 @@ kotlin.io.FileTreeWalk$FileTreeWalkIterator
 kotlin.io.FileTreeWalk$WalkState
 kotlin.io.FileTreeWalk
 kotlin.io.FileWalkDirection
-kotlin.io.FilesKt
-kotlin.io.FilesKt__FilePathComponentsKt
+kotlin.io.FilesKt:
+    private void <init>()
+kotlin.io.FilesKt__FilePathComponentsKt:
+    public void <init>()
+    public static final java.io.File getRoot(java.io.File)
+    private static final int getRootLength$FilesKt__FilePathComponentsKt(java.lang.String)
+    public static final java.lang.String getRootName(java.io.File)
+    public static final boolean isRooted(java.io.File)
+    public static final java.io.File subPath(java.io.File,int,int)
+    public static final kotlin.io.FilePathComponents toComponents(java.io.File)
 kotlin.io.FilesKt__FileReadWriteKt$readLines$1
-kotlin.io.FilesKt__FileReadWriteKt
-kotlin.io.FilesKt__FileTreeWalkKt
+kotlin.io.FilesKt__FileReadWriteKt:
+    public void <init>()
+    public static final void appendBytes(java.io.File,byte[])
+    public static final void appendText(java.io.File,java.lang.String,java.nio.charset.Charset)
+    public static synthetic void appendText$default(java.io.File,java.lang.String,java.nio.charset.Charset,int,java.lang.Object)
+    private static final java.io.BufferedReader bufferedReader(java.io.File,java.nio.charset.Charset,int)
+    static synthetic java.io.BufferedReader bufferedReader$default(java.io.File,java.nio.charset.Charset,int,int,java.lang.Object)
+    private static final java.io.BufferedWriter bufferedWriter(java.io.File,java.nio.charset.Charset,int)
+    static synthetic java.io.BufferedWriter bufferedWriter$default(java.io.File,java.nio.charset.Charset,int,int,java.lang.Object)
+    public static final void forEachBlock(java.io.File,int,kotlin.jvm.functions.Function2)
+    public static final void forEachBlock(java.io.File,kotlin.jvm.functions.Function2)
+    public static final void forEachLine(java.io.File,java.nio.charset.Charset,kotlin.jvm.functions.Function1)
+    public static synthetic void forEachLine$default(java.io.File,java.nio.charset.Charset,kotlin.jvm.functions.Function1,int,java.lang.Object)
+    private static final java.io.FileInputStream inputStream(java.io.File)
+    private static final java.io.FileOutputStream outputStream(java.io.File)
+    private static final java.io.PrintWriter printWriter(java.io.File,java.nio.charset.Charset)
+    static synthetic java.io.PrintWriter printWriter$default(java.io.File,java.nio.charset.Charset,int,java.lang.Object)
+    public static final byte[] readBytes(java.io.File)
+    public static final java.util.List readLines(java.io.File,java.nio.charset.Charset)
+    public static synthetic java.util.List readLines$default(java.io.File,java.nio.charset.Charset,int,java.lang.Object)
+    public static final java.lang.String readText(java.io.File,java.nio.charset.Charset)
+    public static synthetic java.lang.String readText$default(java.io.File,java.nio.charset.Charset,int,java.lang.Object)
+    private static final java.io.InputStreamReader reader(java.io.File,java.nio.charset.Charset)
+    static synthetic java.io.InputStreamReader reader$default(java.io.File,java.nio.charset.Charset,int,java.lang.Object)
+    public static final java.lang.Object useLines(java.io.File,java.nio.charset.Charset,kotlin.jvm.functions.Function1)
+    public static synthetic java.lang.Object useLines$default(java.io.File,java.nio.charset.Charset,kotlin.jvm.functions.Function1,int,java.lang.Object)
+    public static final void writeBytes(java.io.File,byte[])
+    public static final void writeText(java.io.File,java.lang.String,java.nio.charset.Charset)
+    public static synthetic void writeText$default(java.io.File,java.lang.String,java.nio.charset.Charset,int,java.lang.Object)
+    private static final java.io.OutputStreamWriter writer(java.io.File,java.nio.charset.Charset)
+    static synthetic java.io.OutputStreamWriter writer$default(java.io.File,java.nio.charset.Charset,int,java.lang.Object)
+kotlin.io.FilesKt__FileTreeWalkKt:
+    public void <init>()
+    public static final kotlin.io.FileTreeWalk walk(java.io.File,kotlin.io.FileWalkDirection)
+    public static synthetic kotlin.io.FileTreeWalk walk$default(java.io.File,kotlin.io.FileWalkDirection,int,java.lang.Object)
+    public static final kotlin.io.FileTreeWalk walkBottomUp(java.io.File)
+    public static final kotlin.io.FileTreeWalk walkTopDown(java.io.File)
 kotlin.io.FilesKt__UtilsKt$copyRecursively$1
 kotlin.io.FilesKt__UtilsKt$copyRecursively$2
-kotlin.io.FilesKt__UtilsKt
+kotlin.io.FilesKt__UtilsKt:
+    public void <init>()
+    public static final boolean copyRecursively(java.io.File,java.io.File,boolean,kotlin.jvm.functions.Function2)
+    public static synthetic boolean copyRecursively$default(java.io.File,java.io.File,boolean,kotlin.jvm.functions.Function2,int,java.lang.Object)
+    public static final java.io.File createTempDir(java.lang.String,java.lang.String,java.io.File)
+    public static synthetic java.io.File createTempDir$default(java.lang.String,java.lang.String,java.io.File,int,java.lang.Object)
+    public static final java.io.File createTempFile(java.lang.String,java.lang.String,java.io.File)
+    public static synthetic java.io.File createTempFile$default(java.lang.String,java.lang.String,java.io.File,int,java.lang.Object)
+    public static final boolean deleteRecursively(java.io.File)
+    public static final boolean endsWith(java.io.File,java.io.File)
+    public static final boolean endsWith(java.io.File,java.lang.String)
+    public static final java.lang.String getExtension(java.io.File)
+    public static final java.lang.String getInvariantSeparatorsPath(java.io.File)
+    public static final java.lang.String getNameWithoutExtension(java.io.File)
+    public static final java.io.File normalize(java.io.File)
+    private static final java.util.List normalize$FilesKt__UtilsKt(java.util.List)
+    private static final kotlin.io.FilePathComponents normalize$FilesKt__UtilsKt(kotlin.io.FilePathComponents)
+    public static final java.io.File relativeTo(java.io.File,java.io.File)
+    public static final java.io.File relativeToOrNull(java.io.File,java.io.File)
+    public static final java.io.File relativeToOrSelf(java.io.File,java.io.File)
+    public static final java.io.File resolve(java.io.File,java.io.File)
+    public static final java.io.File resolve(java.io.File,java.lang.String)
+    public static final java.io.File resolveSibling(java.io.File,java.io.File)
+    public static final java.io.File resolveSibling(java.io.File,java.lang.String)
+    public static final boolean startsWith(java.io.File,java.io.File)
+    public static final boolean startsWith(java.io.File,java.lang.String)
+    public static final java.lang.String toRelativeString(java.io.File,java.io.File)
+    private static final java.lang.String toRelativeStringOrNull$FilesKt__UtilsKt(java.io.File,java.io.File)
 kotlin.io.LineReader
 kotlin.io.LinesSequence$iterator$1
 kotlin.io.LinesSequence
-kotlin.io.NoSuchFileException
 kotlin.io.OnErrorAction
 kotlin.io.ReadAfterEOFException
 kotlin.io.SerializableKt

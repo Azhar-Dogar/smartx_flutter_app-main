@@ -58,5 +58,6 @@ com.example.smartx_flutter_app-packaged_res-56 C:\Users\PC\StudioProjects\smartx
 com.example.smartx_flutter_app-packaged_res-57 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\location\intermediates\packaged_res\debug
 com.example.smartx_flutter_app-packaged_res-58 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\path_provider_android\intermediates\packaged_res\debug
 com.example.smartx_flutter_app-packaged_res-59 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\permission_handler_android\intermediates\packaged_res\debug
-com.example.smartx_flutter_app-packaged_res-60 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\shared_preferences_android\intermediates\packaged_res\debug
-com.example.smartx_flutter_app-packaged_res-61 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\intermediates\packaged_res\debug
+com.example.smartx_flutter_app-packaged_res-60 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\share_plus\intermediates\packaged_res\debug
+com.example.smartx_flutter_app-packaged_res-61 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\shared_preferences_android\intermediates\packaged_res\debug
+com.example.smartx_flutter_app-packaged_res-62 C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\sqflite\intermediates\packaged_res\debug

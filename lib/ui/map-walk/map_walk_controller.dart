@@ -59,11 +59,21 @@ class MapWalkController extends GetxController {
   RxList userPosts = [].obs;
   DateTime time = DateTime.now();
   int _seconds = 0;
-  List<DogModel> selectedDogs = [];
+  RxList<DogModel> selectedDogs = <DogModel>[].obs;
   Timer? timer;
   final titleController = TextEditingController();
+  addSelectedDogs(List<DogModel> dogs){
+    selectedDogs.value = dogs;
+  }
+  clearValues(){
+    hours.value = 0;
+    minutes.value=0;
+    seconds.value=0;
+    totalDistance.value=0;
+    selectedDogs.clear();
+    titleController.clear();
+  }
   getCurrentUser() {
-    print("Here");
     String uid = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance
         .collection("user")

@@ -199,6 +199,19 @@
       externalAnnotations="annotations.zip"
       proguardRules="proguard.txt"/>
   <library
+      name="C:\Users\PC\StudioProjects\smartx_flutter_app-main\android@@:share_plus::release"
+      jars="C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\share_plus\.transforms\30165f1ab7d0c92ab047f9eb9f67b0d7\transformed\out\jars\classes.jar;C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\share_plus\.transforms\30165f1ab7d0c92ab047f9eb9f67b0d7\transformed\out\jars\libs\R.jar"
+      resolved="dev.fluttercommunity.plus.share:share_plus:unspecified"
+      folder="C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\share_plus\.transforms\30165f1ab7d0c92ab047f9eb9f67b0d7\transformed\out"
+      manifest="AndroidManifest.xml"
+      resFolder="res"
+      assetsFolder="assets"
+      lintJar="lint.jar"
+      publicResources="public.txt"
+      symbolFile="R.txt"
+      externalAnnotations="annotations.zip"
+      proguardRules="proguard.txt"/>
+  <library
       name="C:\Users\PC\StudioProjects\smartx_flutter_app-main\android@@:fluttertoast::release"
       jars="C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\fluttertoast\.transforms\a29723fd9093111238686c5e6b92ac24\transformed\out\jars\classes.jar;C:\Users\PC\StudioProjects\smartx_flutter_app-main\build\fluttertoast\.transforms\a29723fd9093111238686c5e6b92ac24\transformed\out\jars\libs\R.jar"
       resolved="com.example.FlutterToast:fluttertoast:unspecified"

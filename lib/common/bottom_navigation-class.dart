@@ -17,7 +17,6 @@ class BottomNavigationClass extends StatelessWidget {
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // navItem2Widget(items[0]),
           for (var e in items) navItemWidget(e),
         ],
       ),
@@ -88,9 +87,7 @@ class BottomNavigationClass extends StatelessWidget {
                                     : (item.index == 4)
                                         ? null
                                         : Constants.colorOnCard,
-                                image: AssetImage(
-                                  item.image,
-                                ),
+                                image: profileImage(item)
                                 // width: 25,
                                 // fit: BoxFit.fitWidth,
                               ),
@@ -105,57 +102,12 @@ class BottomNavigationClass extends StatelessWidget {
       ),
     );
   }
-
-  navItem2Widget(
-    BottomNavItem item,
-  ) {
-    return InkWell(
-      onTap: () {
-        onSelect(item.index);
-      },
-      child: Expanded(
-        child: Container(
-          color: Colors.white,
-          child: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                color: (item.isFirst == true)
-                    ? Constants.buttonColor
-                    : Colors.white,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-                border: (item.isFirst == true)
-                    ? Border.all(
-                        color: Constants.colorSecondaryVariant, width: 5)
-                    : null,
-              ),
-              width: 50,
-              height: 50,
-              child: (item.isFirst == true)
-                  ? const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Image(
-                        color: item.isSelected
-                            ? Constants.buttonColor
-                            : Constants.colorOnCard,
-                        image: AssetImage(
-                          item.image,
-                        ),
-                        // width: 25,
-                        // fit: BoxFit.fitWidth,
-                      ),
-                    ),
-            ),
-          ),
-        ),
-      ),
-    );
+  ImageProvider profileImage(BottomNavItem item){
+    if(item.isProfile==true){
+      return NetworkImage(item.image);
+    }else{
+      return AssetImage(item.image);
+    }
   }
 }
 
@@ -164,8 +116,10 @@ class BottomNavItem {
   int index;
   bool isSelected;
   bool? isFirst;
+  bool? isProfile;
   BottomNavItem({
     this.isFirst,
+    this.isProfile,
     required this.image,
     required this.index,
     required this.isSelected,
