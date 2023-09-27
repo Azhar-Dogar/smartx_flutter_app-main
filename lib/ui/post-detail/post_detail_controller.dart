@@ -7,6 +7,7 @@ import 'package:smartx_flutter_app/backend/shared_web_service.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
 import 'package:http/http.dart' as http;
+import 'package:smartx_flutter_app/models/comment_model.dart';
 
 import '../../models/post_model.dart';
 import '../../models/user_model.dart';
@@ -78,7 +79,39 @@ class PostDetailController extends GetxController {
         .doc(post.id)
         .update({'likedUsers': likes, 'totalLikes': likes.length});
   }
+  deleteComment(CommentModel comment) async {
+    var uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection('comments')
+        .doc(postModel.id)
+        .collection("comments").doc(comment.id).delete();
+    await FirebaseFirestore.instance.collection("user").doc(uid).update({
+      "userComments": userModel.value!.userComments! - 1
+    });
+    var counts = postModel.commentsCount - 1;
+    await FirebaseFirestore.instance.collection("posts").doc(postModel.id).update({
+      "commentsCount": postModel.commentsCount - 1
+    });
+    postModel = postModel.copyWith(commentsCount: counts);
+  }
+  void commentToggleLike(CommentModel comment, bool isLiked) async {
+    final user = FirebaseAuth.instance.currentUser;
 
+    List<String> likes = comment.likedUsers;
+
+    if (isLiked) {
+      likes.remove(user?.uid);
+    } else {
+      likes.add(user!.uid);
+    }
+
+    await FirebaseFirestore.instance
+        .collection('comments')
+        .doc(postModel.id)
+        .collection('comments')
+        .doc(comment.id)
+        .update({'likedUsers': likes,});
+  }
   updateUser() async {
     if (userModel.value != null) {
       final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -95,17 +128,17 @@ class PostDetailController extends GetxController {
 
     final user = await SharedPreferenceHelper.instance.user;
     if (user == null) return;
-
-    await FirebaseFirestore.instance
+    var doc = FirebaseFirestore.instance
         .collection('comments')
         .doc(postModel.id)
-        .collection("comments")
-        .add({
+        .collection("comments").doc();
+    await doc.set({
       "username": '${user.firstName} ${user.lastName}',
       "comment": commentsTECController.text,
       "timestamp": Timestamp.now(),
       "userDp": user.imagePath,
-      "userId": user.id
+      "userId": user.id,
+      "id":doc.id
     }).whenComplete(() async {
       commentsTECController.clear();
 

@@ -6,12 +6,15 @@ class CommentModel {
   Timestamp timestamp;
   String userDp;
   String userId;
-
+  String id;
+  final List<String> likedUsers;
   CommentModel({
     required this.username,
     required this.comment,
+    required this.likedUsers,
     required this.timestamp,
     required this.userDp,
+    required this.id,
     required this.userId,
   });
 
@@ -21,13 +24,19 @@ class CommentModel {
     final timestamp = json['timestamp'];
     final userDp = json['userDp'];
     final userId = json['userId'];
-
+    final id = json['id'];
+    final List<String> likedUsers = json.containsKey('likedUsers')
+        ? (json['likedUsers'] as List).map((e) => e.toString()).toList()
+        : <String>[];
     return CommentModel(
         username: username,
         comment: comment,
         timestamp: timestamp,
         userDp: userDp,
-        userId: userId);
+        userId: userId,
+        likedUsers: likedUsers,
+        id: id??"",
+    );
   }
 
   Map<String, dynamic> toJson() {

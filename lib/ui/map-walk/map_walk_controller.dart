@@ -203,16 +203,18 @@ class MapWalkController extends GetxController {
         .orderBy("dateTime", descending: true)
         .snapshots()
         .listen((event) {
-      // RxList tempWalks = [].obs;
+      List<WalkModel> tempWalks = [];
       streakList = [].obs;
       DateTime currentDate = DateTime.now();
       DateTime weekStart = currentDate.subtract(const Duration(days: 6));
       for (var element in event.docs) {
-        userWalks.add(WalkModel.fromJson(element.data()));
+        tempWalks.add(WalkModel.fromJson(element.data()));
       }
+      userWalks.value = tempWalks;
       print("here is user walks");
       print(userWalks.length);
     });
+    update();
   }
 
   addAchievement(String title) async {

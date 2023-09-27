@@ -13,6 +13,7 @@ import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
+import 'package:smartx_flutter_app/util/functions.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../helper/firestore_database_helper.dart';
@@ -28,9 +29,6 @@ class PostDetailScreen extends StatelessWidget {
     final controller = Get.find<PostDetailController>();
     final mapWalkController = Get.find<MapWalkController>();
     final size = context.screenSize;
-    PostModel args = Get.arguments;
-    print(args);
-    print("these are args");
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -97,118 +95,203 @@ class PostDetailScreen extends StatelessWidget {
                                 .snapshots(),
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (_, DocumentSnapshot snapshot) {
-                              CommentModel comments = CommentModel.fromJson(
-                                  snapshot.data() as Map<String, dynamic>);
-
-                              return Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20.0, right: 20, bottom: 10),
-                                  child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        (comments.userDp.toString() == 'null' ||
-                                                comments.userDp.toString() ==
-                                                    '')
-                                            ? Image.asset('assets/4.png',
-                                                height: 40)
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        comments.userDp ?? '',
-                                                    height: 40,
-                                                    width: 40,
-                                                    fit: BoxFit.cover,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        const Center(
-                                                            child:
-                                                                CircularProgressIndicator
-                                                                    .adaptive())),
-                                              ),
-                                        const SizedBox(width: 5),
-                                        Expanded(
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    color: Constants
-                                                        .colorBackground,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(comments.username,
-                                                            style: const TextStyle(
-                                                                fontFamily:
-                                                                    Constants
-                                                                        .workSansMedium,
-                                                                fontSize: 16,
-                                                                color: Constants
-                                                                    .colorSecondary)),
-                                                        const SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Expanded(
-                                                          child: Text(
-                                                              timeago.format(
-                                                                  comments
-                                                                      .timestamp
-                                                                      .toDate()),
+                              if (snapshot.data() != null) {
+                                CommentModel comments = CommentModel.fromJson(
+                                    snapshot.data() as Map<String, dynamic>);
+                                final isLiked = comments.likedUsers.contains(
+                                    FirebaseAuth.instance.currentUser!.uid);
+                                return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20.0, right: 20, bottom: 10),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          (comments.userDp.toString() ==
+                                                      'null' ||
+                                                  comments.userDp.toString() ==
+                                                      '')
+                                              ? Image.asset('assets/4.png',
+                                                  height: 40)
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          comments.userDp ?? '',
+                                                      height: 40,
+                                                      width: 40,
+                                                      fit: BoxFit.cover,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          const Center(
+                                                              child: CircularProgressIndicator
+                                                                  .adaptive())),
+                                                ),
+                                          const SizedBox(width: 5),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                      color: Constants
+                                                          .colorBackground,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              comments.username,
                                                               style: const TextStyle(
                                                                   fontFamily:
                                                                       Constants
-                                                                          .workSansLight,
-                                                                  fontSize: 12,
+                                                                          .workSansMedium,
+                                                                  fontSize: 16,
                                                                   color: Constants
                                                                       .colorSecondary)),
-                                                        ),
-                                                      ],
+                                                          const SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Expanded(
+                                                            child: Text(
+                                                                timeago.format(
+                                                                    comments
+                                                                        .timestamp
+                                                                        .toDate()),
+                                                                style: const TextStyle(
+                                                                    fontFamily:
+                                                                        Constants
+                                                                            .workSansLight,
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Constants
+                                                                        .colorSecondary)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Text(
+                                                        comments.comment ??
+                                                            'Such a cutie! 🐾❤️ Dogs truly are the best companions. Sending lots of belly rubs and ear scratches your way!',
+                                                        style: const TextStyle(
+                                                            fontFamily: Constants
+                                                                .workSansRegular,
+                                                            color: Constants
+                                                                .colorSecondary),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    if (comments.likedUsers
+                                                        .isNotEmpty) ...[
+                                                      Text(
+                                                          comments
+                                                              .likedUsers.length
+                                                              .toString(),
+                                                          style: const TextStyle(
+                                                              fontFamily: Constants
+                                                                  .workSansLight,
+                                                              fontSize: 16,
+                                                              color: Constants
+                                                                  .colorSecondary))
+                                                    ],
+                                                    const SizedBox(
+                                                      width: 5,
                                                     ),
-                                                    Text(
-                                                      comments.comment ??
-                                                          'Such a cutie! 🐾❤️ Dogs truly are the best companions. Sending lots of belly rubs and ear scratches your way!',
-                                                      style: const TextStyle(
-                                                          fontFamily: Constants
-                                                              .workSansRegular,
-                                                          color: Constants
-                                                              .colorSecondary),
+                                                    GestureDetector(
+                                                      child: Text('Like',
+                                                          style: TextStyle(
+                                                              fontFamily: Constants
+                                                                  .workSansLight,
+                                                              fontSize: 14,
+                                                              color: (isLiked)
+                                                                  ? Colors.blue
+                                                                  : Constants
+                                                                      .colorSecondary)),
+                                                      onTap: () {
+                                                        controller
+                                                            .commentToggleLike(
+                                                                comments,
+                                                                isLiked);
+                                                      },
+                                                    ),
+                                                    const SizedBox(width: 10)
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 5),
+                                          if (comments.userId ==
+                                              FirebaseAuth.instance.currentUser!
+                                                  .uid) ...[
+                                            IconButton(
+                                              onPressed: () {
+                                                final RenderBox button =
+                                                    context.findRenderObject()
+                                                        as RenderBox;
+                                                final RenderBox overlay =
+                                                    Overlay.of(context)!
+                                                            .context
+                                                            .findRenderObject()
+                                                        as RenderBox;
+                                                final Offset position = button
+                                                    .localToGlobal(Offset.zero,
+                                                        ancestor: overlay);
+                                                showMenu(
+                                                  context: context,
+                                                  position:
+                                                      RelativeRect.fromLTRB(
+                                                    position.dx +
+                                                        button.size.width,
+                                                    position.dy +
+                                                        button.size.height,
+                                                    position.dx,
+                                                    position.dy +
+                                                        button.size.height,
+                                                  ),
+                                                  items: <PopupMenuEntry>[
+                                                    PopupMenuItem(
+                                                      child:
+                                                          const Text('Delete'),
+                                                      onTap: () {
+                                                        Functions
+                                                            .showLoaderDialog(
+                                                                context);
+                                                        controller
+                                                            .deleteComment(
+                                                                comments,);
+
+                                                        Functions.showSnackBar(
+                                                            context,
+                                                            "comment deleted");
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
                                                     ),
                                                   ],
-                                                ),
-                                              ),
-                                              const Row(
-                                                children: [
-                                                  Text('Like',
-                                                      style: TextStyle(
-                                                          fontFamily: Constants
-                                                              .workSansLight,
-                                                          fontSize: 12,
-                                                          color: Constants
-                                                              .colorSecondary)),
-                                                  SizedBox(width: 10)
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        const Icon(Icons.more_horiz,
-                                            color:
-                                                Constants.colorPrimaryVariant)
-                                      ]));
+                                                );
+                                              },
+                                              icon: const Icon(Icons.more_horiz,
+                                                  color: Constants
+                                                      .colorPrimaryVariant),
+                                            )
+                                          ]
+                                        ]));
+                              }
+                              return const SizedBox();
                             })
                       ]))),
           StreamBuilder(
@@ -217,36 +300,42 @@ class PostDetailScreen extends StatelessWidget {
                   .doc(FirebaseAuth.instance.currentUser!.uid)
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if(snapshot.hasData){
+                if (snapshot.hasData) {
                   UserModel user = UserModel.fromJson(snapshot.data.data());
-                return Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    color: Constants.colorSecondaryVariant,
-                    child: AppTextField(
-                      height: 40,
-                      controller: controller.commentsTECController,
-                      hint: 'write comment',
-                      textInputType: TextInputType.text,
-                      textInputAction: TextInputAction.done,
-                      isError: false,
-                      hasBorder: false,
-                      onSuffixClick: () async {
-                        await controller.uploadComment();
-                        await controller.updateUser();
-                        if(user.userComments! >= 5){
-                          await mapWalkController.addAchievement("20 comments");
-                        }
-                        if (FirebaseAuth.instance.currentUser!.uid !=
-                            controller.postModel.userid) {
-                        await  FirestoreDatabaseHelper.instance()
-                              .sendNotification(controller.postModel, true);
-                        }
-                      },
-                      suffixIcon: const Icon(Icons.send_rounded,
-                          color: Constants.colorSecondary),
-                      // prefixIcon: Image.asset('assets/attachment.png',
-                      //     color: Constants.colorSecondary, width: 20)
-                    ));}
+                  return Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      color: Constants.colorSecondaryVariant,
+                      child: AppTextField(
+                        height: 40,
+                        controller: controller.commentsTECController,
+                        hint: 'write comment',
+                        textInputType: TextInputType.text,
+                        textInputAction: TextInputAction.done,
+                        isError: false,
+                        hasBorder: false,
+                        onSuffixClick: () async {
+                          await controller.uploadComment();
+                          await controller.updateUser();
+                          if (user.userComments! >= 5) {
+                            List tempList = mapWalkController.achievements
+                                .where((p0) => p0.title == "20 comments")
+                                .toList();
+                            if(tempList.isEmpty){
+                            await mapWalkController
+                                .addAchievement("20 comments");
+                          }}
+                          if (FirebaseAuth.instance.currentUser!.uid !=
+                              controller.postModel.userid) {
+                            await FirestoreDatabaseHelper.instance()
+                                .sendNotification(controller.postModel, true);
+                          }
+                        },
+                        suffixIcon: const Icon(Icons.send_rounded,
+                            color: Constants.colorSecondary),
+                        // prefixIcon: Image.asset('assets/attachment.png',
+                        //     color: Constants.colorSecondary, width: 20)
+                      ));
+                }
                 return const SizedBox();
               })
         ],

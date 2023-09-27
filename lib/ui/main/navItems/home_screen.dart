@@ -100,11 +100,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontFamily: Constants.workSansBold,
                                       fontSize: 16),
                                 ),
-                                Text('SEE ALL',
-                                    style: TextStyle(
-                                        fontFamily: Constants.workSansRegular,
-                                        color: Constants.colorPrimary,
-                                        fontSize: 16))
+                                // Text('SEE ALL',
+                                //     style: TextStyle(
+                                //         fontFamily: Constants.workSansRegular,
+                                //         color: Constants.colorPrimary,
+                                //         fontSize: 16))
                               ]),
                         ),
                         SizedBox(

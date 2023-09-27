@@ -111,7 +111,7 @@ class MainScreenController extends GetxController {
     }
   }
 
-  Rx<int> indexState = Rx(1);
+  Rx<int> indexState = 1.obs;
   Rx<int> selectedSliderIndex = Rx(0);
 
   Rx<DataEvent> postDataEvent = Rx<DataEvent>(const Initial());
@@ -123,7 +123,9 @@ class MainScreenController extends GetxController {
   Rx<DataEvent> groupsEvents = Rx<DataEvent>(const Initial());
 
   final int batchSize = 10; // Number of documents to fetch per page
-
+ changeIndex(int val){
+   indexState.value = val;
+ }
   void loadMoreData() {
     if (isLoadingMore.value) return;
 

@@ -14,6 +14,7 @@ import 'package:smartx_flutter_app/ui/add-post/add_post_screen.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_controller.dart';
 import 'package:smartx_flutter_app/ui/main/notifications/notification_screen.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
+import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
 import '../../helper/firestore_database_helper.dart';

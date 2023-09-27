@@ -97,60 +97,38 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Constants.colorSecondary,
-        // titleSpacing: 0,
-        automaticallyImplyLeading: false,
-        title: InkWell(
-          onTap: () => Get.back(),
-          child: const Row(
+      body: SafeArea(
+        child: SizedBox(
+          height: height,
+          width: width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                Icons.arrow_back,
-                color: Constants.colorOnBackground,
-              ),
-              Text(
-                'Back',
-                style: TextStyle(
-                    fontFamily: Constants.workSansRegular,
-                    color: Constants.colorOnBackground,
-                    fontSize: 16),
-              ),
+              GetX<MapWalkController>(
+                builder: (_) {
+                  return Expanded(
+                    child: Column(children: [
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Screenshot(
+                                controller: screenshotController,
+                                child: googleMap()),
+                            if (controller.isStart.value) ...[
+                              stopButton()
+                            ] else ...[
+                              startButton()
+                            ]
+                          ],
+                        ),
+                      )
+                    ]),
+                  );
+                },
+              )
             ],
           ),
-        ),
-      ),
-      body: SizedBox(
-        height: height,
-        width: width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GetX<MapWalkController>(
-              builder: (_) {
-                return Expanded(
-                  child: Column(children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Screenshot(
-                              controller: screenshotController,
-                              child: googleMap()),
-                          if (controller.isStart.value) ...[
-                            stopButton()
-                          ] else ...[
-                            startButton()
-                          ]
-                        ],
-                      ),
-                    )
-                  ]),
-                );
-              },
-            )
-          ],
         ),
       ),
     );

@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
@@ -11,14 +15,32 @@ import '../../models/user_model.dart';
 class UserDetailController extends GetxController {
   Rx<DataEvent> userPostEvents = Rx<DataEvent>(const Initial());
   Rx<DataEvent> userDogEvents = Rx<DataEvent>(const Initial());
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  late Stream<QuerySnapshot<Map<String, dynamic>>> postStream;
+  static const String _POSTS = 'posts';
   final MapEntry mapEntry;
-List<DogModel> dogs = [];
+  RxBool isLiked = false.obs;
+  RxList<PostModel> posts = <PostModel>[].obs;
+  var userId;
+  List<DogModel> dogs = [];
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
+      postStreamSubscription;
   UserDetailController({required this.mapEntry}) {
+    userId = (mapEntry.value as UserModel).id;
+    postStream = _firebaseFirestore
+        .collection(_POSTS)
+        .where('userid', isEqualTo: userId)
+        .where('groupId', isEqualTo: "")
+        .snapshots();
     getUserPosts();
-   getUserDogs();
+    getUserDogs();
   }
 
   Rx<int> tabIndex = Rx<int>(0);
+  @mustCallSuper
+  void dispose() {
+    postStreamSubscription?.cancel();
+  }
 
   updateTempPost(PostModel model) {
     if (userPostEvents.value is Data) {
@@ -41,22 +63,34 @@ List<DogModel> dogs = [];
   }
 
   getUserPosts() async {
-    userPostEvents(const Loading());
-    try {
-      final res = await FirestoreDatabaseHelper.instance()
-          .getUserPosts((mapEntry.value as UserModel).id);
-      if (res == null) {
-        userPostEvents(const Empty(message: ''));
-        return;
-      }
-      if (res.isEmpty) {
-        userPostEvents(const Empty(message: ''));
-        return;
-      }
-      userPostEvents(Data(data: res));
-    } catch (_) {
-      userPostEvents(Error(exception: Exception()));
-    }
+    var id = (mapEntry.value as UserModel).id;
+    postStreamSubscription = _firebaseFirestore
+        .collection(_POSTS)
+        .where('userid', isEqualTo: id)
+        .where('groupId', isEqualTo: "")
+        .snapshots()
+        .listen((event) {
+      posts.clear();
+      event.docs.forEach((element) {
+        posts.add(PostModel.fromJson(element.data()));
+      });
+    });
+    // userPostEvents(const Loading());
+    // try {
+    //   final res = await FirestoreDatabaseHelper.instance()
+    //       .getUserPosts((mapEntry.value as UserModel).id);
+    //   if (res == null) {
+    //     userPostEvents(const Empty(message: ''));
+    //     return;
+    //   }
+    //   if (res.isEmpty) {
+    //     userPostEvents(const Empty(message: ''));
+    //     return;
+    //   }
+    //   userPostEvents(Data(data: res));
+    // } catch (_) {
+    //   userPostEvents(Error(exception: Exception()));
+    // }
   }
 
   Future<DataEvent?> getUserDogs() async {

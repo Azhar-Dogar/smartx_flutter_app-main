@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -11,14 +12,23 @@ import 'package:smartx_flutter_app/util/constants.dart';
 import '../../models/user_model.dart';
 import '../user-detail/user_detail_screen.dart';
 
-class FindAndViewScreen extends StatelessWidget {
+class FindAndViewScreen extends StatefulWidget {
   static const String route = '/find_and_view_route';
 
   const FindAndViewScreen({super.key});
 
   @override
+  State<FindAndViewScreen> createState() => _FindAndViewScreenState();
+}
+
+class _FindAndViewScreenState extends State<FindAndViewScreen> {
+  String searchValue = "";
+  TextEditingController search = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     final controller = Get.find<FindAndViewController>();
+    List<UserModel> users = [];
+    List<UserModel> searchUsers = [];
     return Scaffold(
       backgroundColor: Constants.colorSecondaryVariant,
       appBar: AppBar(
@@ -46,9 +56,15 @@ class FindAndViewScreen extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
         child: Column(
           children: [
-            const AppTextField(
-                prefixIcon: Icon(Icons.search),
+            AppTextField(
+                prefixIcon: const Icon(Icons.search),
                 hint: 'Search',
+                controller: search,
+                onChanged: (v) {
+                  setState(() {
+                    searchValue = v;
+                  });
+                },
                 textInputType: TextInputType.text,
                 radius: 10,
                 isError: false,
@@ -57,7 +73,6 @@ class FindAndViewScreen extends StatelessWidget {
             Expanded(child: GetX<FindAndViewController>(
               builder: (_) {
                 final state = controller.userDataEvent.value;
-                print(state);
                 if (state is Loading) {
                   return const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -75,13 +90,29 @@ class FindAndViewScreen extends StatelessWidget {
                   );
                 }
                 if (state is Data) {
-                  print('ddad');
-                  final users = state.data as List<UserModel>;
-
+                  users = state.data as List<UserModel>;
+                  if (searchValue != "") {
+                    searchUsers = users
+                        .where((element) => element.firstName
+                            .toLowerCase()
+                            .contains(searchValue))
+                        .toList();
+                  }
+                  List finalList = [];
+                  if (searchUsers.isNotEmpty) {
+                    finalList = [];
+                    finalList = searchUsers;
+                  } else if (searchValue == "") {
+                    finalList = [];
+                    finalList = users;
+                  }
+                  if (finalList.isEmpty && searchValue != "") {
+                    return const Center(child: Text("No user Found"));
+                  }
                   return ListView.builder(
-                      itemCount: users.length,
+                      itemCount: finalList.length,
                       itemBuilder: (_, i) {
-                        return _SingleRowCard(user: users[i], index: i);
+                        return _SingleRowCard(user: finalList[i], index: i);
                       });
                 }
 
@@ -112,60 +143,60 @@ class _SingleRowCard extends StatelessWidget {
     final controller = Get.find<FindAndViewController>();
     RegExp regExp = RegExp(r'seconds=(\d+), nanoseconds=(\d+)');
     Match match = regExp.firstMatch(user.created!) as Match;
-      int seconds = int.parse(match.group(1)!);
-      int nanoseconds = int.parse(match.group(2)!);
-      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true)
-          .add(Duration(microseconds: nanoseconds ~/ 1000));
+    int seconds = int.parse(match.group(1)!);
+    int nanoseconds = int.parse(match.group(2)!);
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true)
+            .add(Duration(microseconds: nanoseconds ~/ 1000));
     String formattedDate = DateFormat.yMMMMd().format(dateTime);
     return Column(
       children: [
-        Row(
-          children: [
-            GestureDetector(
-                onTap: () => Get.toNamed(UserDetailScreen.route,
-                    arguments: MapEntry(false, user)),
-                child: Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                            color: Constants.colorOnSurface, width: 2)),
-                    child: (user.imagePath.toString() == '')
-                        ? Image.asset('assets/5.png', height: 50)
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: CachedNetworkImage(
-                                imageUrl: user.imagePath ?? '',
-                                height: 50,
-                                width: 50)))),
-            GestureDetector(
-                onTap: () => Get.toNamed(UserDetailScreen.route,
-                    arguments: MapEntry(false, user)),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(user.firstName,
-                          style: const TextStyle(
-                              fontFamily: Constants.workSansMedium,
-                              fontSize: 16,
-                              color: Constants.colorSecondary)),
-                       Text(formattedDate,
-                          style: const TextStyle(
-                              fontFamily: Constants.workSansLight,
-                              color: Constants.colorSecondary))
-                    ])),
-            const Spacer(),
-            GestureDetector(
-              onTap: () => controller.followUnfollowUser(index, user),
-              child: Text(user.isFollowing ? 'Following' : 'Follow',
-                  style: TextStyle(
-                      fontFamily: Constants.workSansMedium,
-                      fontSize: 16,
-                      color: user.isFollowing
-                          ? Constants.colorTextField
-                          : Constants.colorOnSurface)),
-            ),
-          ],
+        GestureDetector(
+          onTap: () {
+            controller.updateIndex(index);
+            Get.toNamed(UserDetailScreen.route,
+                arguments: MapEntry(false, user));
+          },
+          child: Row(
+            children: [
+              Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                          color: Constants.colorOnSurface, width: 2)),
+                  child: (user.imagePath.toString() == '')
+                      ? Image.asset('assets/5.png', height: 50)
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: CachedNetworkImage(
+                              imageUrl: user.imagePath ?? '',
+                              height: 50,
+                              width: 50))),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(user.firstName,
+                    style: const TextStyle(
+                        fontFamily: Constants.workSansMedium,
+                        fontSize: 16,
+                        color: Constants.colorSecondary)),
+                Text(formattedDate,
+                    style: const TextStyle(
+                        fontFamily: Constants.workSansLight,
+                        color: Constants.colorSecondary))
+              ]),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => controller.followUnfollowUser(index, user),
+                child: Text(user.isFollowing ? 'Following' : 'Follow',
+                    style: TextStyle(
+                        fontFamily: Constants.workSansMedium,
+                        fontSize: 16,
+                        color: user.isFollowing
+                            ? Constants.colorTextField
+                            : Constants.colorOnSurface)),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 10),
         const Divider(),

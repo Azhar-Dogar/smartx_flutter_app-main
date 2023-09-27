@@ -143,7 +143,9 @@ class _MainScreenState extends State<MainScreen> {
           if (controller.indexState.value == 3) {
              return FloatingActionButton(
               backgroundColor: Constants.buttonColor,
-              onPressed: () => Get.toNamed(MapWalkScreen.route),
+              onPressed: (){
+                controller.changeIndex(0);
+              },
               child: const Icon(
                 Icons.add,
                 color: Constants.colorOnBackground,

@@ -12,7 +12,11 @@ import '../../models/user_model.dart';
 
 class FindAndViewController extends GetxController {
   Rx<DataEvent> userDataEvent = Rx<DataEvent>(const Initial());
-
+  RxBool isFollow = RxBool(false);
+  RxInt index = 0.obs;
+  updateIndex(int _index){
+    index.value = _index;
+  }
   final FirestoreDatabaseHelper _firestoreDatabaseHelper =
       FirestoreDatabaseHelper.instance();
 

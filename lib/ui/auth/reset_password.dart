@@ -31,16 +31,19 @@ class _ResetPasswordState extends State<ResetPassword> {
           children: [
              AppTextField(hint: "Email", textInputType: TextInputType.text, isError: false,controller: email,),
             const SizedBox(height: 20,),
-            AppButton(
-                color: Constants.buttonColor,
-                text:"Send", onClick:(){
-              Functions.showLoaderDialog(context);
-              FirebaseAuth.instance.sendPasswordResetEmail(email: email.text).then((value){
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Functions.showSnackBar(context,"Password reset instructions has been send to your email.");
-              });
-            })
+            SizedBox(
+              width: 100,
+              child: AppButton(
+                  color: Constants.buttonColor,
+                  text:"Send", onClick:(){
+                Functions.showLoaderDialog(context);
+                FirebaseAuth.instance.sendPasswordResetEmail(email: email.text).then((value){
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Functions.showSnackBar(context,"Password reset instructions has been send to your email.");
+                });
+              }),
+            )
           ],
         ),
       ),

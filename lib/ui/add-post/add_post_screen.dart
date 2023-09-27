@@ -52,9 +52,8 @@ class AddPostScreen extends StatelessWidget {
     final args = Get.arguments;
     print(args);
     print("args");
-    return GetX<AddPostController>(
-      builder: (DisposableInterface con) {
-       return Scaffold(
+    return GetX<AddPostController>(builder: (DisposableInterface con) {
+      return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             elevation: 0,
@@ -78,11 +77,16 @@ class AddPostScreen extends StatelessWidget {
               GestureDetector(
                   onTap: () async {
                     await _addPost(context, args);
-                      await controller.updateUser();
-                      if(controller.user.value!.userPosts! >= 5){
+                    await controller.updateUser();
+                    if (controller.user.value!.userPosts! >= 5) {
+                      List tempList = mapWalkController.achievements
+                          .where((p0) => p0.title == "20 posts")
+                          .toList();
+                      if (tempList.isEmpty) {
                         mapWalkController.addAchievement("20 posts");
                       }
-                    },
+                    }
+                  },
                   child: const Padding(
                       padding: EdgeInsets.only(right: 8.0),
                       child: Text('POST',
@@ -93,114 +97,112 @@ class AddPostScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-               Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.only(
-                              top: 20.0, left: 20, right: 20),
-                          child: Row(children: [
-                            Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: (controller.user.value?.imagePath
-                                                .toString() !=
-                                            '' &&
-                                        controller.user.value?.imagePath != null)
-                                    ? CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            controller.user.value?.imagePath ??
-                                                ""),
-                                        radius: 25,
-                                      )
-                                    : Image.asset('assets/4.png', height: 50)),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                      padding:
+                          const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                      child: Row(children: [
+                        Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration:
+                                const BoxDecoration(shape: BoxShape.circle),
+                            child: (controller.user.value?.imagePath
+                                            .toString() !=
+                                        '' &&
+                                    controller.user.value?.imagePath != null)
+                                ? CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        controller.user.value?.imagePath ?? ""),
+                                    radius: 25,
+                                  )
+                                : Image.asset('assets/4.png', height: 50)),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  controller.user.value?.firstName ??
+                                      'Stella Andrew',
+                                  style: const TextStyle(
+                                      fontFamily: Constants.workSansMedium,
+                                      color: Constants.colorSecondary))
+                            ])
+                      ])),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AppTextField(
+                          hint: 'Type here....',
+                          controller: controller.textController,
+                          textInputAction: TextInputAction.done,
+                          textInputType: TextInputType.text,
+                          isError: false,
+                          hasBorder: false)),
+                  const SizedBox(height: 40),
+                  controller.fileImage.value != null
+                      ? Image.file(File(controller.fileImage.value!.path))
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                final XFile? pickedImage = await ImagePicker()
+                                    .pickImage(source: ImageSource.gallery);
+                                controller.fileImage(pickedImage);
+                                print("path");
+                                print(controller.fileImage.value?.path);
+                              },
+                              child: Row(
                                 children: [
+                                  Image.asset(
+                                    'assets/attachment.png',
+                                    width: 20,
+                                    color: Constants.colorSecondary,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  const Text(
+                                    'Attach Media',
+                                    style: TextStyle(
+                                      fontFamily: Constants.workSansMedium,
+                                      color: Constants.colorSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            GestureDetector(
+                              onTap: () async {
+                                final XFile? pickedImage = await ImagePicker()
+                                    .pickImage(source: ImageSource.camera);
+                                controller.fileImage(pickedImage);
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: Constants.colorSecondary,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 5),
                                   Text(
-                                      controller.user.value?.firstName ??
-                                          'Stella Andrew',
-                                      style: const TextStyle(
-                                          fontFamily: Constants.workSansMedium,
-                                          color: Constants.colorSecondary))
-                                ])
-                          ])),
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: AppTextField(
-                              hint: 'Type here....',
-                              controller: controller.textController,
-                              textInputAction: TextInputAction.done,
-                              textInputType: TextInputType.text,
-                              isError: false,
-                              hasBorder: false)),
-                      const SizedBox(height: 40),
-                      controller.fileImage.value != null
-                          ? Image.file(File(controller.fileImage.value!.path))
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    final XFile? pickedImage = await ImagePicker()
-                                        .pickImage(source: ImageSource.gallery);
-                                    controller.fileImage(pickedImage);
-                                    print("path");
-                                    print(controller.fileImage.value?.path);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        'assets/attachment.png',
-                                        width: 20,
-                                        color: Constants.colorSecondary,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      const Text(
-                                        'Attach Media',
-                                        style: TextStyle(
-                                          fontFamily: Constants.workSansMedium,
-                                          color: Constants.colorSecondary,
-                                        ),
-                                      ),
-                                    ],
+                                    'Take Photo',
+                                    style: TextStyle(
+                                      fontFamily: Constants.workSansMedium,
+                                      color: Constants.colorSecondary,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 20),
-                                GestureDetector(
-                                  onTap: () async {
-                                    final XFile? pickedImage = await ImagePicker()
-                                        .pickImage(source: ImageSource.camera);
-                                    controller.fileImage(pickedImage);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.camera_alt_outlined,
-                                        color: Constants.colorSecondary,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        'Take Photo',
-                                        style: TextStyle(
-                                          fontFamily: Constants.workSansMedium,
-                                          color: Constants.colorSecondary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                    ],
-
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                ],
               )
             ],
           ),
         ),
-      );}
-    );
+      );
+    });
   }
 }

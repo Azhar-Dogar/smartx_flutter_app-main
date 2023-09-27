@@ -26,10 +26,15 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
   var imagePath ;
   final controller = Get.put(MapWalkController());
   @override
-  Widget build(BuildContext context) {
-     imagePath = Get.arguments;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    imagePath = Get.arguments;
     print("Image Path");
     print(imagePath.value);
+  }
+  @override
+  Widget build(BuildContext context) {
     final size = context.screenSize;
     print("These are selected dogs");
     print(controller.selectedDogs.length);
@@ -200,8 +205,8 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                                 Functions.showLoaderDialog(context);
                                 await controller.addWalk();
                                 Get.back();
-                                shareDialogue();
-                                // controller.clearValues();
+                               await shareDialogue();
+                                controller.clearValues();
                               }),
                         ),
                       ),
