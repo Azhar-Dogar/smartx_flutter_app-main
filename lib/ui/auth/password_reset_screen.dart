@@ -5,6 +5,8 @@ import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/ui/auth/password_reset_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
+import 'package:smartx_flutter_app/util/functions.dart';
+import 'package:utility_extensions/utility_extensions.dart';
 
 class PasswordResetScreen extends StatelessWidget {
   static const String route = '/password_reset_screen_route';
@@ -90,8 +92,13 @@ class PasswordResetScreen extends StatelessWidget {
                             width: size.width,
                             child: AppButton(
                                 onClick: () {
-                                  controller.isEmailSent(
-                                      !controller.isEmailSent.value);
+                                  if(controller.emailController.text.isValidEmail){
+                                    controller.isEmailSent(
+                                        !controller.isEmailSent.value);
+                                  }else{
+                                    Functions.showToast(context, "Please enter a valid email address");
+                                  }
+
                                 },
                                 text: controller.isEmailSent.value
                                     ? 'Resend'

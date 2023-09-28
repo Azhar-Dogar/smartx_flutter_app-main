@@ -51,7 +51,7 @@ class MainScreenController extends GetxController {
 
   MainScreenController() {
     initData();
-    mainNavigationScreenMap[_mainAddNavigationItemScreenKey] = const SizedBox();
+    mainNavigationScreenMap[_mainAddNavigationItemScreenKey] = const MapWalkScreen();
     mainNavigationScreenMap[_mainhomeNavigationItemScreenKey] =
         const HomeScreen(
       key: _mainhomeNavigationItemScreenKey,
@@ -94,7 +94,7 @@ class MainScreenController extends GetxController {
   Widget _navigationItemIndex(int index) {
     switch (index) {
       case 0:
-        return MapWalkScreen(key: _mainAddNavigationItemScreenKey);
+        return const MapWalkScreen(key: _mainAddNavigationItemScreenKey);
       case 1:
         return const HomeScreen(key: _mainhomeNavigationItemScreenKey);
       case 2:

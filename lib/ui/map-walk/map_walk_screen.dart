@@ -35,7 +35,7 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
   late double width, height;
   @override
   void initState() {
-    // TODO: implement initState
+    print("hello");
     super.initState();
     _requestLocationPermission();
   }

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smartx_flutter_app/dialogues/reset_password.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
@@ -96,7 +97,7 @@ class ProfileScreen extends StatelessWidget {
                 imagePath: 'assets/Lock.png',
                 title: 'Reset Password',
                 onClick: () {
-                  Get.to(const ResetPassword());
+                  showDialog(context: context, builder: (_)=>ResetPasswordDialog());
                 }),
             const SizedBox(height: 20),
             SIngleCard(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,9 +23,10 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   late double width, height;
+  final controller = Get.put(MapWalkController());
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(MapWalkController());
+
     print(FirebaseAuth.instance.currentUser!.uid);
     final size = context.screenSize;
     width = MediaQuery.of(context).size.width;
@@ -51,6 +53,9 @@ class _LocationScreenState extends State<LocationScreen> {
 
   Widget walkWidget(WalkModel model) {
     return GestureDetector(
+      onTap: (){
+        // FirebaseFirestore.instance.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).collection("walks").doc(model.id).delete();
+      },
       child: Container(
         margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
         width: width,

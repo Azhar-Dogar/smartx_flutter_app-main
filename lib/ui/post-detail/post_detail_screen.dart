@@ -316,7 +316,7 @@ class PostDetailScreen extends StatelessWidget {
                         onSuffixClick: () async {
                           await controller.uploadComment();
                           await controller.updateUser();
-                          if (user.userComments! >= 5) {
+                          if (user.userComments! >= 20) {
                             List tempList = mapWalkController.achievements
                                 .where((p0) => p0.title == "20 comments")
                                 .toList();

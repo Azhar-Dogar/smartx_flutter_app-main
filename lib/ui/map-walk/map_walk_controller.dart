@@ -24,6 +24,7 @@ import 'package:http/http.dart' as http;
 
 class MapWalkController extends GetxController {
   String? uid;
+
   MapWalkController({this.uid}) {
     _requestLocationPermission();
     getCurrentUser();
@@ -31,13 +32,13 @@ class MapWalkController extends GetxController {
     getUserWalks();
     getAchievement();
   }
+
   Rx<DataEvent> userAchievements = Rx<DataEvent>(const Initial());
-  CollectionReference stream = FirebaseFirestore
-      .instance
-      .collection(_USER);
-      // .doc(_uid??userId)
-      // .collection(_ACHIEVEMENTS)
-      // .snapshots();
+  CollectionReference stream = FirebaseFirestore.instance.collection(_USER);
+
+  // .doc(_uid??userId)
+  // .collection(_ACHIEVEMENTS)
+  // .snapshots();
   static String _USER = "user";
   static String _POSTS = "posts";
   static String _WALKS = "walks";
@@ -62,17 +63,20 @@ class MapWalkController extends GetxController {
   RxList<DogModel> selectedDogs = <DogModel>[].obs;
   Timer? timer;
   final titleController = TextEditingController();
-  addSelectedDogs(List<DogModel> dogs){
+
+  addSelectedDogs(List<DogModel> dogs) {
     selectedDogs.value = dogs;
   }
-  clearValues(){
+
+  clearValues() {
     hours.value = 0;
-    minutes.value=0;
-    seconds.value=0;
-    totalDistance.value=0;
+    minutes.value = 0;
+    seconds.value = 0;
+    totalDistance.value = 0;
     selectedDogs.clear();
     titleController.clear();
   }
+
   getCurrentUser() {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance
@@ -95,17 +99,23 @@ class MapWalkController extends GetxController {
       // print("first name");
     });
   }
+
   getAchievement({String? uid}) async {
     achievements = <AchievementModel>[].obs;
-    final documents = await stream.doc(uid??userId).collection(_ACHIEVEMENTS).get();
-        // .listen((event) {
-      documents.docs.forEach((element) {
-        achievements.add(AchievementModel.fromJson(element.data()));
-      });
-      achievements.obs;
-      print("achievements");
-      print(achievements.length);
-      update();
+    final documents =
+        await stream.doc(uid ?? userId).collection(_ACHIEVEMENTS).get();
+    // .listen((event) {
+
+    for (var doc in documents.docs) {
+      if(achievements.where((element) => element.title == doc.data()["title"]).isEmpty){
+        achievements.add(AchievementModel.fromJson(doc.data()));
+      }
+    }
+
+    achievements.obs;
+    print("achievements");
+    print(achievements.length);
+    update();
     // });
   }
 
@@ -193,6 +203,7 @@ class MapWalkController extends GetxController {
   }
 
   getUserComments() {}
+
   getUserWalks() {
     userWalks = <WalkModel>[].obs;
     streakList = [].obs;
@@ -240,10 +251,10 @@ class MapWalkController extends GetxController {
             paths: pathPoints,
             dateTime: DateTime.now(),
             duration: hours.value * 3600 + minutes.value * 60 + seconds.value,
-            distance: totalDistance.value,
+            distance: totalDistance.value / 1000,
             id: doc.id)
         .toJson());
-    if(userWalks.length <= 1){
+    if (userWalks.length <= 1) {
       addFirstWalkBadge();
     }
     if (DateTime.now().hour >= 20) {
@@ -255,12 +266,15 @@ class MapWalkController extends GetxController {
     addWeeklyBadge();
     addMonthlyBadge();
   }
-  addFirstWalkBadge(){
+
+  addFirstWalkBadge() {
     List tempList =
-    achievements.where((p0) => p0.title == "First Walk").toList();
-    if(tempList.isEmpty){
+        achievements.where((p0) => p0.title == "First Walk").toList();
+    if (tempList.isEmpty) {
       addAchievement("First Walk");
-  }}
+    }
+  }
+
   List<WalkModel> checkStreak(int days) {
     List<WalkModel> streakList = [];
     DateTime currentDate = DateTime.now();
@@ -329,24 +343,28 @@ class MapWalkController extends GetxController {
       }
     }
   }
+
   addRainyBadge() async {
     bool match = false;
     List tempList =
-    achievements.where((p0) => p0.title == "Rainy Walk").toList();
-    if(tempList.isEmpty){
-    for (var element in hourlyWeather) {
-      DateTime dateTime = DateTime.parse(element.time);
-      if(dateTime.day == DateTime.now().day && dateTime.hour == DateTime.now().hour){
-        if(element.waterRange != 0.0){
-         match = true;
-        }
-        if(match){
-          await addAchievement("Rainy Walk");
-          return;
+        achievements.where((p0) => p0.title == "Rainy Walk").toList();
+    if (tempList.isEmpty) {
+      for (var element in hourlyWeather) {
+        DateTime dateTime = DateTime.parse(element.time);
+        if (dateTime.day == DateTime.now().day &&
+            dateTime.hour == DateTime.now().hour) {
+          if (element.waterRange != 0.0) {
+            match = true;
+          }
+          if (match) {
+            await addAchievement("Rainy Walk");
+            return;
+          }
         }
       }
-    }}
-   }
+    }
+  }
+
   Future<void> _requestLocationPermission() async {
     final permission_handler.PermissionStatus status =
         await permission_handler.Permission.location.request();
