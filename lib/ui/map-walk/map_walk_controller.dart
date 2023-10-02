@@ -44,12 +44,14 @@ class MapWalkController extends GetxController {
   static String _WALKS = "walks";
   static String _ACHIEVEMENTS = "achievements";
   Rx<bool> isStart = Rx<bool>(false);
+  Rx<bool> isPause = Rx<bool>(false);
   RxList badges = [].obs;
   Rx<UserModel?> userModel = Rx<UserModel?>(null);
   static String userId = FirebaseAuth.instance.currentUser!.uid;
   List<LatLng> pathPoints = [];
   RxDouble totalDistance = 0.0.obs;
-  DateTime modified = DateTime.now();
+  DateTime modified = DateTime(DateTime.now().year, DateTime.now().month,
+      DateTime.now().day, 00, 00, 00);
   RxInt minutes = 0.obs;
   RxInt seconds = 0.obs;
   RxInt hours = 0.obs;
@@ -107,7 +109,9 @@ class MapWalkController extends GetxController {
     // .listen((event) {
 
     for (var doc in documents.docs) {
-      if(achievements.where((element) => element.title == doc.data()["title"]).isEmpty){
+      if (achievements
+          .where((element) => element.title == doc.data()["title"])
+          .isEmpty) {
         achievements.add(AchievementModel.fromJson(doc.data()));
       }
     }
@@ -161,7 +165,7 @@ class MapWalkController extends GetxController {
   }
 
   void startTimer() {
-    modified = DateTime(time.year, time.month, time.day, 00, 00, 00);
+    // modified = DateTime(time.year, time.month, time.day, 00, 00, 00);
     time = modified;
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _seconds++;

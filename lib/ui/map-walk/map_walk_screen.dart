@@ -69,19 +69,22 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
   Future<void> _setMyLocation() async {
     final Location location = Location();
     location.onLocationChanged.listen((LocationData newLocation) {
-        _myLocation = newLocation;
+      _myLocation = newLocation;
+      if (controller.pathPoints.isEmpty) {
         controller.pathPoints
             .add(LatLng(newLocation.latitude!, newLocation.longitude!));
-      if (controller.isStart.value) {
-        Future.delayed(const Duration(seconds: 5)).then((value) {
-          setState(() {
-            _myLocation = newLocation;
-            controller.pathPoints
-                .add(LatLng(newLocation.latitude!, newLocation.longitude!));
-            print("paths ${controller.pathPoints.length}");
-          });
-        });
       }
+
+        Future.delayed(const Duration(seconds: 5)).then((value) {
+          if (controller.isStart.value && !controller.isPause.value) {
+            setState(() {
+              _myLocation = newLocation;
+              controller.pathPoints
+                  .add(LatLng(newLocation.latitude!, newLocation.longitude!));
+              print("paths ${controller.pathPoints.length}");
+            });
+          }});
+
       if (_controller != null) {
         _controller!.animateCamera(
           CameraUpdate.newLatLng(
@@ -91,6 +94,7 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
       }
     });
   }
+
   ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
@@ -135,7 +139,6 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
   }
 
   Widget stopButton() {
-    DateTime date = DateTime.now();
     return Positioned(
       bottom: 10,
       left: width * 0.25,
@@ -147,13 +150,24 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Text(controller.totalDistance.toStringAsFixed(3)),
-              Container(
-                  alignment: Alignment.center,
-                  height: 40,
-                  width: 40,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Constants.colorOnSurface),
-                  child: const Icon(Icons.pause)),
+              InkWell(
+                onTap: () {
+                  if(!controller.isPause.value){
+                  controller.isPause(true);
+                  controller.timer?.cancel();
+                }else{
+                    controller.isPause(false);
+                    controller.startTimer();
+                  }},
+                child: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    width: 40,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Constants.colorOnSurface),
+                    child: Icon((controller.isPause.value)?Icons.play_arrow:Icons.pause)),
+              ),
               const MarginWidget(
                 factor: 1,
                 isHorizontal: true,
@@ -161,26 +175,29 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
               GestureDetector(
                 onTap: () async {
                   late File imagePath;
-                  try{
-                    var e = await _controller!.takeSnapshot().
-                  then((Uint8List? image) async {
-                    print("here we know");
-                    if (image != null) {
-                       final directory = await getTemporaryDirectory();
-                       imagePath = await File('${directory.path}/image.png').create();
-                      var e = await imagePath.writeAsBytes(image);
-                       }
-                  });}
-                  catch(e){
+                  try {
+                    var e = await _controller!
+                        .takeSnapshot()
+                        .then((Uint8List? image) async {
+                      if (image != null) {
+                        final directory = await getTemporaryDirectory();
+                        imagePath =
+                            await File('${directory.path}/image.png').create();
+                        var e = await imagePath.writeAsBytes(image);
+                      }
+                    });
+                  } catch (e) {
                     print("error ");
                     print(e);
-                  };
+                  }
+                  ;
                   controller.calDistance();
-                  Get.toNamed(StopWalkScreen.route,arguments: MapEntry(false,imagePath.path));
+                  Get.toNamed(StopWalkScreen.route,
+                      arguments: MapEntry(false, imagePath.path));
                   controller.pathPoints = [];
                   controller.timer!.cancel();
                   controller.isStart(false);
-                  },
+                },
                 child: Container(
                   alignment: Alignment.center,
                   height: 110,
