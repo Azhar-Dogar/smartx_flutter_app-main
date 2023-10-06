@@ -43,7 +43,7 @@ class GroupsScreen extends StatelessWidget {
                   height: size.height * 0.6,
                   width: size.width,
                   color: Constants.colorOnBackground,
-                  child: Stack(
+                  child: (userGroups.isEmpty)?Center(child: Text("No user group"),):Stack(
                     children: [
                       SizedBox(
                           height: size.height * 0.2,

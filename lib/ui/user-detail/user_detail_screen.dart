@@ -14,7 +14,7 @@ import 'package:smartx_flutter_app/ui/find-and-view/find_view_controller.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
-import 'package:smartx_flutter_app/ui/user-detail/achievements_screen.dart';
+import 'package:smartx_flutter_app/ui/user-detail/achievements/achievements_screen.dart';
 import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
@@ -22,6 +22,7 @@ import '../../backend/server_response.dart';
 import '../../models/dog_model.dart';
 import '../../models/post_model.dart';
 import '../../models/user_model.dart';
+import '../map-walk/map_walk_controller.dart';
 
 class UserDetailScreen extends StatefulWidget {
   static const String route = '/user_detai_screen_route';
@@ -51,6 +52,8 @@ class _UserDetailScreenState extends State<UserDetailScreen>
         index = tabController.index;
       });
     });
+    final controller = Get.put(MapWalkController(uid: FirebaseAuth.instance.currentUser!.uid));
+    controller.getAchievement(uid:FirebaseAuth.instance.currentUser!.uid);
   }
 
   @override
@@ -128,7 +131,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>
                                           Constants.colorOnSurface,
                                       tabs: const [
                                         Tab(text: "Activities"),
-                                        Tab(text: 'Achievements'),
+                                        Tab(text: 'Trophies'),
                                         Tab(text: 'Dogs'),
                                       ],
                                     ),
@@ -506,7 +509,7 @@ class UserFeedTabScreen extends StatelessWidget {
                                 .updateTempPost(res);
                           }
                         },
-                        child: Text('Have Something to share?',
+                        child: Text('Have something to say?',
                             style: TextStyle(
                                 fontFamily: Constants.workSansLight,
                                 color: color))))

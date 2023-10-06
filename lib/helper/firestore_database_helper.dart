@@ -239,6 +239,8 @@ class FirestoreDatabaseHelper {
     if (documentReference.docs.isEmpty) return null;
     return documentReference.docs.map((e) {
       final post = GroupModel.fromMap(e.data());
+      print(post.title);
+      print("post name");
       return post;
     }).toList();
   }

@@ -7,6 +7,7 @@ import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/common/stream_comments_wrapper.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
+import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/models/post_model.dart';
 import 'package:smartx_flutter_app/models/user_model.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
@@ -317,13 +318,16 @@ class PostDetailScreen extends StatelessWidget {
                           await controller.uploadComment();
                           await controller.updateUser();
                           if (user.userComments! >= 20) {
-                            List tempList = mapWalkController.achievements
-                                .where((p0) => p0.title == "20 comments")
-                                .toList();
-                            if(tempList.isEmpty){
+                            List<AchievementModel> tempModel = mapWalkController.achievements
+                                .where((p0) => p0.title == "20 comments").toList();
+                            if(tempModel.isEmpty){
                             await mapWalkController
-                                .addAchievement("20 comments");
-                          }}
+                                .addAchievement("20 comments","You have make 20 comments",DateTime.now().millisecondsSinceEpoch,1);
+                          }else{
+                              if(user.userComments! % 2 == 0){
+                              await mapWalkController.updateAchievement(tempModel.first.id, tempModel.first.count + 1);
+                              mapWalkController.getAchievement();
+                            }}}
                           if (FirebaseAuth.instance.currentUser!.uid !=
                               controller.postModel.userid) {
                             await FirestoreDatabaseHelper.instance()

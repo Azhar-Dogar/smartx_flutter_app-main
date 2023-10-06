@@ -278,7 +278,7 @@ class FeedTabScreen extends StatelessWidget {
                                 .updateTempPost(res);
                           }
                         },
-                        child: Text('Have Something to share?',
+                        child: Text('Have something to say?',
                             style: TextStyle(
                                 fontFamily: Constants.workSansLight,
                                 color: color))))

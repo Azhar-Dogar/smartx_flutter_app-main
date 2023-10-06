@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/models/quest_model.dart';
+import 'package:smartx_flutter_app/util/functions.dart';
 
 import '../ui/map-walk/map_walk_controller.dart';
 import '../util/constants.dart';
@@ -32,10 +33,11 @@ class QuestWidget extends StatelessWidget {
                 .map((e) =>
                     AchievementModel.fromJson(e.data() as Map<String, dynamic>))
                 .toList();
+            if(achievements.isNotEmpty){
             var e = achievements.where((p0) => p0.title==model.title).toList();
             if(e.isNotEmpty){
               isComplete = true;
-            }
+            }}
             print("length");
             print(achievements.length);
             return Container(
@@ -105,8 +107,11 @@ class QuestWidget extends StatelessWidget {
                           child: AppButton(
                               onClick: () {
                                 if (!isComplete) {
+                                  if(mapWalkController.userWalks.isNotEmpty){
                                   mapWalkController.addQuestStreak(model);
-                                }
+                                }else{
+                                    Functions.showSnackBar(context, "please make walk to complete quest");
+                                  }}
                               },
                               text:
                                   isComplete ? "Completed" : 'Mark as complete',

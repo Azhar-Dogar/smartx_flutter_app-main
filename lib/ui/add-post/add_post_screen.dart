@@ -9,6 +9,7 @@ import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/helper/material_dialog_helper.dart';
 import 'package:smartx_flutter_app/helper/snackbar_helper.dart';
 import 'package:smartx_flutter_app/helper/snackbar_message.dart';
+import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_controller.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
@@ -79,12 +80,15 @@ class AddPostScreen extends StatelessWidget {
                     await _addPost(context, args);
                     await controller.updateUser();
                     if (controller.user.value!.userPosts! >= 20) {
-                      List tempList = mapWalkController.achievements
-                          .where((p0) => p0.title == "20 posts")
-                          .toList();
-                      if (tempList.isEmpty) {
-                        mapWalkController.addAchievement("20 posts");
-                      }
+                      List<AchievementModel> tempModel = mapWalkController.achievements
+                          .where((p0) => p0.title == "20 posts").toList();
+                      if (tempModel.isEmpty) {
+                        mapWalkController.addAchievement("20 posts","You have make 20 posts",DateTime.now().millisecondsSinceEpoch,1);
+                      }else{
+                        if(controller.user.value!.userPosts! % 20 == 0){
+                        mapWalkController.updateAchievement(tempModel.first.id, tempModel.first.count + 1);
+                        mapWalkController.getAchievement();
+                      }}
                     }
                   },
                   child: const Padding(
