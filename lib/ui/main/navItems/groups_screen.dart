@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,14 +41,14 @@ class GroupsScreen extends StatelessWidget {
                   height: size.height * 0.6,
                   width: size.width,
                   color: Constants.colorOnBackground,
-                  child: Stack(
+                  child: (userGroups.isEmpty)?Center(child: Text("No user group"),):Stack(
                     children: [
                       SizedBox(
                           height: size.height * 0.2,
                           width: size.width,
                           child: Image.network(
                               list[mainController.selectedSliderIndex.value]
-                                      .coverImage ??
+                                  .coverImage ??
                                   "https://cdn.pixabay.com/photo/2016/12/13/05/15/puppy-1903313_1280.jpg",
                               fit: BoxFit.cover)),
                       Positioned(
@@ -64,63 +62,63 @@ class GroupsScreen extends StatelessWidget {
                                 itemBuilder: (_, i) {
                                   return GetX<MainScreenController>(
                                       builder: (_) {
-                                    if (i ==
-                                        mainController
-                                            .selectedSliderIndex.value) {
-                                      return InkWell(
-                                          onTap: () => mainController
-                                              .selectedSliderIndex(i),
-                                          child: Container(
-                                              margin: const EdgeInsets.all(8.0),
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 3,
-                                                      color: Constants
-                                                          .colorOnBackground),
-                                                  borderRadius:
+                                        if (i ==
+                                            mainController
+                                                .selectedSliderIndex.value) {
+                                          return InkWell(
+                                              onTap: () => mainController
+                                                  .selectedSliderIndex(i),
+                                              child: Container(
+                                                  margin: const EdgeInsets.all(8.0),
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          width: 3,
+                                                          color: Constants
+                                                              .colorOnBackground),
+                                                      borderRadius:
                                                       BorderRadius.circular(
                                                           14)),
-                                              child: ClipRRect(
-                                                  borderRadius:
+                                                  child: ClipRRect(
+                                                      borderRadius:
                                                       BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                      userGroups[i].profileImage,
-                                                      fit: BoxFit.cover,
-                                                      width: 130))));
-                                    }
-                                    return InkWell(
-                                      onTap: () =>
-                                          mainController.selectedSliderIndex(i),
-                                      child: Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 8.0,
-                                            right: 8.0,
-                                            bottom: 22,
-                                            top: 22),
-                                        child: ClipRRect(
-                                          borderRadius:
+                                                      child: Image.network(
+                                                          userGroups[i].profileImage,
+                                                          fit: BoxFit.cover,
+                                                          width: 130))));
+                                        }
+                                        return InkWell(
+                                          onTap: () =>
+                                              mainController.selectedSliderIndex(i),
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 8.0,
+                                                right: 8.0,
+                                                bottom: 22,
+                                                top: 22),
+                                            child: ClipRRect(
+                                              borderRadius:
                                               BorderRadius.circular(10),
-                                          child: Stack(
-                                            children: [
-                                              Image.network(
-                                                userGroups[i].profileImage,
-                                                fit: BoxFit.cover,
-                                                height: 150,
-                                                width: 100,
+                                              child: Stack(
+                                                children: [
+                                                  Image.network(
+                                                    userGroups[i].profileImage,
+                                                    fit: BoxFit.cover,
+                                                    height: 150,
+                                                    width: 100,
+                                                  ),
+                                                  Container(
+                                                    height: 150,
+                                                    width: 100,
+                                                    color: Constants
+                                                        .colorOnBackground
+                                                        .withOpacity(0.5),
+                                                  )
+                                                ],
                                               ),
-                                              Container(
-                                                height: 150,
-                                                width: 100,
-                                                color: Constants
-                                                    .colorOnBackground
-                                                    .withOpacity(0.5),
-                                              )
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  });
+                                        );
+                                      });
                                 })),
                       ),
                       Positioned(
@@ -133,7 +131,7 @@ class GroupsScreen extends StatelessWidget {
                           children: [
                             Text(
                               userGroups[mainController.selectedSliderIndex.value]
-                                      .title ??
+                                  .title ??
                                   'A Dog Lovers\nCommunity',
                               style: TextStyle(
                                   fontFamily: Constants.workSansBold,
@@ -142,7 +140,7 @@ class GroupsScreen extends StatelessWidget {
                             SizedBox(height: 5),
                             Text(
                               userGroups[mainController.selectedSliderIndex.value]
-                                      .description ??
+                                  .description ??
                                   'Welcome to our dog loving community! this social media group is a haven for passionate dog lovers from all walks of life. Join us to connect with fellow dog enthusiasts, share heartwarming stories, exchange training tips, and showcase adorable pictures of our furry friends. ',
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
@@ -158,7 +156,7 @@ class GroupsScreen extends StatelessWidget {
                                 child: AppButton(
                                     onClick: () {
                                       if (userGroups[mainController
-                                              .selectedSliderIndex.value]
+                                          .selectedSliderIndex.value]
                                           .isJoined) {
                                         Get.toNamed(GroupDetailScreen.route,
                                             arguments: userGroups[mainController
@@ -166,11 +164,11 @@ class GroupsScreen extends StatelessWidget {
                                       } else {
                                         Get.find<MainScreenController>()
                                             .joinGroup(
-                                                mainController
-                                                    .selectedSliderIndex.value,
-                                                userGroups[mainController
-                                                    .selectedSliderIndex
-                                                    .value]);
+                                            mainController
+                                                .selectedSliderIndex.value,
+                                            userGroups[mainController
+                                                .selectedSliderIndex
+                                                .value]);
                                       }
                                     },
                                     text:
@@ -178,7 +176,7 @@ class GroupsScreen extends StatelessWidget {
                                     //             .selectedSliderIndex.value]
                                     //         .isJoined ?
                                     'Explore',
-                                        // : 'Join Now',
+                                    // : 'Join Now',
                                     fontFamily: Constants.workSansRegular,
                                     textColor: Constants.colorTextWhite,
                                     borderRadius: 10.0,
@@ -213,15 +211,15 @@ class GroupsScreen extends StatelessWidget {
                 if(recommendedGroups.isEmpty)...[
                   Text("No Group to show")
                 ]else...[
-                SizedBox(
-                  height: 220,
-                  width: size.width,
-                  child: ListView.builder(
-                      itemCount: recommendedGroups.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (_, i) => SingleGroupCardWidget(
-                          index: i, size: size, groupModel: recommendedGroups[i])),
-                )]
+                  SizedBox(
+                    height: 220,
+                    width: size.width,
+                    child: ListView.builder(
+                        itemCount: recommendedGroups.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (_, i) => SingleGroupCardWidget(
+                            index: i, size: size, groupModel: recommendedGroups[i])),
+                  )]
               ],
             ),
           );
@@ -267,10 +265,10 @@ class GroupsScreen extends StatelessWidget {
                                                     color: Constants
                                                         .colorOnBackground),
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                             child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                                 child: Image.network(
                                                     mainController
                                                         .imageUrlList[i],
@@ -380,9 +378,9 @@ class GroupsScreen extends StatelessWidget {
 class SingleGroupCardWidget extends StatelessWidget {
   const SingleGroupCardWidget(
       {super.key,
-      required this.size,
-      required this.index,
-      required this.groupModel});
+        required this.size,
+        required this.index,
+        required this.groupModel});
 
   final GroupModel groupModel;
   final int index;
@@ -420,7 +418,7 @@ class SingleGroupCardWidget extends StatelessWidget {
               width: 80,
               decoration: BoxDecoration(
                 border:
-                    Border.all(color: Constants.colorOnBackground, width: 2),
+                Border.all(color: Constants.colorOnBackground, width: 2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: ClipRRect(
@@ -443,7 +441,7 @@ class SingleGroupCardWidget extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style:
-                    TextStyle(fontFamily: Constants.workSansBold, fontSize: 17),
+                TextStyle(fontFamily: Constants.workSansBold, fontSize: 17),
               ),
             ),
           ),
@@ -457,8 +455,8 @@ class SingleGroupCardWidget extends StatelessWidget {
                     onClick: () {
                       // if (groupModel.isJoined) {
                       // } else {
-                        Get.find<MainScreenController>()
-                            .joinGroup(index, groupModel);
+                      Get.find<MainScreenController>()
+                          .joinGroup(index, groupModel);
                       // }
                     },
                     text: 'Join Now',

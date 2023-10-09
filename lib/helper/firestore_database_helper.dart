@@ -27,7 +27,7 @@ class FirestoreDatabaseHelper {
       _firebaseFirestore.settings = const Settings(persistenceEnabled: true);
     }
   }
-    sendNotification(PostModel post,bool isComment)async{
+  sendNotification(PostModel post,bool isComment)async{
     String uid = FirebaseAuth.instance.currentUser!.uid;
     var doc  = _firebaseFirestore.collection(_USER).doc(post.userid).collection(_NOTIFICATIONS).doc();
     await doc.set({
@@ -39,12 +39,12 @@ class FirestoreDatabaseHelper {
       "groupId": post.groupId,
       "dateTime" : DateTime.now(),
     });
-   }
+  }
   static FirestoreDatabaseHelper instance() {
     _instance ??= FirestoreDatabaseHelper._();
     return _instance!;
   }
-   
+
   Future<UserModel?> addUser(UserModel user) async {
     await _firebaseFirestore
         .collection(_USER)
@@ -154,7 +154,7 @@ class FirestoreDatabaseHelper {
         .collection(_USER_FOLLOWING)
         .get();
     final List<String> documentIds =
-        followingSnapshot.docs.map((doc) => doc.id).toList();
+    followingSnapshot.docs.map((doc) => doc.id).toList();
     return documentIds;
   }
 
@@ -206,7 +206,7 @@ class FirestoreDatabaseHelper {
   Future<List<PostModel>?> getGroupPosts(id) async {
     final documentReference = await _firebaseFirestore
         .collection(_POSTS)
-         .where('groupId', isEqualTo: id)
+        .where('groupId', isEqualTo: id)
         .get()
         .timeout(_timeoutDuration);
     print("document");
@@ -239,6 +239,8 @@ class FirestoreDatabaseHelper {
     if (documentReference.docs.isEmpty) return null;
     return documentReference.docs.map((e) {
       final post = GroupModel.fromMap(e.data());
+      print(post.title);
+      print("post name");
       return post;
     }).toList();
   }

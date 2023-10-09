@@ -29,7 +29,7 @@ class SignUpController extends GetxController {
   final SharedPreferenceHelper _sharedPreferenceHelper =
       SharedPreferenceHelper.instance;
   final FirestoreDatabaseHelper _firestoreDatabaseHelper =
-      FirestoreDatabaseHelper.instance();
+  FirestoreDatabaseHelper.instance();
   changeVisibility(){
     isPasswordVisible.value = !(isPasswordVisible.value);
     print(isPasswordVisible);
@@ -40,7 +40,7 @@ class SignUpController extends GetxController {
     print(password);
     try {
       final userCredential =
-          await _firebaseAuthHelper.signUp(userEmail, password);
+      await _firebaseAuthHelper.signUp(userEmail, password);
       final userUid = userCredential.user?.uid;
       if (userUid == null) return null;
 
@@ -65,7 +65,7 @@ class SignUpController extends GetxController {
         await _sharedPreferenceHelper.insertUser(userData);
         await _sharedPreferenceHelper.savePassword(password);
       }
-      addAchievement("New Bie");
+      addAchievement("New Bie","You are new bie",DateTime.now().millisecondsSinceEpoch);
       return '';
     } on FirebaseAuthException catch (e) {
       return _firebaseAuthHelper
@@ -75,13 +75,18 @@ class SignUpController extends GetxController {
       return null;
     }
   }
-  addAchievement(String title) async {
+  addAchievement(String title,String desc,int dateTime) async {
     var userId = FirebaseAuth.instance.currentUser!.uid;
     CollectionReference ref = FirebaseFirestore.instance
         .collection("user")
         .doc(userId)
         .collection("achievements");
     var doc = ref.doc();
-    await doc.set(AchievementModel(title: title, id: doc.id).toJson());
+    await doc.set(AchievementModel(title: title,
+        id: doc.id,
+        description: desc,
+        dateTime: dateTime,
+        count: 1
+    ).toJson());
   }
 }

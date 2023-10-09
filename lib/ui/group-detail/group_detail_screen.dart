@@ -71,12 +71,12 @@ class GroupDetailScreen extends StatelessWidget {
                         const SizedBox(width: 4),
                         Expanded(
                             child: Text(
-                          controller.groupModel.title ?? 'Dogs all the way',
-                          style: const TextStyle(
-                              color: Constants.colorOnBackground,
-                              fontFamily: Constants.workSansBold,
-                              fontSize: 28),
-                        ))
+                              controller.groupModel.title ?? 'Dogs all the way',
+                              style: const TextStyle(
+                                  color: Constants.colorOnBackground,
+                                  fontFamily: Constants.workSansBold,
+                                  fontSize: 28),
+                            ))
                       ],
                     ),
                   ),
@@ -97,14 +97,14 @@ class GroupDetailScreen extends StatelessWidget {
               ),
               Expanded(
                   child: TabBarView(
-                children: [
-                  const FeedTabScreen(posts: []),
-                  QuestsTabScreen(
-                    size: size,
-                    group: controller.groupModel,
-                  )
-                ],
-              ))
+                    children: [
+                      const FeedTabScreen(posts: []),
+                      QuestsTabScreen(
+                        size: size,
+                        group: controller.groupModel,
+                      )
+                    ],
+                  ))
             ],
           ),
         ),
@@ -135,7 +135,7 @@ class _QuestsTabScreenState extends State<QuestsTabScreen> {
           if (snapshot.hasData) {
             final quests = snapshot.data!.docs
                 .map((e) =>
-                    QuestModel.fromJson(e.data() as Map<String, dynamic>))
+                QuestModel.fromJson(e.data() as Map<String, dynamic>))
                 .toList();
             return ListView.builder(
                 itemCount: quests.length,
@@ -242,9 +242,9 @@ class FeedTabScreen extends StatelessWidget {
 
   const FeedTabScreen(
       {this.canPost = true,
-      this.color = Constants.colorSecondary,
-      required this.posts,
-      super.key});
+        this.color = Constants.colorSecondary,
+        required this.posts,
+        super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +270,7 @@ class FeedTabScreen extends StatelessWidget {
                           final res = await Get.toNamed(
                             AddPostScreen.route,
                             arguments:
-                                Get.find<GroupDetailController>().groupModel.id,
+                            Get.find<GroupDetailController>().groupModel.id,
                           );
 
                           if (res is PostModel) {
@@ -278,7 +278,7 @@ class FeedTabScreen extends StatelessWidget {
                                 .updateTempPost(res);
                           }
                         },
-                        child: Text('Have Something to share?',
+                        child: Text('Have something to say?',
                             style: TextStyle(
                                 fontFamily: Constants.workSansLight,
                                 color: color))))
@@ -299,7 +299,7 @@ class FeedTabScreen extends StatelessWidget {
             if (snapshot.hasData) {
               final posts = snapshot.data!.docs
                   .map((e) =>
-                      PostModel.fromJson(e.data() as Map<String, dynamic>))
+                  PostModel.fromJson(e.data() as Map<String, dynamic>))
                   .toList();
               return Expanded(
                 child: ListView.builder(
@@ -401,11 +401,11 @@ class SinglePostWidget extends StatelessWidget {
   String? userImagePath;
   SinglePostWidget(
       {super.key,
-      required this.postModel,
-      this.isGroup,
-      this.userImagePath,
-      required this.onLikedTap,
-      this.isLiked = false});
+        required this.postModel,
+        this.isGroup,
+        this.userImagePath,
+        required this.onLikedTap,
+        this.isLiked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -428,26 +428,26 @@ class SinglePostWidget extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.hasData) {
                       UserModel user =
-                          UserModel.fromJson(snapshot.data!.data()!);
+                      UserModel.fromJson(snapshot.data!.data()!);
                       return Container(
                           margin: const EdgeInsets.only(right: 10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50)),
                           child: (user.imagePath.toString() == null ||
-                                  user.imagePath.toString() == '')
+                              user.imagePath.toString() == '')
                               ? Image.asset('assets/4.png', height: 60)
                               : ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: CachedNetworkImage(
-                                      imageUrl: user.imagePath!,
-                                      height: 60,
-                                      width: 60,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                              child: CircularProgressIndicator
-                                                  .adaptive())),
-                                ));
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                                imageUrl: user.imagePath!,
+                                height: 60,
+                                width: 60,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                const Center(
+                                    child: CircularProgressIndicator
+                                        .adaptive())),
+                          ));
                     } else {
                       return const CircularProgressIndicator();
                     }
@@ -484,12 +484,12 @@ class SinglePostWidget extends StatelessWidget {
           (postModel.imagePath == null || postModel.imagePath.toString() == '')
               ? Image.asset('assets/2.png')
               : GestureDetector(
-                  onTap: () =>
-                      Get.toNamed(PostDetailScreen.route, arguments: postModel),
-                  child: CachedNetworkImage(
-                      imageUrl: postModel.imagePath!,
-                      placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator.adaptive()))),
+              onTap: () =>
+                  Get.toNamed(PostDetailScreen.route, arguments: postModel),
+              child: CachedNetworkImage(
+                  imageUrl: postModel.imagePath!,
+                  placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator.adaptive()))),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -498,7 +498,7 @@ class SinglePostWidget extends StatelessWidget {
                   onLikedTap.call();
                   print(isLiked);
                   if (FirebaseAuth.instance.currentUser!.uid !=
-                          postModel.userid &&
+                      postModel.userid &&
                       !isLiked) {
                     FirestoreDatabaseHelper.instance()
                         .sendNotification(postModel, false);

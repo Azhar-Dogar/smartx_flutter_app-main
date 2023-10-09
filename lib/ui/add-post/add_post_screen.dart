@@ -9,6 +9,7 @@ import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/helper/material_dialog_helper.dart';
 import 'package:smartx_flutter_app/helper/snackbar_helper.dart';
 import 'package:smartx_flutter_app/helper/snackbar_message.dart';
+import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_controller.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
@@ -36,7 +37,7 @@ class AddPostScreen extends StatelessWidget {
     if (res is PostModel) {
       snackbarHelper.showSnackbar(
           snackbar:
-              SnackbarMessage.success(message: "Post Added Successfully"));
+          SnackbarMessage.success(message: "Post Added Successfully"));
 
       Get.back(result: res);
     } else {
@@ -79,12 +80,15 @@ class AddPostScreen extends StatelessWidget {
                     await _addPost(context, args);
                     await controller.updateUser();
                     if (controller.user.value!.userPosts! >= 20) {
-                      List tempList = mapWalkController.achievements
-                          .where((p0) => p0.title == "20 posts")
-                          .toList();
-                      if (tempList.isEmpty) {
-                        mapWalkController.addAchievement("20 posts");
-                      }
+                      List<AchievementModel> tempModel = mapWalkController.achievements
+                          .where((p0) => p0.title == "20 posts").toList();
+                      if (tempModel.isEmpty) {
+                        mapWalkController.addAchievement("20 posts","You have make 20 posts",DateTime.now().millisecondsSinceEpoch,1);
+                      }else{
+                        if(controller.user.value!.userPosts! % 20 == 0){
+                          mapWalkController.updateAchievement(tempModel.first.id, tempModel.first.count + 1);
+                          mapWalkController.getAchievement();
+                        }}
                     }
                   },
                   child: const Padding(
@@ -102,21 +106,21 @@ class AddPostScreen extends StatelessWidget {
                 children: [
                   Padding(
                       padding:
-                          const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                      const EdgeInsets.only(top: 20.0, left: 20, right: 20),
                       child: Row(children: [
                         Container(
                             margin: const EdgeInsets.only(right: 10),
                             decoration:
-                                const BoxDecoration(shape: BoxShape.circle),
+                            const BoxDecoration(shape: BoxShape.circle),
                             child: (controller.user.value?.imagePath
-                                            .toString() !=
-                                        '' &&
-                                    controller.user.value?.imagePath != null)
+                                .toString() !=
+                                '' &&
+                                controller.user.value?.imagePath != null)
                                 ? CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        controller.user.value?.imagePath ?? ""),
-                                    radius: 25,
-                                  )
+                              backgroundImage: NetworkImage(
+                                  controller.user.value?.imagePath ?? ""),
+                              radius: 25,
+                            )
                                 : Image.asset('assets/4.png', height: 50)),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,61 +146,61 @@ class AddPostScreen extends StatelessWidget {
                   controller.fileImage.value != null
                       ? Image.file(File(controller.fileImage.value!.path))
                       : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          final XFile? pickedImage = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+                          controller.fileImage(pickedImage);
+                          print("path");
+                          print(controller.fileImage.value?.path);
+                        },
+                        child: Row(
                           children: [
-                            GestureDetector(
-                              onTap: () async {
-                                final XFile? pickedImage = await ImagePicker()
-                                    .pickImage(source: ImageSource.gallery);
-                                controller.fileImage(pickedImage);
-                                print("path");
-                                print(controller.fileImage.value?.path);
-                              },
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/attachment.png',
-                                    width: 20,
-                                    color: Constants.colorSecondary,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  const Text(
-                                    'Attach Media',
-                                    style: TextStyle(
-                                      fontFamily: Constants.workSansMedium,
-                                      color: Constants.colorSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            Image.asset(
+                              'assets/attachment.png',
+                              width: 20,
+                              color: Constants.colorSecondary,
                             ),
-                            const SizedBox(width: 20),
-                            GestureDetector(
-                              onTap: () async {
-                                final XFile? pickedImage = await ImagePicker()
-                                    .pickImage(source: ImageSource.camera);
-                                controller.fileImage(pickedImage);
-                              },
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Constants.colorSecondary,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    'Take Photo',
-                                    style: TextStyle(
-                                      fontFamily: Constants.workSansMedium,
-                                      color: Constants.colorSecondary,
-                                    ),
-                                  ),
-                                ],
+                            const SizedBox(width: 5),
+                            const Text(
+                              'Attach Media',
+                              style: TextStyle(
+                                fontFamily: Constants.workSansMedium,
+                                color: Constants.colorSecondary,
                               ),
                             ),
                           ],
-                        )
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      GestureDetector(
+                        onTap: () async {
+                          final XFile? pickedImage = await ImagePicker()
+                              .pickImage(source: ImageSource.camera);
+                          controller.fileImage(pickedImage);
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.camera_alt_outlined,
+                              color: Constants.colorSecondary,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'Take Photo',
+                              style: TextStyle(
+                                fontFamily: Constants.workSansMedium,
+                                color: Constants.colorSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               )
             ],

@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                   margin: const EdgeInsets.only(left: 5),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   decoration: BoxDecoration(
                       color: Constants.colorOnBackground,
                       borderRadius: BorderRadius.circular(10)),
@@ -77,206 +77,122 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       Expanded(
           child: CustomScrollView(slivers: [
-        SliverToBoxAdapter(
-          child: StreamBuilder(
-              stream: controller.questStream,
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasData) {
-                  final quests = snapshot.data!.docs
-                      .map((e) =>
-                          QuestModel.fromJson(e.data() as Map<String, dynamic>))
-                      .toList();
-                  if (quests.isNotEmpty) {
-                    return Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Challenges',
-                                  style: TextStyle(
-                                      fontFamily: Constants.workSansBold,
-                                      fontSize: 16),
-                                ),
-                                // Text('SEE ALL',
-                                //     style: TextStyle(
-                                //         fontFamily: Constants.workSansRegular,
-                                //         color: Constants.colorPrimary,
-                                //         fontSize: 16))
-                              ]),
-                        ),
-                        SizedBox(
-                          height: 250,
-                          width: size.width,
-                          child: ListView.builder(
-                              itemCount: quests.length,
-                              // shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (_, i) {
-                                return QuestWidget(model: quests[i]);
-                              }),
-                        )
-                      ],
-                    );
-                  }
-                }
-                return const SizedBox();
-              }),
-        ),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-              'News Feed',
-              style:
-                  TextStyle(fontFamily: Constants.workSansBold, fontSize: 16),
-            ),
-          ),
-        ),
-        // const SizedBox(height: 10),
-        SliverToBoxAdapter(
-          child: GetX<MainScreenController>(
-            builder: (_) {
-              final state = controller.postDataEvent.value;
-              print(state);
-              if (state is Loading) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
-              if (state is Data) {
-                final allIds = state.data as List<String>;
-                return StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection("posts")
-                      .where('userid', whereIn: allIds)
-                      .where("groupId", isEqualTo: "")
-                      .snapshots(includeMetadataChanges: true),
-                  builder: (_, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-                    if (snapshot.data == null) {
-                      return const Text('Something went wrong');
-                    }
+            SliverToBoxAdapter(
+              child: StreamBuilder(
+                  stream: controller.questStream,
+                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.hasData) {
-                      final posts = snapshot.data!.docs
-                          .map((e) => PostModel.fromJson(
-                              e.data() as Map<String, dynamic>))
+                      final quests = snapshot.data!.docs
+                          .map((e) =>
+                          QuestModel.fromJson(e.data() as Map<String, dynamic>))
                           .toList();
-                      return ListView.builder(
-                          itemCount: posts.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (_, i) {
-                            final isLiked = posts[i].likedUsers.contains(
-                                FirebaseAuth.instance.currentUser?.uid);
-
-                            return SinglePostWidget(
-                              postModel: posts[i].copyWith(isLiked: isLiked),
-                              isLiked: isLiked,
-                              onLikedTap: () {
-                                controller.toggleLike(posts[i], isLiked);
-                              },
-                            );
-                          });
+                      if (quests.isNotEmpty) {
+                        return Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Challenges',
+                                      style: TextStyle(
+                                          fontFamily: Constants.workSansBold,
+                                          fontSize: 16),
+                                    ),
+                                    // Text('SEE ALL',
+                                    //     style: TextStyle(
+                                    //         fontFamily: Constants.workSansRegular,
+                                    //         color: Constants.colorPrimary,
+                                    //         fontSize: 16))
+                                  ]),
+                            ),
+                            SizedBox(
+                              height: 250,
+                              width: size.width,
+                              child: ListView.builder(
+                                  itemCount: quests.length,
+                                  // shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (_, i) {
+                                    return QuestWidget(model: quests[i]);
+                                  }),
+                            )
+                          ],
+                        );
+                      }
                     }
                     return const SizedBox();
-                  },
-                );
-              }
-
-              return const SizedBox();
-            },
-          ),
-        )
-      ]))
-    ]);
-  }
-
-  Widget quest(QuestModel model, bool isComplete) {
-    return Container(
-      height: 250,
-      width: size.width - 50,
-      decoration: BoxDecoration(
-          color: Constants.colorOnBackground,
-          borderRadius: BorderRadius.circular(10)),
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image(
-                    image: NetworkImage(model.groupImage),
-                    height: 40,
-                  )),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                model.title,
-                style: const TextStyle(
-                    fontFamily: Constants.workSansBold,
-                    fontSize: 16,
-                    color: Constants.colorSecondary),
-              )
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            model.description,
-            style: const TextStyle(
-                fontFamily: Constants.workSansRegular,
-                color: Constants.colorSecondary),
-          ),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Image.asset(
-                'assets/time.png',
-                width: 20,
-                // color: Constants.colorTextField,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                "${model.duration} days",
-                style: const TextStyle(
-                  fontFamily: Constants.workSansLight,
+                  }),
+            ),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'News Feed',
+                  style:
+                  TextStyle(fontFamily: Constants.workSansBold, fontSize: 16),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                  height: 55,
-                  width: size.width / 1.6,
-                  child: AppButton(
-                      onClick: () {
-                        if (!isComplete) {
-                          mapWalkController.addQuestStreak(model);
+            ),
+            // const SizedBox(height: 10),
+            SliverToBoxAdapter(
+              child: GetX<MainScreenController>(
+                builder: (_) {
+                  final state = controller.postDataEvent.value;
+                  print(state);
+                  if (state is Loading) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  }
+                  if (state is Data) {
+                    final allIds = state.data as List<String>;
+                    return StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("posts")
+                          .where('userid', whereIn: allIds)
+                          .where("groupId", isEqualTo: "")
+                          .snapshots(includeMetadataChanges: true),
+                      builder: (_, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
                         }
+                        if (snapshot.data == null) {
+                          return const Text('Something went wrong');
+                        }
+                        if (snapshot.hasData) {
+                          final posts = snapshot.data!.docs
+                              .map((e) => PostModel.fromJson(
+                              e.data() as Map<String, dynamic>))
+                              .toList();
+                          return ListView.builder(
+                              itemCount: posts.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (_, i) {
+                                final isLiked = posts[i].likedUsers.contains(
+                                    FirebaseAuth.instance.currentUser?.uid);
+
+                                return SinglePostWidget(
+                                  postModel: posts[i].copyWith(isLiked: isLiked),
+                                  isLiked: isLiked,
+                                  onLikedTap: () {
+                                    controller.toggleLike(posts[i], isLiked);
+                                  },
+                                );
+                              });
+                        }
+                        return const SizedBox();
                       },
-                      text: isComplete ? "Completed" : 'Mark as complete',
-                      fontFamily: Constants.workSansRegular,
-                      textColor: Constants.colorTextWhite,
-                      borderRadius: 10.0,
-                      fontSize: 16,
-                      color: Constants.buttonColor)),
-            ],
-          ),
-        ],
-      ),
-    );
+                    );
+                  }
+
+                  return const SizedBox();
+                },
+              ),
+            )
+          ]))
+    ]);
   }
 }

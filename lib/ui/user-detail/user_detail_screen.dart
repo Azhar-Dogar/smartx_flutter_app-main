@@ -14,7 +14,7 @@ import 'package:smartx_flutter_app/ui/find-and-view/find_view_controller.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_screen.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
-import 'package:smartx_flutter_app/ui/user-detail/achievements_screen.dart';
+import 'package:smartx_flutter_app/ui/user-detail/achievements/achievements_screen.dart';
 import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
@@ -22,6 +22,7 @@ import '../../backend/server_response.dart';
 import '../../models/dog_model.dart';
 import '../../models/post_model.dart';
 import '../../models/user_model.dart';
+import '../map-walk/map_walk_controller.dart';
 
 class UserDetailScreen extends StatefulWidget {
   static const String route = '/user_detai_screen_route';
@@ -51,6 +52,8 @@ class _UserDetailScreenState extends State<UserDetailScreen>
         index = tabController.index;
       });
     });
+    final controller = Get.put(MapWalkController(uid: FirebaseAuth.instance.currentUser!.uid));
+    controller.getAchievement(uid:FirebaseAuth.instance.currentUser!.uid);
   }
 
   @override
@@ -64,7 +67,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>
   final findController = Get.put(FindAndViewController());
   @override
   Widget build(BuildContext context) {
-     size = context.screenSize;
+    size = context.screenSize;
     isFollowing ??= user1!.isFollowing;
     String userImagePath = "";
     return SafeArea(
@@ -85,56 +88,56 @@ class _UserDetailScreenState extends State<UserDetailScreen>
           body: (user1 == null)
               ? const SizedBox()
               : StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection("user")
-                      .doc(user1?.id ?? FirebaseAuth.instance.currentUser!.uid)
-                      .snapshots(),
-                  builder: (_, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const SizedBox();
-                    }
-                    if (snapshot.data!.data() != null) {
-                      UserModel user =
-                          UserModel.fromJson(snapshot.data!.data()!);
-                      bool canPost = false;
-                      if (user.id == FirebaseAuth.instance.currentUser!.uid) {
-                        canPost = true;
-                      }
-                      // final user = controller.mapEntry.value as UserModel;
-                      return Column(
-                        children: [
-                          userInfo(user),
-                          if (isFollowing == false &&
-                              controller.mapEntry.key as bool == false) ...[
-                            const Expanded(
-                                child: Center(
+              stream: FirebaseFirestore.instance
+                  .collection("user")
+                  .doc(user1?.id ?? FirebaseAuth.instance.currentUser!.uid)
+                  .snapshots(),
+              builder: (_, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox();
+                }
+                if (snapshot.data!.data() != null) {
+                  UserModel user =
+                  UserModel.fromJson(snapshot.data!.data()!);
+                  bool canPost = false;
+                  if (user.id == FirebaseAuth.instance.currentUser!.uid) {
+                    canPost = true;
+                  }
+                  // final user = controller.mapEntry.value as UserModel;
+                  return Column(
+                    children: [
+                      userInfo(user),
+                      if (isFollowing == false &&
+                          controller.mapEntry.key as bool == false) ...[
+                        const Expanded(
+                            child: Center(
                               child: Text("Follow to see content"),
                             ))
-                          ] else ...[
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    color: Constants.colorOnBackground,
-                                    child: TabBar(
-                                      controller: tabController,
-                                      indicatorColor: Constants.colorOnSurface,
-                                      onTap: (i) {
-                                        controller.tabIndex(i);
-                                      },
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                      labelColor: Constants.colorOnSurface,
-                                      unselectedLabelColor:
-                                          Constants.colorOnSurface,
-                                      tabs: const [
-                                        Tab(text: "Activities"),
-                                        Tab(text: 'Achievements'),
-                                        Tab(text: 'Dogs'),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: TabBarView(
+                      ] else ...[
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Container(
+                                color: Constants.colorOnBackground,
+                                child: TabBar(
+                                  controller: tabController,
+                                  indicatorColor: Constants.colorOnSurface,
+                                  onTap: (i) {
+                                    controller.tabIndex(i);
+                                  },
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  labelColor: Constants.colorOnSurface,
+                                  unselectedLabelColor:
+                                  Constants.colorOnSurface,
+                                  tabs: const [
+                                    Tab(text: "Activities"),
+                                    Tab(text: 'Trophies'),
+                                    Tab(text: 'Dogs'),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                  child: TabBarView(
                                     controller: tabController,
                                     children: [
                                       UserFeedTabScreen(
@@ -150,15 +153,15 @@ class _UserDetailScreenState extends State<UserDetailScreen>
                                       )
                                     ],
                                   ))
-                                ],
-                              ),
-                            )
-                          ]
-                        ],
-                      );
-                    }
-                    return const SizedBox();
-                  }),
+                            ],
+                          ),
+                        )
+                      ]
+                    ],
+                  );
+                }
+                return const SizedBox();
+              }),
         ));
   }
   Widget floatingButton(){
@@ -324,9 +327,9 @@ class DogTabScreen extends StatelessWidget {
           if (event is Empty) {
             return const Center(
                 child: Text(
-              'no dog profile added yet',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-            ));
+                  'no dog profile added yet',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ));
           }
           if (event is Data) {
             final list = event.data as List<DogModel>;
@@ -369,7 +372,7 @@ class SingleDogWidget extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border:
-                      Border.all(color: Constants.colorSecondary, width: 2)),
+                  Border.all(color: Constants.colorSecondary, width: 2)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
@@ -464,10 +467,10 @@ class UserFeedTabScreen extends StatelessWidget {
   String userImage;
   UserFeedTabScreen(
       {this.canPost = true,
-      required this.userImage,
-      required this.userId,
-      this.color = Constants.colorSecondary,
-      super.key});
+        required this.userImage,
+        required this.userId,
+        this.color = Constants.colorSecondary,
+        super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -489,13 +492,13 @@ class UserFeedTabScreen extends StatelessWidget {
                     ),
                     child: (userImage == "")
                         ? Image.asset(
-                            "assets/3.png",
-                            height: 25,
-                          )
+                      "assets/3.png",
+                      height: 25,
+                    )
                         : CircleAvatar(
-                            radius: 15,
-                            backgroundImage: NetworkImage(userImage),
-                          )),
+                      radius: 15,
+                      backgroundImage: NetworkImage(userImage),
+                    )),
                 Expanded(
                     child: InkWell(
                         onTap: () async {
@@ -506,64 +509,64 @@ class UserFeedTabScreen extends StatelessWidget {
                                 .updateTempPost(res);
                           }
                         },
-                        child: Text('Have Something to share?',
+                        child: Text('Have something to say?',
                             style: TextStyle(
                                 fontFamily: Constants.workSansLight,
                                 color: color))))
               ])),
         GetX<UserDetailController>(
-            // autoRemove: false,
+          // autoRemove: false,
             builder: (con) {
-          // final event = con.userPostEvents.value;
-          // if (event is Loading) {
-          //   return const Expanded(
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       crossAxisAlignment: CrossAxisAlignment.center,
-          //       children: [
-          //         CircularProgressIndicator.adaptive(),
-          //       ],
-          //     ),
-          //   );
-          // }
-          //
-          // if (event is Empty) {
-          //   return const Expanded(
-          //     child: Center(
-          //       child: Text(
-          //         "No Post Yet",
-          //         style:
-          //             TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-          //       ),
-          //     ),
-          //   );
-          // }
-          // if (event is Data) {
-          //   final list = event.data as List<PostModel>;
-          return Expanded(
-            child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                itemCount: userController.posts.length,
-                // shrinkWrap: true,
-                itemBuilder: (_, i) {
-                  final isLiked = userController.posts[i].likedUsers
-                      .contains(FirebaseAuth.instance.currentUser!.uid);
-                  print("isLiked");
-                  print(isLiked);
-                  return SinglePostWidget(
-                    userImagePath: userImage,
-                    postModel: userController.posts[i],
-                    isLiked: isLiked,
-                    onLikedTap: () {
-                      mainController.toggleLike(
-                          userController.posts[i], isLiked);
-                    },
-                  );
-                }),
-          );
-        }
-            // return const SizedBox();
-            ),
+              // final event = con.userPostEvents.value;
+              // if (event is Loading) {
+              //   return const Expanded(
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         CircularProgressIndicator.adaptive(),
+              //       ],
+              //     ),
+              //   );
+              // }
+              //
+              // if (event is Empty) {
+              //   return const Expanded(
+              //     child: Center(
+              //       child: Text(
+              //         "No Post Yet",
+              //         style:
+              //             TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              //       ),
+              //     ),
+              //   );
+              // }
+              // if (event is Data) {
+              //   final list = event.data as List<PostModel>;
+              return Expanded(
+                child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    itemCount: userController.posts.length,
+                    // shrinkWrap: true,
+                    itemBuilder: (_, i) {
+                      final isLiked = userController.posts[i].likedUsers
+                          .contains(FirebaseAuth.instance.currentUser!.uid);
+                      print("isLiked");
+                      print(isLiked);
+                      return SinglePostWidget(
+                        userImagePath: userImage,
+                        postModel: userController.posts[i],
+                        isLiked: isLiked,
+                        onLikedTap: () {
+                          mainController.toggleLike(
+                              userController.posts[i], isLiked);
+                        },
+                      );
+                    }),
+              );
+            }
+          // return const SizedBox();
+        ),
       ],
     );
   }
