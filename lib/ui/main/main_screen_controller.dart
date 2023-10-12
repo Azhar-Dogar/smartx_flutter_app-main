@@ -35,7 +35,7 @@ class MainScreenController extends GetxController {
   final GlobalKey globalKey = GlobalKey(debugLabel: 'btm_app_bar');
   List posts = [].obs;
   RxList<QuestModel> userQuests = <QuestModel>[].obs;
-
+  RxList<String> followingUserIds = <String>[].obs;
   ///INDEXED STACK SETUP
   static const _mainAddNavigationItemScreenKey =
       PageStorageKey(MapWalkScreen.key_title);
@@ -241,7 +241,7 @@ class MainScreenController extends GetxController {
     postDataEvent(const Loading());
     try {
       final res = await _firestoreDatabaseHelper.getFollowingUserIds();
-
+      followingUserIds.value = res;
       if (res.isEmpty) {
         postDataEvent(const Empty(message: 'No Post yet'));
         return;

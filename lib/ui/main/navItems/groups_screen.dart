@@ -200,13 +200,6 @@ class GroupsScreen extends StatelessWidget {
                         style: TextStyle(
                             fontFamily: Constants.workSansBold, fontSize: 18),
                       ),
-                      // Text(
-                      //   'SEE ALL',
-                      //   style: TextStyle(
-                      //       fontFamily: Constants.workSansRegular,
-                      //       color: Constants.colorPrimaryVariant,
-                      //       fontSize: 16),
-                      // ),
                     ],
                   ),
                 ),
@@ -359,13 +352,6 @@ class GroupsScreen extends StatelessWidget {
                       style: TextStyle(
                           fontFamily: Constants.workSansBold, fontSize: 18),
                     ),
-                    // Text(
-                    //   'SEE ALL',
-                    //   style: TextStyle(
-                    //       fontFamily: Constants.workSansRegular,
-                    //       color: Constants.colorPrimaryVariant,
-                    //       fontSize: 16),
-                    // ),
                   ],
                 ),
               ),

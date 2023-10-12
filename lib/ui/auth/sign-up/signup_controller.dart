@@ -65,7 +65,7 @@ class SignUpController extends GetxController {
         await _sharedPreferenceHelper.insertUser(userData);
         await _sharedPreferenceHelper.savePassword(password);
       }
-      addAchievement("New Bie","You are new bie",DateTime.now().millisecondsSinceEpoch);
+      addAchievement("Newbie","You are new bie",DateTime.now().millisecondsSinceEpoch);
       return '';
     } on FirebaseAuthException catch (e) {
       return _firebaseAuthHelper

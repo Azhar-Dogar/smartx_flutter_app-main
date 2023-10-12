@@ -75,22 +75,6 @@ class UserDetailController extends GetxController {
         posts.add(PostModel.fromJson(element.data()));
       });
     });
-    // userPostEvents(const Loading());
-    // try {
-    //   final res = await FirestoreDatabaseHelper.instance()
-    //       .getUserPosts((mapEntry.value as UserModel).id);
-    //   if (res == null) {
-    //     userPostEvents(const Empty(message: ''));
-    //     return;
-    //   }
-    //   if (res.isEmpty) {
-    //     userPostEvents(const Empty(message: ''));
-    //     return;
-    //   }
-    //   userPostEvents(Data(data: res));
-    // } catch (_) {
-    //   userPostEvents(Error(exception: Exception()));
-    // }
   }
 
   Future<DataEvent?> getUserDogs() async {

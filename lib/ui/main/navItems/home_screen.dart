@@ -75,124 +75,169 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Image.asset('assets/Notification.png', height: 25)))
         ]),
       ),
-      Expanded(
+      GetX<MainScreenController>(builder: (DisposableInterface con) {
+        return Expanded(
           child: CustomScrollView(slivers: [
-        SliverToBoxAdapter(
-          child: StreamBuilder(
-              stream: controller.questStream,
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasData) {
-                  final quests = snapshot.data!.docs
-                      .map((e) =>
-                          QuestModel.fromJson(e.data() as Map<String, dynamic>))
-                      .toList();
-                  if (quests.isNotEmpty) {
-                    return Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Challenges',
-                                  style: TextStyle(
-                                      fontFamily: Constants.workSansBold,
-                                      fontSize: 16),
-                                ),
-                                // Text('SEE ALL',
-                                //     style: TextStyle(
-                                //         fontFamily: Constants.workSansRegular,
-                                //         color: Constants.colorPrimary,
-                                //         fontSize: 16))
-                              ]),
-                        ),
-                        SizedBox(
-                          height: 250,
-                          width: size.width,
-                          child: ListView.builder(
-                              itemCount: quests.length,
-                              // shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (_, i) {
-                                return QuestWidget(model: quests[i]);
-                              }),
-                        )
-                      ],
-                    );
-                  }
-                }
-                return const SizedBox();
-              }),
-        ),
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-              'News Feed',
-              style:
-                  TextStyle(fontFamily: Constants.workSansBold, fontSize: 16),
-            ),
-          ),
-        ),
-        // const SizedBox(height: 10),
-        SliverToBoxAdapter(
-          child: GetX<MainScreenController>(
-            builder: (_) {
-              final state = controller.postDataEvent.value;
-              print(state);
-              if (state is Loading) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
-              if (state is Data) {
-                final allIds = state.data as List<String>;
-                return StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection("posts")
-                      .where('userid', whereIn: allIds)
-                      .where("groupId", isEqualTo: "")
-                      .snapshots(includeMetadataChanges: true),
-                  builder: (_, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-                    if (snapshot.data == null) {
-                      return const Text('Something went wrong');
-                    }
+            SliverToBoxAdapter(
+              child: StreamBuilder(
+                  stream: controller.questStream,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.hasData) {
-                      final posts = snapshot.data!.docs
-                          .map((e) => PostModel.fromJson(
+                      final quests = snapshot.data!.docs
+                          .map((e) => QuestModel.fromJson(
                               e.data() as Map<String, dynamic>))
                           .toList();
-                      return ListView.builder(
-                          itemCount: posts.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (_, i) {
-                            final isLiked = posts[i].likedUsers.contains(
-                                FirebaseAuth.instance.currentUser?.uid);
-
-                            return SinglePostWidget(
-                              postModel: posts[i].copyWith(isLiked: isLiked),
-                              isLiked: isLiked,
-                              onLikedTap: () {
-                                controller.toggleLike(posts[i], isLiked);
-                              },
-                            );
-                          });
+                      if (quests.isNotEmpty) {
+                        return Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Challenges',
+                                      style: TextStyle(
+                                          fontFamily: Constants.workSansBold,
+                                          fontSize: 16),
+                                    ),
+                                    // Text('SEE ALL',
+                                    //     style: TextStyle(
+                                    //         fontFamily: Constants.workSansRegular,
+                                    //         color: Constants.colorPrimary,
+                                    //         fontSize: 16))
+                                  ]),
+                            ),
+                            SizedBox(
+                              height: 250,
+                              width: size.width,
+                              child: ListView.builder(
+                                  itemCount: quests.length,
+                                  // shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (_, i) {
+                                    return QuestWidget(model: quests[i]);
+                                  }),
+                            )
+                          ],
+                        );
+                      }
                     }
                     return const SizedBox();
-                  },
-                );
-              }
+                  }),
+            ),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'News Feed',
+                  style: TextStyle(
+                      fontFamily: Constants.workSansBold, fontSize: 16),
+                ),
+              ),
+            ),
+            // const SizedBox(height: 10),
+            // GetX<MainScreenController>(
+            //   builder: (_) {
+            //     final state = controller.postDataEvent.value;
+            //     print(state);
+            //     if (state is Loading) {
+            //       return SliverToBoxAdapter(
+            //         child: const Center(
+            //           child: CircularProgressIndicator.adaptive(),
+            //         ),
+            //       );
+            //     }
+            //     if (state is Data) {
+            //       final allIds = state.data as List<String>;
+            //       return
+            if (controller.followingUserIds.isEmpty) ...[
+              const SliverToBoxAdapter(
+                child: Text(
+                  "No Feed Yet",
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
+            ] else ...[
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("posts")
+                    .where('userid', whereIn: controller.followingUserIds)
+                    .where("groupId", isEqualTo: "")
+                    .snapshots(includeMetadataChanges: true),
+                builder: (_, snapshot) {
+                  if (snapshot.hasError) {
+                    return SliverToBoxAdapter(
+                        child: Text('Error: ${snapshot.error}'));
+                  }
+                  if (snapshot.data == null) {
+                    return const SliverToBoxAdapter(
+                        child: Text('Something went wrong'));
+                  }
+                  if (snapshot.hasData) {
+                    final posts = snapshot.data!.docs
+                        .map((e) => PostModel.fromJson(
+                            e.data() as Map<String, dynamic>))
+                        .toList();
+                    return (posts.isEmpty)
+                            ? const SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 100.0),
+                                  child: Center(child: Text("No News Feed")),
+                                ),
+                              )
+                            : SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int i) {
+                                    final isLiked = posts[i]
+                                        .likedUsers
+                                        .contains(FirebaseAuth
+                                            .instance.currentUser?.uid);
 
-              return const SizedBox();
-            },
-          ),
-        )
-      ]))
+                                    return SinglePostWidget(
+                                      postModel:
+                                          posts[i].copyWith(isLiked: isLiked),
+                                      isLiked: isLiked,
+                                      onLikedTap: () {
+                                        controller.toggleLike(
+                                            posts[i], isLiked);
+                                      },
+                                    );
+                                  },
+                                  childCount: posts.length,
+                                ),
+                              )
+                        // ListView.builder(
+                        //   itemCount: posts.length,
+                        //   shrinkWrap: true,
+                        //   physics: const NeverScrollableScrollPhysics(),
+                        //   itemBuilder: (_, i) {
+                        //     final isLiked = posts[i].likedUsers.contains(
+                        //         FirebaseAuth.instance.currentUser?.uid);
+                        //
+                        //     return SinglePostWidget(
+                        //       postModel: posts[i].copyWith(isLiked: isLiked),
+                        //       isLiked: isLiked,
+                        //       onLikedTap: () {
+                        //         controller.toggleLike(posts[i], isLiked);
+                        //       },
+                        //     );
+                        //   })
+                        ;
+                  }
+                  return const SliverToBoxAdapter(child: SizedBox());
+                },
+              )
+            ]
+            //   }
+            //
+            //   return const SizedBox();
+            // },
+          ]),
+        );
+      })
     ]);
   }
 }

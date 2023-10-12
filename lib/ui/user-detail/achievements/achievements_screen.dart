@@ -57,63 +57,6 @@ class _AchievementScreenState extends State<AchievementScreen> {
                   }),
             )
           ]
-          // StreamBuilder(
-          //     stream: controller.stream,
-          //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          //       if (snapshot.hasData) {
-          //         // List<WalkModel> streakList = [];
-          //         DateTime currentDate = DateTime.now();
-          //         List<String> badges = [];
-          //         final achievements = snapshot.data!.docs
-          //             .map((e) =>
-          //                 AchievementModel.fromJson(e.data() as Map<String, dynamic>))
-          //             .toList();
-          //         double totalDistance = 0.0;
-          //         badges.clear();
-          //         // for(var e in walks){
-          //         //   if(e.dateTime.day == DateTime.now().day){
-          //         //     if(e.dateTime.hour<11 && e.dateTime.hour > 6){
-          //         //       var f = DateFormat.jm().format(e.dateTime);
-          //         //       if(f.contains("PM")){
-          //         //         badges.add("Night Owl");
-          //         //       }else{
-          //         //         badges.add("Early Bird");
-          //         //       }
-          //         //     }
-          //         //   }
-          //         //   totalDistance = totalDistance + e.distance;
-          //         // }
-          //         if(totalDistance*100 >=10000){
-          //           badges.add("10k walked");
-          //         }
-          //         // List<WalkModel> streakList = checkWeekStreak(walks,30);
-          //         if (achievements.length >=1) {
-          //         //   badges.add("1 month streak");
-          //         // } else {
-          //         //   streakList = checkWeekStreak(walks,7);
-          //         //   if(streakList.length>=7){
-          //         //     badges.add("1 week streak");
-          //         //   }
-          //           // for (var element in controller.badges) {
-          //           //   badges.add(element);
-          //           // }
-          //           return Expanded(
-          //             child: GridView.builder(
-          //                 gridDelegate:
-          //                     const SliverGridDelegateWithMaxCrossAxisExtent(
-          //                         maxCrossAxisExtent: 125,
-          //                         childAspectRatio: 3 / 2,
-          //                         crossAxisSpacing: 0,
-          //                         mainAxisSpacing: 15),
-          //                 itemCount: achievements.length,
-          //                 itemBuilder: (BuildContext ctx, index) {
-          //                   return item(achievements[index].title);
-          //                 }),
-          //           );
-          //         }
-          //       }
-          //       return SizedBox();
-          //     }),
         ],
       );
     });

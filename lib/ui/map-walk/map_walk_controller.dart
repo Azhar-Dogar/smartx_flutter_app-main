@@ -75,8 +75,11 @@ class MapWalkController extends GetxController {
     minutes.value = 0;
     seconds.value = 0;
     totalDistance.value = 0;
+    modified;
+    timer?.cancel();
     selectedDogs.clear();
     titleController.clear();
+    notifyChildrens();
   }
 
   getCurrentUser() {
@@ -170,6 +173,8 @@ class MapWalkController extends GetxController {
 
   void startTimer() {
     // modified = DateTime(time.year, time.month, time.day, 00, 00, 00);
+    modified = DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 00, 00, 00);
     time = modified;
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _seconds++;
@@ -222,14 +227,13 @@ class MapWalkController extends GetxController {
         .orderBy("dateTime", descending: true)
         .snapshots()
         .listen((event) {
+          userWalks.value = [];
       List<WalkModel> tempWalks = [];
       streakList = [].obs;
-      DateTime currentDate = DateTime.now();
-      DateTime weekStart = currentDate.subtract(const Duration(days: 6));
       for (var element in event.docs) {
-        tempWalks.add(WalkModel.fromJson(element.data()));
+        userWalks.add(WalkModel.fromJson(element.data()));
       }
-      userWalks.value = tempWalks;
+      // userWalks.value = tempWalks;
       print("here is user walks");
       print(userWalks.length);
     });

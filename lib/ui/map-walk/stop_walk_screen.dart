@@ -202,6 +202,10 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                               fontFamily: Constants.workSansRegular,
                               text: 'Save',
                               onClick: () async {
+                                if(controller.titleController.text.trim().isEmpty){
+                                Functions.showSnackBar(context, "Please add title of walk");
+                                  return;
+                                }
                                 Functions.showLoaderDialog(context);
                                 await controller.addWalk();
                                 Get.back();
@@ -241,6 +245,7 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
             children: [
               GestureDetector(
                 onTap: () {
+                  controller.clearValues();
                   Get.back();
                   Get.back();
                 },
@@ -268,9 +273,7 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                       onClick: () {
                         Share.shareXFiles([XFile(imagePath.value)],
                             subject:controller.titleController.text,
-                          text: """
-                          Title: ${controller.titleController.text}\n
-                          Distance Covered:${controller.totalDistance} km"""
+                          text: "Title: ${controller.titleController.text}\nDistance Covered:${controller.totalDistance} km"
                         );
                         controller.clearValues();
                       }),

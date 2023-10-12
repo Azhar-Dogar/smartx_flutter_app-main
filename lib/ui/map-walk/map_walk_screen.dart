@@ -16,6 +16,7 @@ import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/ui/map-walk/stop_walk_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
+import 'package:smartx_flutter_app/util/functions.dart';
 
 import '../main/main_screen_controller.dart';
 
@@ -174,6 +175,8 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
               ),
               GestureDetector(
                 onTap: () async {
+                  controller.timer?.cancel();
+                  Functions.showLoaderDialog(context);
                   late File imagePath;
                   try {
                     var e = await _controller!
@@ -190,7 +193,7 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
                     print("error ");
                     print(e);
                   }
-                  ;
+                  Get.back();
                   controller.calDistance();
                   Get.toNamed(StopWalkScreen.route,
                       arguments: MapEntry(false, imagePath.path));
@@ -224,7 +227,6 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
   }
 
   Widget timer() {
-    DateTime time = controller.time;
     return Container(
       margin: const EdgeInsets.only(bottom: 5),
       width: width * 0.25,

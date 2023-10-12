@@ -53,7 +53,7 @@ class _UserDetailScreenState extends State<UserDetailScreen>
       });
     });
     final controller = Get.put(MapWalkController(uid: FirebaseAuth.instance.currentUser!.uid));
-    controller.getAchievement(uid:FirebaseAuth.instance.currentUser!.uid);
+    controller.getAchievement(uid:user1!.id);
   }
 
   @override
