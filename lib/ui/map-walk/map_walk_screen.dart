@@ -12,7 +12,6 @@ import 'package:permission_handler/permission_handler.dart'
     as permission_handler;
 import 'package:screenshot/screenshot.dart';
 import 'package:smartx_flutter_app/common/margin_widget.dart';
-import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/ui/map-walk/map_walk_controller.dart';
 import 'package:smartx_flutter_app/ui/map-walk/stop_walk_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';

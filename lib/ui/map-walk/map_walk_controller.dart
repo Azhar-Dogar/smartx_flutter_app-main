@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart'
 as permission_handler;
 import 'package:geolocator/geolocator.dart' as geo_locator;
@@ -10,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:smartx_flutter_app/models/achievement_model.dart';
 import 'package:smartx_flutter_app/models/dog_model.dart';
 import 'package:smartx_flutter_app/models/quest_model.dart';

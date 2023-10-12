@@ -4,17 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_button.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
-import 'package:smartx_flutter_app/helper/meta_data.dart';
 import 'package:smartx_flutter_app/models/group_model.dart';
 import 'package:smartx_flutter_app/models/quest_model.dart';
 import 'package:smartx_flutter_app/ui/add-post/add_post_screen.dart';
 import 'package:smartx_flutter_app/ui/group-detail/group_detail_controller.dart';
-import 'package:smartx_flutter_app/ui/main/notifications/notification_screen.dart';
 import 'package:smartx_flutter_app/ui/post-detail/post_detail_screen.dart';
-import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
 import '../../helper/firestore_database_helper.dart';

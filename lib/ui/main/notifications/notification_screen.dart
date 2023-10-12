@@ -8,7 +8,6 @@ import 'package:smartx_flutter_app/util/constants.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../../models/user_model.dart';
 import '../../../util/functions.dart';
-import '../../user-detail/user_detail_controller.dart';
 
 class NotificationScreen extends StatefulWidget {
   static const String route = '/notification_screen_route';

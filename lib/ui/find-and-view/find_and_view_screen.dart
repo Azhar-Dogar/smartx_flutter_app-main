@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
 import 'package:smartx_flutter_app/ui/find-and-view/find_view_controller.dart';

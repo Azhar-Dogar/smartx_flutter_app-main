@@ -7,9 +7,7 @@ import 'package:smartx_flutter_app/helper/material_dialog_helper.dart';
 import 'package:smartx_flutter_app/helper/snackbar_helper.dart';
 import 'package:smartx_flutter_app/helper/snackbar_message.dart';
 import 'package:smartx_flutter_app/ui/auth/sign-up/signup_controller.dart';
-import 'package:smartx_flutter_app/ui/auth/user-profile/user_profile_screen.dart';
 import 'package:smartx_flutter_app/ui/get_started_screen.dart';
-import 'package:smartx_flutter_app/ui/main/main_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
 class SignUpScreen extends StatelessWidget {

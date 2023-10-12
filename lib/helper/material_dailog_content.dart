@@ -1,6 +1,4 @@
 
-
-
 class MaterialDialogContent {
   final String title;
   final String message;

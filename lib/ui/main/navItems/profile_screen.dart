@@ -8,7 +8,6 @@ import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
-import 'package:smartx_flutter_app/ui/auth/reset_password.dart';
 import 'package:smartx_flutter_app/ui/find-and-view/find_and_view_screen.dart';
 import 'package:smartx_flutter_app/ui/main/main_screen_controller.dart';
 import 'package:smartx_flutter_app/ui/user-detail/user_detail_screen.dart';

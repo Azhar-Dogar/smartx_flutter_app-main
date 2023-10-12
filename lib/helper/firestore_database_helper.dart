@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:smartx_flutter_app/backend/server_response.dart';
-import 'package:smartx_flutter_app/models/notification_model.dart';
 
 import '../models/dog_model.dart';
 import '../models/group_model.dart';

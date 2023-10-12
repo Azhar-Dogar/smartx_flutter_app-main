@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smartx_flutter_app/backend/server_response.dart';
 
 import '../models/user_model.dart';
 

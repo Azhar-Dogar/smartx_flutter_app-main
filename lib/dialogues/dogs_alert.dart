@@ -8,7 +8,6 @@ import 'package:smartx_flutter_app/ui/user-detail/user_detail_controller.dart';
 
 import '../helper/meta_data.dart';
 import '../models/dog_model.dart';
-import '../ui/map-walk/map_walk_controller.dart';
 
 class DogsAlert extends StatefulWidget {
   const DogsAlert({super.key});

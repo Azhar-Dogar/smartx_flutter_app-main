@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smartx_flutter_app/common/googleMap_widget.dart';
 import 'package:smartx_flutter_app/extension/context_extension.dart';
 import 'package:smartx_flutter_app/models/walk_model.dart';
-import 'package:smartx_flutter_app/ui/map-walk/map_walk_screen.dart';
 import 'package:smartx_flutter_app/ui/map-walk/stop_walk_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 

@@ -1,10 +1,7 @@
 import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
 import 'package:smartx_flutter_app/helper/material_dialog_helper.dart';
 import 'package:smartx_flutter_app/helper/snackbar_helper.dart';

@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:smartx_flutter_app/backend/server_response.dart';
 import 'package:smartx_flutter_app/backend/shared_web_service.dart';
-import 'package:smartx_flutter_app/helper/firebase_auth_helper.dart';
 import 'package:smartx_flutter_app/helper/firestore_database_helper.dart';
 import 'package:smartx_flutter_app/helper/meta_data.dart';
 import 'package:smartx_flutter_app/helper/shared_preference_helpert.dart';
