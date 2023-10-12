@@ -50,12 +50,12 @@ class _AchievementDetailsState extends State<AchievementDetails> {
                     border: Border.all(color: Constants.redBorder)),
                 child: Center(
                     child: Text(
-                  widget.streak.title,
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Constants.redBorder),
-                )),
+                      widget.streak.title,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Constants.redBorder),
+                    )),
               )
             ],
             const SizedBox(

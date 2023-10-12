@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart'
-    as permission_handler;
+as permission_handler;
 import 'package:geolocator/geolocator.dart' as geo_locator;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -108,7 +108,7 @@ class MapWalkController extends GetxController {
   getAchievement({String? uid}) async {
     achievements = <AchievementModel>[].obs;
     final documents =
-        await stream.doc(uid ?? userId).collection(_ACHIEVEMENTS).get();
+    await stream.doc(uid ?? userId).collection(_ACHIEVEMENTS).get();
     // .listen((event) {
 
     for (var doc in documents.docs) {
@@ -132,7 +132,7 @@ class MapWalkController extends GetxController {
     for (var i = 0; i < questModel.duration; i++) {
       DateTime date = DateTime.now().subtract(Duration(days: i));
       var e =
-          userWalks.firstWhere((element) => element.dateTime.day == date.day);
+      userWalks.firstWhere((element) => element.dateTime.day == date.day);
       questWalks.add(e);
     }
     if (questWalks.length == questModel.duration) {
@@ -248,11 +248,11 @@ class MapWalkController extends GetxController {
         .collection(_ACHIEVEMENTS);
     var doc = ref.doc();
     await doc.set(AchievementModel(
-            title: title,
-            id: doc.id,
-            description: description,
-            dateTime: dateTime,
-            count: count)
+        title: title,
+        id: doc.id,
+        description: description,
+        dateTime: dateTime,
+        count: count)
         .toJson());
   }
 
@@ -265,13 +265,13 @@ class MapWalkController extends GetxController {
         .collection("walks");
     var doc = ref.doc();
     await doc.set(WalkModel(
-            title: titleController.text,
-            dogs: selectedDogs,
-            paths: pathPoints,
-            dateTime: DateTime.now(),
-            duration: hours.value * 3600 + minutes.value * 60 + seconds.value,
-            distance: totalDistance.value / 1000,
-            id: doc.id)
+        title: titleController.text,
+        dogs: selectedDogs,
+        paths: pathPoints,
+        dateTime: DateTime.now(),
+        duration: hours.value * 3600 + minutes.value * 60 + seconds.value,
+        distance: totalDistance.value / 1000,
+        id: doc.id)
         .toJson());
     if (userWalks.length <= 1) {
       addFirstWalkBadge();
@@ -288,7 +288,7 @@ class MapWalkController extends GetxController {
 
   addFirstWalkBadge() {
     List tempList =
-        achievements.where((p0) => p0.title == "First Walk").toList();
+    achievements.where((p0) => p0.title == "First Walk").toList();
     if (tempList.isEmpty) {
       addAchievement("First Walk", "You have ran first walk",
           DateTime.now().millisecondsSinceEpoch, 1);
@@ -301,7 +301,7 @@ class MapWalkController extends GetxController {
     for (var i = 0; i <= days; i++) {
       List<WalkModel> tempList = userWalks
           .where((p0) =>
-              p0.dateTime.day == currentDate.subtract(Duration(days: i)).day)
+      p0.dateTime.day == currentDate.subtract(Duration(days: i)).day)
           .toList();
       // var foundModel = userWalks.firstWhere(
       //     (model) =>
@@ -328,7 +328,7 @@ class MapWalkController extends GetxController {
 
   addNightOwl() {
     List<AchievementModel> tempModel =
-        achievements.where((p0) => p0.title == "Night Owl").toList();
+    achievements.where((p0) => p0.title == "Night Owl").toList();
     if (tempModel.isEmpty) {
       addAchievement("Night Owl", "You have ran in night",
           DateTime.now().millisecondsSinceEpoch, 1);
@@ -350,7 +350,7 @@ class MapWalkController extends GetxController {
 
   addEarlyBird() {
     List<AchievementModel> tempModel =
-        achievements.where((p0) => p0.title == "Early Bird").toList();
+    achievements.where((p0) => p0.title == "Early Bird").toList();
     if (tempModel.isEmpty) {
       addAchievement("Early Bird", "You have ran in early morning",
           DateTime.now().millisecondsSinceEpoch, 1);
@@ -368,7 +368,7 @@ class MapWalkController extends GetxController {
     //   });
     // }
     List<AchievementModel> tempModel =
-        achievements.where((p0) => p0.title == "1 week streak").toList();
+    achievements.where((p0) => p0.title == "1 week streak").toList();
     if (tempModel.isEmpty) {
       List walks = checkStreak(7);
       if (walks.length >= 7) {
@@ -377,7 +377,7 @@ class MapWalkController extends GetxController {
       }
     } else {
       DateTime eDate =
-          DateTime.fromMillisecondsSinceEpoch(tempModel.first.dateTime);
+      DateTime.fromMillisecondsSinceEpoch(tempModel.first.dateTime);
       if (DateTime.now().day - eDate.day == 7) {
         updateAchievement(tempModel.first.id, tempModel.first.count + 1);
       }
@@ -386,7 +386,7 @@ class MapWalkController extends GetxController {
 
   addMonthlyBadge() {
     List<AchievementModel> tempMonth =
-        achievements.where((p0) => p0.title == "1 month streak").toList();
+    achievements.where((p0) => p0.title == "1 month streak").toList();
     if (tempMonth.isEmpty) {
       List walks = checkStreak(30);
       if (walks.length >= 30) {
@@ -395,7 +395,7 @@ class MapWalkController extends GetxController {
       }
     } else {
       DateTime eDate =
-          DateTime.fromMillisecondsSinceEpoch(tempMonth.first.dateTime);
+      DateTime.fromMillisecondsSinceEpoch(tempMonth.first.dateTime);
       if (DateTime.now().day - eDate.day == 30) {
         updateAchievement(tempMonth.first.id, tempMonth.first.count + 1);
       }
@@ -405,7 +405,7 @@ class MapWalkController extends GetxController {
   addRainyBadge() async {
     bool match = false;
     List<AchievementModel> tempModel =
-        achievements.where((p0) => p0.title == "Rainy Walk").toList();
+    achievements.where((p0) => p0.title == "Rainy Walk").toList();
     if (tempModel.isEmpty) {
       for (var element in hourlyWeather) {
         DateTime dateTime = DateTime.parse(element.time);
@@ -428,7 +428,7 @@ class MapWalkController extends GetxController {
 
   Future<void> _requestLocationPermission() async {
     final permission_handler.PermissionStatus status =
-        await permission_handler.Permission.location.request();
+    await permission_handler.Permission.location.request();
     if (status.isGranted) {
       var location = await _getLocation();
       if (location != null) {
@@ -440,7 +440,7 @@ class MapWalkController extends GetxController {
   Future<LatLng?> _getLocation() async {
     try {
       geo_locator.Position position =
-          await geo_locator.Geolocator.getCurrentPosition(
+      await geo_locator.Geolocator.getCurrentPosition(
         desiredAccuracy: geo_locator.LocationAccuracy.high,
       );
       return LatLng(position.latitude, position.longitude);

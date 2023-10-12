@@ -31,13 +31,13 @@ class QuestWidget extends StatelessWidget {
           if (snapshot.hasData) {
             final achievements = snapshot.data!.docs
                 .map((e) =>
-                    AchievementModel.fromJson(e.data() as Map<String, dynamic>))
+                AchievementModel.fromJson(e.data() as Map<String, dynamic>))
                 .toList();
             if(achievements.isNotEmpty){
-            var e = achievements.where((p0) => p0.title==model.title).toList();
-            if(e.isNotEmpty){
-              isComplete = true;
-            }}
+              var e = achievements.where((p0) => p0.title==model.title).toList();
+              if(e.isNotEmpty){
+                isComplete = true;
+              }}
             print("length");
             print(achievements.length);
             return Container(
@@ -108,13 +108,13 @@ class QuestWidget extends StatelessWidget {
                               onClick: () {
                                 if (!isComplete) {
                                   if(mapWalkController.userWalks.isNotEmpty){
-                                  mapWalkController.addQuestStreak(model);
-                                }else{
+                                    mapWalkController.addQuestStreak(model);
+                                  }else{
                                     Functions.showSnackBar(context, "please make walk to complete quest");
                                   }}
                               },
                               text:
-                                  isComplete ? "Completed" : 'Mark as complete',
+                              isComplete ? "Completed" : 'Mark as complete',
                               fontFamily: Constants.workSansRegular,
                               textColor: Constants.colorTextWhite,
                               borderRadius: 10.0,

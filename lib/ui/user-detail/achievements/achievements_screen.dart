@@ -91,9 +91,9 @@ class _AchievementScreenState extends State<AchievementScreen> {
             context,
             MaterialPageRoute(
                 builder: (_) => AchievementDetails(
-                      streak: model,
+                  streak: model,
                   imagePath: imagePath,
-                    )));
+                )));
       },
       child: Column(
         children: [
@@ -102,26 +102,26 @@ class _AchievementScreenState extends State<AchievementScreen> {
               child: (imagePath != "")
                   ? Image(image: AssetImage(imagePath))
                   : Container(
-                      // width: width * 0.5,
-                      height: height * 0.11,
-                      decoration: BoxDecoration(
-                          color: Constants.colorSecondaryVariant,
-                          shape: BoxShape.circle,
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Constants.redShadow,
-                                offset: Offset(4, 4))
-                          ],
-                          border: Border.all(color: Constants.redBorder)),
-                      child: Center(
-                          child: Text(
-                        model.title,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Constants.redBorder),
-                      )),
+                // width: width * 0.5,
+                height: height * 0.11,
+                decoration: BoxDecoration(
+                    color: Constants.colorSecondaryVariant,
+                    shape: BoxShape.circle,
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Constants.redShadow,
+                          offset: Offset(4, 4))
+                    ],
+                    border: Border.all(color: Constants.redBorder)),
+                child: Center(
+                    child: Text(
+                      model.title,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Constants.redBorder),
                     )),
+              )),
           const SizedBox(
             height: 5,
           ),
@@ -141,8 +141,8 @@ class _AchievementScreenState extends State<AchievementScreen> {
     DateTime currentDate = DateTime.now().add(const Duration(days: 15));
     for (var i = 0; i <= days; i++) {
       WalkModel? foundModel = walks.firstWhere(
-          (model) =>
-              model.dateTime.day == currentDate.subtract(Duration(days: i)).day,
+              (model) =>
+          model.dateTime.day == currentDate.subtract(Duration(days: i)).day,
           orElse: () => null);
       if (foundModel != null) {
         streakList.add(foundModel);

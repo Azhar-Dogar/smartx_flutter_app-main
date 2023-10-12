@@ -29,7 +29,7 @@ class SignUpController extends GetxController {
   final SharedPreferenceHelper _sharedPreferenceHelper =
       SharedPreferenceHelper.instance;
   final FirestoreDatabaseHelper _firestoreDatabaseHelper =
-      FirestoreDatabaseHelper.instance();
+  FirestoreDatabaseHelper.instance();
   changeVisibility(){
     isPasswordVisible.value = !(isPasswordVisible.value);
     print(isPasswordVisible);
@@ -40,7 +40,7 @@ class SignUpController extends GetxController {
     print(password);
     try {
       final userCredential =
-          await _firebaseAuthHelper.signUp(userEmail, password);
+      await _firebaseAuthHelper.signUp(userEmail, password);
       final userUid = userCredential.user?.uid;
       if (userUid == null) return null;
 
@@ -85,8 +85,8 @@ class SignUpController extends GetxController {
     await doc.set(AchievementModel(title: title,
         id: doc.id,
         description: desc,
-      dateTime: dateTime,
-      count: 1
+        dateTime: dateTime,
+        count: 1
     ).toJson());
   }
 }

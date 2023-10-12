@@ -29,5 +29,5 @@ class AchievementModel {
     data['dateTime'] = dateTime;
     data['description'] = description;
     return data;
-}
+  }
 }

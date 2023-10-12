@@ -70,11 +70,11 @@ class PostDetailScreen extends StatelessWidget {
                               controller.toggleLike(
                                   controller.postModel, isLiked);
                               if (FirebaseAuth.instance.currentUser!.uid !=
-                                      controller.postModel.userid &&
+                                  controller.postModel.userid &&
                                   !isLiked) {
                                 FirestoreDatabaseHelper.instance()
                                     .sendNotification(
-                                        controller.postModel, false);
+                                    controller.postModel, false);
                               }
                             },
                           );
@@ -87,7 +87,7 @@ class PostDetailScreen extends StatelessWidget {
                             shrinkWrap: true,
                             scrollController: controller.commentScroll,
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            const EdgeInsets.symmetric(horizontal: 20.0),
                             stream: FirebaseFirestore.instance
                                 .collection('comments')
                                 .doc(controller.postModel.id)
@@ -106,58 +106,58 @@ class PostDetailScreen extends StatelessWidget {
                                         left: 20.0, right: 20, bottom: 10),
                                     child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           (comments.userDp.toString() ==
-                                                      'null' ||
-                                                  comments.userDp.toString() ==
-                                                      '')
+                                              'null' ||
+                                              comments.userDp.toString() ==
+                                                  '')
                                               ? Image.asset('assets/4.png',
-                                                  height: 40)
+                                              height: 40)
                                               : ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                  child: CachedNetworkImage(
-                                                      imageUrl:
-                                                          comments.userDp ?? '',
-                                                      height: 40,
-                                                      width: 40,
-                                                      fit: BoxFit.cover,
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          const Center(
-                                                              child: CircularProgressIndicator
-                                                                  .adaptive())),
-                                                ),
+                                            borderRadius:
+                                            BorderRadius.circular(50),
+                                            child: CachedNetworkImage(
+                                                imageUrl:
+                                                comments.userDp ?? '',
+                                                height: 40,
+                                                width: 40,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context,
+                                                    url) =>
+                                                const Center(
+                                                    child: CircularProgressIndicator
+                                                        .adaptive())),
+                                          ),
                                           const SizedBox(width: 5),
                                           Expanded(
                                             child: Column(
                                               children: [
                                                 Container(
                                                   padding:
-                                                      const EdgeInsets.all(10),
+                                                  const EdgeInsets.all(10),
                                                   decoration: BoxDecoration(
                                                       color: Constants
                                                           .colorBackground,
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
+                                                      BorderRadius.circular(
+                                                          10)),
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Row(
                                                         mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                         children: [
                                                           Text(
                                                               comments.username,
                                                               style: const TextStyle(
                                                                   fontFamily:
-                                                                      Constants
-                                                                          .workSansMedium,
+                                                                  Constants
+                                                                      .workSansMedium,
                                                                   fontSize: 16,
                                                                   color: Constants
                                                                       .colorSecondary)),
@@ -172,10 +172,10 @@ class PostDetailScreen extends StatelessWidget {
                                                                         .toDate()),
                                                                 style: const TextStyle(
                                                                     fontFamily:
-                                                                        Constants
-                                                                            .workSansLight,
+                                                                    Constants
+                                                                        .workSansLight,
                                                                     fontSize:
-                                                                        12,
+                                                                    12,
                                                                     color: Constants
                                                                         .colorSecondary)),
                                                           ),
@@ -220,12 +220,12 @@ class PostDetailScreen extends StatelessWidget {
                                                               color: (isLiked)
                                                                   ? Colors.blue
                                                                   : Constants
-                                                                      .colorSecondary)),
+                                                                  .colorSecondary)),
                                                       onTap: () {
                                                         controller
                                                             .commentToggleLike(
-                                                                comments,
-                                                                isLiked);
+                                                            comments,
+                                                            isLiked);
                                                       },
                                                     ),
                                                     const SizedBox(width: 10)
@@ -241,20 +241,20 @@ class PostDetailScreen extends StatelessWidget {
                                             IconButton(
                                               onPressed: () {
                                                 final RenderBox button =
-                                                    context.findRenderObject()
-                                                        as RenderBox;
+                                                context.findRenderObject()
+                                                as RenderBox;
                                                 final RenderBox overlay =
-                                                    Overlay.of(context)!
-                                                            .context
-                                                            .findRenderObject()
-                                                        as RenderBox;
+                                                Overlay.of(context)!
+                                                    .context
+                                                    .findRenderObject()
+                                                as RenderBox;
                                                 final Offset position = button
                                                     .localToGlobal(Offset.zero,
-                                                        ancestor: overlay);
+                                                    ancestor: overlay);
                                                 showMenu(
                                                   context: context,
                                                   position:
-                                                      RelativeRect.fromLTRB(
+                                                  RelativeRect.fromLTRB(
                                                     position.dx +
                                                         button.size.width,
                                                     position.dy +
@@ -266,14 +266,14 @@ class PostDetailScreen extends StatelessWidget {
                                                   items: <PopupMenuEntry>[
                                                     PopupMenuItem(
                                                       child:
-                                                          const Text('Delete'),
+                                                      const Text('Delete'),
                                                       onTap: () {
                                                         Functions
                                                             .showLoaderDialog(
-                                                                context);
+                                                            context);
                                                         controller
                                                             .deleteComment(
-                                                                comments,);
+                                                          comments,);
 
                                                         Functions.showSnackBar(
                                                             context,
@@ -321,13 +321,13 @@ class PostDetailScreen extends StatelessWidget {
                             List<AchievementModel> tempModel = mapWalkController.achievements
                                 .where((p0) => p0.title == "20 comments").toList();
                             if(tempModel.isEmpty){
-                            await mapWalkController
-                                .addAchievement("20 comments","You have make 20 comments",DateTime.now().millisecondsSinceEpoch,1);
-                          }else{
+                              await mapWalkController
+                                  .addAchievement("20 comments","You have make 20 comments",DateTime.now().millisecondsSinceEpoch,1);
+                            }else{
                               if(user.userComments! % 2 == 0){
-                              await mapWalkController.updateAchievement(tempModel.first.id, tempModel.first.count + 1);
-                              mapWalkController.getAchievement();
-                            }}}
+                                await mapWalkController.updateAchievement(tempModel.first.id, tempModel.first.count + 1);
+                                mapWalkController.getAchievement();
+                              }}}
                           if (FirebaseAuth.instance.currentUser!.uid !=
                               controller.postModel.userid) {
                             await FirestoreDatabaseHelper.instance()
