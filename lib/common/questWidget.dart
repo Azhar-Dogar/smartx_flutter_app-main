@@ -38,7 +38,6 @@ class QuestWidget extends StatelessWidget {
               if(e.isNotEmpty){
                 isComplete = true;
               }}
-            print("length");
             print(achievements.length);
             return Container(
               height: 250,
