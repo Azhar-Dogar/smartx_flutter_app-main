@@ -41,7 +41,7 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 late final FirebaseMessaging _messaging;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 }
 
 void main() async {
