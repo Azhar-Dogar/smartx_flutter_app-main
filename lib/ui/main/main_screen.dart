@@ -30,9 +30,9 @@ class _MainScreenState extends State<MainScreen> {
             bottomNavigation(), // Obx(() => BottomNavigationBar(
         floatingActionButton: GetX<MainScreenController>(builder: (_) {
           if (controller.indexState.value == 3) {
-             return FloatingActionButton(
+            return FloatingActionButton(
               backgroundColor: Constants.buttonColor,
-              onPressed: (){
+              onPressed: () {
                 controller.changeIndex(0);
               },
               child: const Icon(
@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
     return BottomNavigationClass(
       items: [
         BottomNavItem(
-          isFirst: true,
+            isFirst: true,
             index: 0,
             image: '',
             isSelected: controller.indexState.value == 0),
@@ -73,8 +73,16 @@ class _MainScreenState extends State<MainScreen> {
             isSelected: controller.indexState.value == 3),
         BottomNavItem(
             index: 4,
-            isProfile: (controller.user !=null)?true:false,
-            image: (controller.user!=null)?controller.user!.imagePath!:"assets/profile.png",
+            isProfile: (controller.user != null)
+                ? (controller.user!.imagePath != "")
+                    ? true
+                    : false
+                : false,
+            image: (controller.user != null)
+                ? (controller.user!.imagePath != "")
+                    ? controller.user!.imagePath!
+                    : "assets/profile.png"
+                : "assets/profile.png",
             isSelected: controller.indexState.value == 4),
       ],
       onSelect: (index) {
