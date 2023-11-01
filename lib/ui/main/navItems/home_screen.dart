@@ -96,11 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           fontFamily: Constants.workSansBold,
                                           fontSize: 16),
                                     ),
-                                    // Text('SEE ALL',
-                                    //     style: TextStyle(
-                                    //         fontFamily: Constants.workSansRegular,
-                                    //         color: Constants.colorPrimary,
-                                    //         fontSize: 16))
                                   ]),
                             ),
                             SizedBox(
@@ -108,7 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: size.width,
                               child: ListView.builder(
                                   itemCount: quests.length,
-                                  // shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (_, i) {
                                     return QuestWidget(model: quests[i]);
@@ -131,21 +125,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            // const SizedBox(height: 10),
-            // GetX<MainScreenController>(
-            //   builder: (_) {
-            //     final state = controller.postDataEvent.value;
-            //     print(state);
-            //     if (state is Loading) {
-            //       return SliverToBoxAdapter(
-            //         child: const Center(
-            //           child: CircularProgressIndicator.adaptive(),
-            //         ),
-            //       );
-            //     }
-            //     if (state is Data) {
-            //       final allIds = state.data as List<String>;
-            //       return
             if (controller.followingUserIds.isEmpty) ...[
               const SliverToBoxAdapter(
                 child: Text(
@@ -201,33 +180,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   childCount: posts.length,
                                 ),
-                              )
-                        // ListView.builder(
-                        //   itemCount: posts.length,
-                        //   shrinkWrap: true,
-                        //   physics: const NeverScrollableScrollPhysics(),
-                        //   itemBuilder: (_, i) {
-                        //     final isLiked = posts[i].likedUsers.contains(
-                        //         FirebaseAuth.instance.currentUser?.uid);
-                        //
-                        //     return SinglePostWidget(
-                        //       postModel: posts[i].copyWith(isLiked: isLiked),
-                        //       isLiked: isLiked,
-                        //       onLikedTap: () {
-                        //         controller.toggleLike(posts[i], isLiked);
-                        //       },
-                        //     );
-                        //   })
-                        ;
+                              );
                   }
                   return const SliverToBoxAdapter(child: SizedBox());
                 },
               )
             ]
-            //   }
-            //
-            //   return const SizedBox();
-            // },
           ]),
         );
       })
