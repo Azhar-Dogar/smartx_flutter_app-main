@@ -26,6 +26,26 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Required</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Required to get user photo</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Required</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Required to get user photo</string>
+    
+    
+    
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Required to get user location</string>
+    
+    
+    
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Required to get user location</string>
+    
+    
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -35,29 +55,15 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Required to get user photo</string>
-    
-    <key>NSCameraUsageDescription</key>
-    <string>Required to get user photo</string>
-    
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Required</string>
-    
-    
-    <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>Required</string>
 </dict>
 </plist>
