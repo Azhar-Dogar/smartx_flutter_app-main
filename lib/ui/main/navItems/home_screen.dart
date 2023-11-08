@@ -126,12 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             if (controller.followingUserIds.isEmpty) ...[
-              const SliverToBoxAdapter(
-                child: Text(
-                  "No Feed Yet",
-                  style: TextStyle(color: Colors.black),
-                ),
-              )
+
             ] else ...[
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
