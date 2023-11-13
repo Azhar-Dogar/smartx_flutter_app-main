@@ -7,6 +7,7 @@ import 'package:smartx_flutter_app/models/walk_model.dart';
 import 'package:smartx_flutter_app/ui/map-walk/stop_walk_screen.dart';
 import 'package:smartx_flutter_app/util/constants.dart';
 
+import '../../../common/walk_widget.dart';
 import '../../map-walk/map_walk_controller.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 : ListView.builder(
                     itemCount: controller.userWalks.length,
                     itemBuilder: (BuildContext context, index) {
-                      return walkWidget(controller.userWalks[index]);
+                      return WalkWidget(model: controller.userWalks[index]);
                     }),
           ),
         ],
@@ -48,95 +49,4 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 
-  Widget walkWidget(WalkModel model) {
-    return GestureDetector(
-      onTap: (){
-        // FirebaseFirestore.instance.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).collection("walks").doc(model.id).delete();
-      },
-      child: Container(
-        margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
-        width: width,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.red),
-            color: Constants.colorOnBackground,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-            ),
-            height: 150,
-            width: width,
-            child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                child: GoogleMapWidget(
-                  model: model,
-                  key: Key(model.id),
-                )),
-          ),
-          // ClipRRect(
-          //   borderRadius: const BorderRadius.only(
-          //       topLeft: Radius.circular(10),
-          //       topRight: Radius.circular(10)),
-          //   child: Image.asset(
-          //     'assets/location_view.png',
-          //     height: 130,
-          //     width: width,
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  model.title,
-                  style: const TextStyle(
-                    fontFamily: Constants.workSansMedium,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(model.distance.toStringAsFixed(0),
-                        style: const TextStyle(
-                            fontFamily: Constants.workSansMedium,
-                            color: Constants.colorOnSurface)),
-                    const SizedBox(width: 10),
-                    const DottedLineContainer(),
-                    const SizedBox(width: 10),
-                    Text(model.duration.toString(),
-                        style: const TextStyle(
-                            fontFamily: Constants.workSansMedium,
-                            color: Constants.colorOnSurface)),
-                  ],
-                ),
-                Row(children: [
-                  if (model.dogs != null) ...[
-                    for (var e in model.dogs!)
-                      Container(
-                        margin: const EdgeInsets.only(top: 10, right: 5),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border:
-                                Border.all(color: Constants.colorSecondary)),
-                        child: CircleAvatar(
-                          radius: 15,
-                          backgroundImage: NetworkImage(
-                            e.imagePath!,
-                          ),
-                        ),
-                      )
-                  ]
-                ])
-              ],
-            ),
-          )
-        ]),
-      ),
-    );
-  }
 }

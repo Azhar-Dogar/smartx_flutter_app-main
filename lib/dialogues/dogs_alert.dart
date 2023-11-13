@@ -52,7 +52,7 @@ class _DogsAlertState extends State<DogsAlert> {
             if (controller.userDogEvents.value is Data) ...[
               SizedBox(
                 height: 300,
-                width: double.infinity,
+                width: 700,
                 child: ListView.builder(
                     // padding: const EdgeInsets.symmetric(horizontal: 3),
                     itemCount: list.length,

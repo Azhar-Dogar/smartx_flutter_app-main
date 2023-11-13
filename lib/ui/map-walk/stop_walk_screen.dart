@@ -38,92 +38,283 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
     // TODO: implement initState
     super.initState();
     imagePath = Get.arguments;
-    print("Image Path");
-    print(imagePath.value);
   }
 
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
-    print("These are selected dogs");
-    print(controller.selectedDogs.length);
-    return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Constants.colorSecondary,
-        // titleSpacing: 0,
-        automaticallyImplyLeading: false,
-        title: InkWell(
-          onTap: () => Get.back(),
-          child: const Row(
-            children: [
-              Icon(
-                Icons.arrow_back,
-                color: Constants.colorOnBackground,
-              ),
-              Text(
-                'Back',
-                style: TextStyle(
-                    fontFamily: Constants.workSansRegular,
-                    color: Constants.colorOnBackground,
-                    fontSize: 16),
-              ),
-            ],
+
+
+    if(widget.walk == null){
+      return Scaffold(
+        // resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Constants.colorSecondary,
+          // titleSpacing: 0,
+          automaticallyImplyLeading: false,
+          title: InkWell(
+            onTap: () => Get.back(),
+            child: const Row(
+              children: [
+                Icon(
+                  Icons.arrow_back,
+                  color: Constants.colorOnBackground,
+                ),
+                Text(
+                  'Back',
+                  style: TextStyle(
+                      fontFamily: Constants.workSansRegular,
+                      color: Constants.colorOnBackground,
+                      fontSize: 16),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: size.height * 0.9,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: size.height * 0.9,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Image.asset('assets/Timer.png', width: 25),
+                      const SizedBox(width: 10),
+                      const Text('Duration',
+                          style: TextStyle(
+                              fontFamily: Constants.workSansMedium,
+                              fontSize: 16,
+                              color: Constants.colorSecondary)),
+                      const SizedBox(width: 10),
+                      const DottedLineContainer(),
+                      const SizedBox(width: 10),
+                      Text(
+                        formatTime(),
+                        style: const TextStyle(color: Constants.colorOnSurface),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Image.asset('assets/Distance.png', width: 25),
+                      const SizedBox(width: 10),
+                      const Text('Distance',
+                          style: TextStyle(
+                              fontFamily: Constants.workSansMedium,
+                              fontSize: 16,
+                              color: Constants.colorSecondary)),
+                      const SizedBox(width: 10),
+                      const DottedLineContainer(),
+                      const SizedBox(width: 10),
+                      Text(
+                        '${controller.totalDistance}',
+                        style: const TextStyle(color: Constants.colorOnSurface),
+                      ),
+                    ],
+                  ),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 20),
+                      width: 100,
+                      height: 2,
+                      color: Constants.colorTextField),
+                  Obx(
+                        () => Row(
+                      children: [
+                        Image.asset('assets/Dog.png', width: 25),
+                        const SizedBox(width: 10),
+                        const Text('Dogs',
+                            style: TextStyle(
+                                fontFamily: Constants.workSansMedium,
+                                fontSize: 16,
+                                color: Constants.colorSecondary)),
+                        const SizedBox(width: 10),
+                        const DottedLineContainer(),
+                        const SizedBox(width: 10),
+                        if (controller.selectedDogs.isNotEmpty) ...[
+                          Expanded(child: dogImages(controller.selectedDogs))
+                        ],
+                        DottedBorder(
+                          color: Constants.colorSecondary,
+                          borderType: BorderType.Circle,
+                          child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => const DogsAlert())
+                                  .then((value) {
+                                if (value != null) {
+                                  controller.addSelectedDogs(
+                                      value["list"] as List<DogModel>);
+                                }
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.add,
+                              color: Constants.colorOnSurface,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 30),
+                      width: 100,
+                      height: 2,
+                      color: Constants.colorTextField),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                      height: 50,
+                      child: DottedBorderAppTextField(
+                          hint: 'Set title',
+                          radius: 10,
+                          controller: controller.titleController,
+                          textInputType: TextInputType.text,
+                          isError: false)),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            controller.clearValues();
+                            Get.back();
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 20),
+                            alignment: Alignment.center,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Constants.buttonColor)),
+                            child: const Text(
+                              'Discard',
+                              style: TextStyle(color: Constants.buttonColor),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: SizedBox(
+                            height: 60,
+                            child: AppButton(
+                                borderRadius: 10,
+                                color: Constants.colorOnSurface,
+                                fontFamily: Constants.workSansRegular,
+                                text: 'Save',
+                                onClick: () async {
+                                  if (controller.titleController.text
+                                      .trim()
+                                      .isEmpty) {
+                                    Functions.showSnackBar(
+                                        context, "Please add title of walk");
+                                    return;
+                                  }
+                                  Functions.showLoaderDialog(context);
+                                  await controller.addWalk();
+                                  Get.back();
+                                  await shareDialogue();
+                                  controller.clearValues();
+                                }),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }else{
+      return Scaffold(
+        // resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Constants.colorSecondary,
+          // titleSpacing: 0,
+          automaticallyImplyLeading: false,
+          title: InkWell(
+            onTap: () => Get.back(),
+            child: const Row(
               children: [
-                Row(
-                  children: [
-                    Image.asset('assets/Timer.png', width: 25),
-                    const SizedBox(width: 10),
-                    const Text('Duration',
-                        style: TextStyle(
-                            fontFamily: Constants.workSansMedium,
-                            fontSize: 16,
-                            color: Constants.colorSecondary)),
-                    const SizedBox(width: 10),
-                    const DottedLineContainer(),
-                    const SizedBox(width: 10),
-                    Text(
-                      '${controller.hours.value}:${controller.minutes.value}:${controller.seconds.value}',
-                      style: const TextStyle(color: Constants.colorOnSurface),
-                    ),
-                  ],
+                Icon(
+                  Icons.arrow_back,
+                  color: Constants.colorOnBackground,
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Image.asset('assets/Distance.png', width: 25),
-                    const SizedBox(width: 10),
-                    const Text('Distance',
-                        style: TextStyle(
-                            fontFamily: Constants.workSansMedium,
-                            fontSize: 16,
-                            color: Constants.colorSecondary)),
-                    const SizedBox(width: 10),
-                    const DottedLineContainer(),
-                    const SizedBox(width: 10),
-                    Text(
-                      '${controller.totalDistance}',
-                      style: const TextStyle(color: Constants.colorOnSurface),
-                    ),
-                  ],
+                Text(
+                  'Back',
+                  style: TextStyle(
+                      fontFamily: Constants.workSansRegular,
+                      color: Constants.colorOnBackground,
+                      fontSize: 16),
                 ),
-                Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    width: 100,
-                    height: 2,
-                    color: Constants.colorTextField),
-                Obx(
-                  () => Row(
+              ],
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: size.height * 0.9,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Image.asset('assets/Timer.png', width: 25),
+                      const SizedBox(width: 10),
+                      const Text('Duration',
+                          style: TextStyle(
+                              fontFamily: Constants.workSansMedium,
+                              fontSize: 16,
+                              color: Constants.colorSecondary)),
+                      const SizedBox(width: 10),
+                      const DottedLineContainer(),
+                      const SizedBox(width: 10),
+                      Text(
+                        formatTime(),
+                        style: const TextStyle(color: Constants.colorOnSurface),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Image.asset('assets/Distance.png', width: 25),
+                      const SizedBox(width: 10),
+                      const Text('Distance',
+                          style: TextStyle(
+                              fontFamily: Constants.workSansMedium,
+                              fontSize: 16,
+                              color: Constants.colorSecondary)),
+                      const SizedBox(width: 10),
+                      const DottedLineContainer(),
+                      const SizedBox(width: 10),
+                      Text(
+                        '${widget.walk!.distance.toStringAsFixed(2)}',
+                        style: const TextStyle(color: Constants.colorOnSurface),
+                      ),
+                    ],
+                  ),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 20),
+                      width: 100,
+                      height: 2,
+                      color: Constants.colorTextField),
+
+                  Row(
                     children: [
                       Image.asset('assets/Dog.png', width: 25),
                       const SizedBox(width: 10),
@@ -135,111 +326,47 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                       const SizedBox(width: 10),
                       const DottedLineContainer(),
                       const SizedBox(width: 10),
-                      if (controller.selectedDogs.isNotEmpty) ...[
-                        Expanded(child: dogImages(controller.selectedDogs))
+                      if (widget.walk!.dogs!.isNotEmpty) ...[
+                        Expanded(child: dogImages(widget.walk!.dogs!))
                       ],
-                      DottedBorder(
-                        color: Constants.colorSecondary,
-                        borderType: BorderType.Circle,
-                        child: IconButton(
-                          onPressed: () {
-                            showDialog(
-                                    context: context,
-                                    builder: (_) => const DogsAlert())
-                                .then((value) {
-                              if (value != null) {
-                                controller.addSelectedDogs(
-                                    value["list"] as List<DogModel>);
-                              }
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.add,
-                            color: Constants.colorOnSurface,
-                            size: 20,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
-                ),
-                Container(
-                    margin: const EdgeInsets.symmetric(vertical: 30),
-                    width: 100,
-                    height: 2,
-                    color: Constants.colorTextField),
-                const SizedBox(height: 30),
-                SizedBox(
-                    height: 50,
-                    child: DottedBorderAppTextField(
-                        hint: 'Set title',
-                        radius: 10,
-                        controller: controller.titleController,
-                        textInputType: TextInputType.text,
-                        isError: false)),
-                const Spacer(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          controller.clearValues();
-                          Get.back();
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 20),
-                          alignment: Alignment.center,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Constants.buttonColor)),
-                          child: const Text(
-                            'Discard',
-                            style: TextStyle(color: Constants.buttonColor),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: SizedBox(
-                          height: 60,
-                          child: AppButton(
-                              borderRadius: 10,
-                              color: Constants.colorOnSurface,
-                              fontFamily: Constants.workSansRegular,
-                              text: 'Save',
-                              onClick: () async {
-                                if (controller.titleController.text
-                                    .trim()
-                                    .isEmpty) {
-                                  Functions.showSnackBar(
-                                      context, "Please add title of walk");
-                                  return;
-                                }
-                                Functions.showLoaderDialog(context);
-                                await controller.addWalk();
-                                Get.back();
-                                await shareDialogue();
-                                controller.clearValues();
-                              }),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 30,
-                )
-              ],
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+
   }
 
+
+  String formatTime() {
+
+    if(widget.walk == null ){
+      var h = "${controller.hours < 10 ? "0" : ""}${controller.hours}";
+      var m = "${controller.minutes < 10 ? "0" : ""}${controller.minutes}";
+      var s = "${controller.seconds < 10 ? "0" : ""}${controller.seconds}";
+
+      return "$h:$m:$s";
+    }else{
+
+      var seconds = widget.walk!.duration;
+
+      int hours = seconds ~/ 3600; // ~/ is the integer division operator
+      int minutes = (seconds % 3600) ~/ 60;
+      int remainingSeconds = seconds % 60;
+
+      var h = "${hours < 10 ? "0" : ""}$hours";
+      var m = "${minutes < 10 ? "0" : ""}$minutes";
+      var s = "${seconds < 10 ? "0" : ""}$seconds";
+
+      return "$h:$m:$s";
+    }
+
+  }
   Future shareDialogue() {
     return Get.defaultDialog(
       title: '',

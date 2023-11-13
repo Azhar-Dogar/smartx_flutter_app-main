@@ -16,7 +16,7 @@ class WalkWidget extends StatelessWidget {
     var width = context.width;
     return GestureDetector(
       onTap: () {
-        // FirebaseFirestore.instance.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).collection("walks").doc(model.id).delete();
+        Get.to(()=> StopWalkScreen(walk: model,));
       },
       child: Container(
         margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
