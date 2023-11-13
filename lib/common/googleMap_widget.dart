@@ -9,9 +9,12 @@ class GoogleMapWidget extends StatelessWidget {
 WalkModel model;
   @override
   Widget build(BuildContext context) {
+    if(model.paths.isEmpty){
+      return SizedBox();
+    }
     return  GoogleMap(
       initialCameraPosition:   CameraPosition(
-          zoom: 25, target: model.paths.first),
+          zoom: 25, target: model.paths.isEmpty ? LatLng(31, 31) : model.paths.first),
       onMapCreated: (GoogleMapController controller) {
         print('changes');
         // _controller = controller;

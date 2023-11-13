@@ -51,15 +51,16 @@ class AddPostController extends GetxController {
         print(url);
       }
       final post = PostModel(
-          text: textController.text,
-          username: '${user.value?.firstName} ${user.value?.lastName}',
-          imagePath: url,
-          userImage: user.value?.imagePath ?? '',
-          created: DateTime.now(),
-          groupId: groupId ?? '',
-          likedUsers: [],
-          userid: user.value?.id ?? '',
-          id: '');
+        text: textController.text,
+        username: '${user.value?.firstName} ${user.value?.lastName}',
+        imagePath: url,
+        userImage: user.value?.imagePath ?? '',
+        created: DateTime.now(),
+        groupId: groupId ?? '',
+        likedUsers: [],
+        userid: user.value?.id ?? '',
+        id: '',
+      );
       final res = await _firestoreDatabaseHelper.addPost(post);
       if (res is PostModel) {
         textController.clear();
@@ -70,13 +71,13 @@ class AddPostController extends GetxController {
       return null;
     }
   }
+
   updateUser() async {
     if (user.value != null) {
       final uid = FirebaseAuth.instance.currentUser!.uid;
       await FirebaseFirestore.instance.collection("user").doc(uid).update({
-        "userPosts": (user.value!.userPosts == null)
-            ? 1
-            : user.value!.userPosts! + 1
+        "userPosts":
+            (user.value!.userPosts == null) ? 1 : user.value!.userPosts! + 1
       });
     }
   }

@@ -584,6 +584,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "nested",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "octo_image",
       "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/octo_image-1.0.2",
       "packageUri": "lib/",
@@ -690,6 +696,12 @@
       "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.5",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///Users/admin/.pub-cache/hosted/pub.dev/provider-6.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "quiver",
@@ -926,7 +938,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-10-26T12:47:35.975911Z",
+  "generated": "2023-11-13T05:21:45.233745Z",
   "generator": "pub",
   "generatorVersion": "3.1.4"
 }
