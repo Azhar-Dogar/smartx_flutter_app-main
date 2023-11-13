@@ -126,7 +126,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             if (controller.followingUserIds.isEmpty) ...[
-
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 100.0),
+                  child: Center(child: Text("No News Feed")),
+                ),
+              )
             ] else ...[
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -135,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .where("groupId", isEqualTo: "")
                     .snapshots(includeMetadataChanges: true),
                 builder: (_, snapshot) {
+                  print(controller.followingUserIds.length);
                   if (snapshot.hasError) {
                     return SliverToBoxAdapter(
                         child: Text('Error: ${snapshot.error}'));

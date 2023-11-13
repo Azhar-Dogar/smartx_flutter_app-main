@@ -40,7 +40,7 @@ class AddPostController extends GetxController {
       FirestoreDatabaseHelper.instance();
 
   Future<PostModel?> addPost(String groupId) async {
-    if (user == null) return null;
+    if (user.value == null) return null;
 
     try {
       String? url;

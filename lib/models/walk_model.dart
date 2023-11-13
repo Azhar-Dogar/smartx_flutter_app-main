@@ -10,14 +10,16 @@ class WalkModel {
   DateTime dateTime;
   List<LatLng> paths = [];
   List<DogModel>? dogs = [];
-  WalkModel(
-      {this.dogs,
-        required this.title,
-        required this.dateTime,
-      required this.paths,
-      required this.duration,
-      required this.distance,
-      required this.id});
+
+  WalkModel({
+    this.dogs,
+    required this.title,
+    required this.dateTime,
+    required this.paths,
+    required this.duration,
+    required this.distance,
+    required this.id,
+  });
 
   factory WalkModel.fromJson(Map<String, dynamic> json) {
     final id = json['id'];
@@ -26,7 +28,8 @@ class WalkModel {
     final distance = json['distance'];
     final paths = json['paths'];
     final dateTime = json['dateTime'].toDate();
-    final dogs = List.generate(json['dogs'].length, (index) => DogModel.fromJson(json['dogs'][index]));
+    final dogs = List.generate(
+        json['dogs'].length, (index) => DogModel.fromJson(json['dogs'][index]));
     return WalkModel(
         id: id,
         title: title,
@@ -34,7 +37,8 @@ class WalkModel {
         duration: duration,
         distance: distance,
         paths: paths.map<LatLng>((dynamic item) {
-          double latitude = item['latitude']; // Extract latitude from dynamic item
+          double latitude =
+              item['latitude']; // Extract latitude from dynamic item
           double longitude = item['longitude'];
           return LatLng(latitude, longitude);
         }).toList(),

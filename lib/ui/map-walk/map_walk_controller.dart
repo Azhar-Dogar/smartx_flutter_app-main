@@ -169,6 +169,7 @@ class MapWalkController extends GetxController {
     totalDistance;
   }
 
+
   void startTimer() {
     // modified = DateTime(time.year, time.month, time.day, 00, 00, 00);
     modified = DateTime(DateTime.now().year, DateTime.now().month,

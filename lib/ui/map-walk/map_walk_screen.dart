@@ -22,6 +22,7 @@ import '../main/main_screen_controller.dart';
 class MapWalkScreen extends StatefulWidget {
   static const String route = '/map_walk_screen_route';
   static const String key_title = '/map_walk_screen_title';
+
   const MapWalkScreen({super.key});
 
   @override
@@ -33,6 +34,7 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
   GoogleMapController? _controller;
   LocationData? _myLocation;
   late double width, height;
+
   @override
   void initState() {
     print("hello");
@@ -66,24 +68,27 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
     }
   }
 
+  StreamSubscription<LocationData>? stream;
+
   Future<void> _setMyLocation() async {
     final Location location = Location();
-    location.onLocationChanged.listen((LocationData newLocation) {
+
+    location.getLocation().then((value) {});
+    stream = location.onLocationChanged.listen((LocationData newLocation) {
       _myLocation = newLocation;
       if (controller.pathPoints.isEmpty) {
         controller.pathPoints
             .add(LatLng(newLocation.latitude!, newLocation.longitude!));
       }
 
-        Future.delayed(const Duration(seconds: 5)).then((value) {
-          if (controller.isStart.value && !controller.isPause.value) {
-            setState(() {
-              _myLocation = newLocation;
-              controller.pathPoints
-                  .add(LatLng(newLocation.latitude!, newLocation.longitude!));
-              print("paths ${controller.pathPoints.length}");
-            });
-          }});
+      if (controller.isStart.value && !controller.isPause.value) {
+        setState(() {
+          _myLocation = newLocation;
+          controller.pathPoints
+              .add(LatLng(newLocation.latitude!, newLocation.longitude!));
+          print("paths ${controller.pathPoints.length}");
+        });
+      }
 
       if (_controller != null) {
         _controller!.animateCamera(
@@ -96,6 +101,7 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
   }
 
   ScreenshotController screenshotController = ScreenshotController();
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -152,13 +158,14 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
               // Text(controller.totalDistance.toStringAsFixed(3)),
               InkWell(
                 onTap: () {
-                  if(!controller.isPause.value){
-                  controller.isPause(true);
-                  controller.timer?.cancel();
-                }else{
+                  if (!controller.isPause.value) {
+                    controller.isPause(true);
+                    controller.timer?.cancel();
+                  } else {
                     controller.isPause(false);
                     controller.startTimer();
-                  }},
+                  }
+                },
                 child: Container(
                     alignment: Alignment.center,
                     height: 40,
@@ -166,7 +173,9 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
                     decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Constants.colorOnSurface),
-                    child: Icon((controller.isPause.value)?Icons.play_arrow:Icons.pause)),
+                    child: Icon((controller.isPause.value)
+                        ? Icons.play_arrow
+                        : Icons.pause)),
               ),
               const MarginWidget(
                 factor: 1,
@@ -237,11 +246,20 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
         child: Column(
           children: [
             Text(
-                "${controller.hours}:${controller.minutes}:${controller.seconds}")
+              formatTime(),
+            )
           ],
         ),
       ),
     );
+  }
+
+  String formatTime() {
+    var h = "${controller.hours < 10 ? "0" : ""}${controller.hours}";
+    var m = "${controller.minutes < 10 ? "0" : ""}${controller.minutes}";
+    var s = "${controller.seconds < 10 ? "0" : ""}${controller.seconds}";
+
+    return "$h:$m:$s";
   }
 
   Widget startButton() {
@@ -288,10 +306,10 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
       myLocationEnabled: true,
       polylines: {
         Polyline(
-          polylineId: const PolylineId('path'),
-          color: Colors.blue,
-          points: controller.pathPoints,
-        ),
+            polylineId: const PolylineId('path'),
+            color: Colors.blue,
+            points: controller.pathPoints,
+            width: 4),
       },
     );
   }

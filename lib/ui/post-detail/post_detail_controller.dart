@@ -21,18 +21,6 @@ class PostDetailController extends GetxController {
   ScrollController commentScroll = ScrollController();
 
   sendNotification(String token, Map<String, dynamic> data) async {
-    //   {
-    //     "to":"c1VJDyBjQaq2LOZtB6KqPB:APA91bEd3IN6dvd2BdwT-LeBj4ziVTtF88fg8cpTz3md7r2RnGaiqLaFKInW3ulUsHwWH3SpV9aTzdmPlDRy2uUOk-6a8LTnyis8Z9MSzInVMcrK9g87wJuDeIrzLKjwS0EzPIdGl8Ts",
-    //   "notification":{
-    //   "title":"Portugal vs. Denmark",
-    //   "body":"great match!"
-    // },
-    //   "data" : {
-    //   "body" : "Body of Your Notification in Data",
-    //   "title": "Title of Your Notification in Title"
-    //
-    // }
-    // }
     final uri = Uri.parse('https://fcm.googleapis.com/fcm/send');
     final res = await http.post(uri, body: data, headers: {
       'Authorization':

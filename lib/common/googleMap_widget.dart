@@ -5,34 +5,29 @@ import 'package:smartx_flutter_app/models/walk_model.dart';
 import '../util/constants.dart';
 
 class GoogleMapWidget extends StatelessWidget {
-   GoogleMapWidget({super.key,required this.model});
-WalkModel model;
+  const GoogleMapWidget({super.key, required this.model});
+
+  final WalkModel model;
+
   @override
   Widget build(BuildContext context) {
-    if(model.paths.isEmpty){
+    if (model.paths.isEmpty) {
       return SizedBox();
     }
-    return  GoogleMap(
-      initialCameraPosition:   CameraPosition(
-          zoom: 25, target: model.paths.isEmpty ? LatLng(31, 31) : model.paths.first),
+    return GoogleMap(
+      myLocationButtonEnabled: false,
+      initialCameraPosition:
+          CameraPosition(zoom: 12, target: model.paths.first),
+      zoomControlsEnabled: false,
       onMapCreated: (GoogleMapController controller) {
-        print('changes');
-        // _controller = controller;
-        // _setMyLocation();
+
       },
-      // myLocationEnabled: true,
-      // markers: {
-      //    Marker(markerId: const MarkerId("1"),
-      //   position: model.paths.first,
-      //      icon: BitmapDescriptor.defaultMarkerWithHue(12)
-      //   )
-      // },
       polylines: {
         Polyline(
-          polylineId: const PolylineId('path'),
-          color: Constants.buttonColor,
-          points: model.paths,
-        ),
+            polylineId: const PolylineId('path'),
+            color: Colors.blue,
+            points: model.paths,
+            width: 5),
       },
     );
   }

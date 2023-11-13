@@ -24,30 +24,28 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Required</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Required to get user photo</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Required to get user location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Required to get user location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Required</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Required to get user photo</string>
-    
-    
-    
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Required to get user location</string>
-    
-    
-    
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Required to get user location</string>
-    
-    
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -65,8 +63,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-	<key>ITSAppUsesNonExemptEncryption</key>
-    <false/>
 </dict>
 </plist>
