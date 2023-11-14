@@ -55,7 +55,7 @@ void main() async {
         description: 'This channel is used for important notifications.',
         enableVibration: true,
         playSound: true,
-        importance: Importance.high);
+        importance: Importance.high,);
   }
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
