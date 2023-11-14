@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smartx_flutter_app/common/app_button.dart';
 import 'package:smartx_flutter_app/common/app_text_field.dart';
@@ -24,6 +28,7 @@ class StopWalkScreen extends StatefulWidget {
   const StopWalkScreen({super.key, this.walk});
 
   final WalkModel? walk;
+
   @override
   State<StopWalkScreen> createState() => _StopWalkScreenState();
 }
@@ -44,8 +49,7 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
   Widget build(BuildContext context) {
     final size = context.screenSize;
 
-
-    if(widget.walk == null){
+    if (widget.walk == null) {
       return Scaffold(
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -122,45 +126,47 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                       height: 2,
                       color: Constants.colorTextField),
                   Obx(
-                        () => Row(
-                      children: [
-                        Image.asset('assets/Dog.png', width: 25),
-                        const SizedBox(width: 10),
-                        const Text('Dogs',
-                            style: TextStyle(
-                                fontFamily: Constants.workSansMedium,
-                                fontSize: 16,
-                                color: Constants.colorSecondary)),
-                        const SizedBox(width: 10),
-                        const DottedLineContainer(),
-                        const SizedBox(width: 10),
-                        if (controller.selectedDogs.isNotEmpty) ...[
-                          Expanded(child: dogImages(controller.selectedDogs))
-                        ],
-                        DottedBorder(
-                          color: Constants.colorSecondary,
-                          borderType: BorderType.Circle,
-                          child: IconButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => const DogsAlert())
-                                  .then((value) {
-                                if (value != null) {
-                                  controller.addSelectedDogs(
-                                      value["list"] as List<DogModel>);
-                                }
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.add,
-                              color: Constants.colorOnSurface,
-                              size: 20,
+                        () =>
+                        Row(
+                          children: [
+                            Image.asset('assets/Dog.png', width: 25),
+                            const SizedBox(width: 10),
+                            const Text('Dogs',
+                                style: TextStyle(
+                                    fontFamily: Constants.workSansMedium,
+                                    fontSize: 16,
+                                    color: Constants.colorSecondary)),
+                            const SizedBox(width: 10),
+                            const DottedLineContainer(),
+                            const SizedBox(width: 10),
+                            if (controller.selectedDogs.isNotEmpty) ...[
+                              Expanded(
+                                  child: dogImages(controller.selectedDogs))
+                            ],
+                            DottedBorder(
+                              color: Constants.colorSecondary,
+                              borderType: BorderType.Circle,
+                              child: IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => const DogsAlert())
+                                      .then((value) {
+                                    if (value != null) {
+                                      controller.addSelectedDogs(
+                                          value["list"] as List<DogModel>);
+                                    }
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Constants.colorOnSurface,
+                                  size: 20,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
                   ),
                   Container(
                       margin: const EdgeInsets.symmetric(vertical: 30),
@@ -191,7 +197,8 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                             height: 50,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Constants.buttonColor)),
+                                border:
+                                Border.all(color: Constants.buttonColor)),
                             child: const Text(
                               'Discard',
                               style: TextStyle(color: Constants.buttonColor),
@@ -218,9 +225,15 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                                     return;
                                   }
                                   Functions.showLoaderDialog(context);
-                                  await controller.addWalk();
+                                  var f = File(imagePath.value);
+                                  var link = await Functions.uploadImage(
+                                      await f.readAsBytes(),
+                                      "map/images/${DateTime
+                                          .now()
+                                          .millisecondsSinceEpoch}.jpeg");
+                                  await controller.addWalk(link);
                                   Get.back();
-                                  await shareDialogue();
+                                  await shareDialogue(link);
                                   controller.clearValues();
                                 }),
                           ),
@@ -237,7 +250,7 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
           ),
         ),
       );
-    }else{
+    } else {
       return Scaffold(
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -264,95 +277,186 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: size.height * 0.9,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Row(
+        body: SizedBox(
+          height: size.height * 0.9,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Column(
                     children: [
-                      Image.asset('assets/Timer.png', width: 25),
-                      const SizedBox(width: 10),
-                      const Text('Duration',
-                          style: TextStyle(
-                              fontFamily: Constants.workSansMedium,
-                              fontSize: 16,
-                              color: Constants.colorSecondary)),
-                      const SizedBox(width: 10),
-                      const DottedLineContainer(),
-                      const SizedBox(width: 10),
-                      Text(
-                        formatTime(),
-                        style: const TextStyle(color: Constants.colorOnSurface),
+                      Row(
+                        children: [
+                          Image.asset('assets/Timer.png', width: 25),
+                          const SizedBox(width: 10),
+                          const Text('Duration',
+                              style: TextStyle(
+                                  fontFamily: Constants.workSansMedium,
+                                  fontSize: 16,
+                                  color: Constants.colorSecondary)),
+                          const SizedBox(width: 10),
+                          const DottedLineContainer(),
+                          const SizedBox(width: 10),
+                          Text(
+                            formatTime(),
+                            style: const TextStyle(
+                                color: Constants.colorOnSurface),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Image.asset('assets/Distance.png', width: 25),
+                          const SizedBox(width: 10),
+                          const Text('Distance',
+                              style: TextStyle(
+                                  fontFamily: Constants.workSansMedium,
+                                  fontSize: 16,
+                                  color: Constants.colorSecondary)),
+                          const SizedBox(width: 10),
+                          const DottedLineContainer(),
+                          const SizedBox(width: 10),
+                          Text(
+                            widget.walk!.distance.toStringAsFixed(2),
+                            style: const TextStyle(
+                                color: Constants.colorOnSurface),
+                          ),
+                        ],
+                      ),
+                      Container(
+                          margin: const EdgeInsets.symmetric(vertical: 20),
+                          width: 100,
+                          height: 2,
+                          color: Constants.colorTextField),
+                      Row(
+                        children: [
+                          Image.asset('assets/Dog.png', width: 25),
+                          const SizedBox(width: 10),
+                          const Text('Dogs',
+                              style: TextStyle(
+                                  fontFamily: Constants.workSansMedium,
+                                  fontSize: 16,
+                                  color: Constants.colorSecondary)),
+                          const SizedBox(width: 10),
+                          const DottedLineContainer(),
+                          const SizedBox(width: 10),
+                          if (widget.walk!.dogs!.isNotEmpty) ...[
+                            Expanded(child: dogImages(widget.walk!.dogs!))
+                          ],
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          widget.walk!.title,
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Image.asset('assets/Distance.png', width: 25),
-                      const SizedBox(width: 10),
-                      const Text('Distance',
-                          style: TextStyle(
-                              fontFamily: Constants.workSansMedium,
-                              fontSize: 16,
-                              color: Constants.colorSecondary)),
-                      const SizedBox(width: 10),
-                      const DottedLineContainer(),
-                      const SizedBox(width: 10),
-                      Text(
-                        '${widget.walk!.distance.toStringAsFixed(2)}',
-                        style: const TextStyle(color: Constants.colorOnSurface),
-                      ),
-                    ],
-                  ),
-                  Container(
-                      margin: const EdgeInsets.symmetric(vertical: 20),
-                      width: 100,
-                      height: 2,
-                      color: Constants.colorTextField),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        child: AppButton(
+                          borderRadius: 10,
+                          color: Constants.colorOnSurface,
+                          fontFamily: Constants.workSansRegular,
+                          text: 'Share',
+                          onClick: () async {
+                            if (widget.walk?.image != null) {
 
-                  Row(
-                    children: [
-                      Image.asset('assets/Dog.png', width: 25),
-                      const SizedBox(width: 10),
-                      const Text('Dogs',
-                          style: TextStyle(
-                              fontFamily: Constants.workSansMedium,
-                              fontSize: 16,
-                              color: Constants.colorSecondary)),
-                      const SizedBox(width: 10),
-                      const DottedLineContainer(),
-                      const SizedBox(width: 10),
-                      if (widget.walk!.dogs!.isNotEmpty) ...[
-                        Expanded(child: dogImages(widget.walk!.dogs!))
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                ],
-              ),
+                              Functions.showLoaderDialog(context);
+                              var res = await get(Uri.parse(widget.walk!.image!));
+
+                              late File imagePath;
+                              final directory = await getTemporaryDirectory();
+                              imagePath =
+                              await File('${directory.path}/image.png').create();
+                              var f = await imagePath.writeAsBytes(res.bodyBytes);
+
+                              Get.back();
+                              Share.shareXFiles([XFile(f.path)],
+                                  subject: widget.walk!.title,
+                                  text:
+                                  "Title: ${widget.walk!.title}\nDistance Covered:${widget.walk!.distance} km");
+                            }
+
+                          },
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(width: 10,),
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        child: AppButton(
+                          borderRadius: 10,
+                          color: Constants.colorOnSurface,
+                          fontFamily: Constants.workSansRegular,
+                          text: 'Share In Feed',
+                          onClick: () async {
+                            Functions.showLoaderDialog(context);
+                            var snapshot = await FirebaseFirestore.instance
+                                .collection("user")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .get();
+
+                            var user = UserModel.fromJson(snapshot.data()!);
+
+                            final post = PostModel(
+                              text: "",
+                              username: '${user.firstName} ${user.lastName}',
+                              userImage: user.imagePath ?? '',
+                              created: DateTime.now(),
+                              groupId: '',
+                              likedUsers: [],
+                              userid: FirebaseAuth.instance.currentUser!.uid,
+                              id: '',
+                              walk: widget.walk,
+                            );
+                            final res = await _firestoreDatabaseHelper.addPost(
+                                post);
+
+                            Get.back();
+                            Functions.showSnackBar(
+                              context,
+                              "Walk shared successfully.",
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
       );
     }
-
   }
 
-
   String formatTime() {
-
-    if(widget.walk == null ){
+    if (widget.walk == null) {
       var h = "${controller.hours < 10 ? "0" : ""}${controller.hours}";
       var m = "${controller.minutes < 10 ? "0" : ""}${controller.minutes}";
       var s = "${controller.seconds < 10 ? "0" : ""}${controller.seconds}";
 
       return "$h:$m:$s";
-    }else{
-
+    } else {
       var seconds = widget.walk!.duration;
 
       int hours = seconds ~/ 3600; // ~/ is the integer division operator
@@ -365,9 +469,9 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
 
       return "$h:$m:$s";
     }
-
   }
-  Future shareDialogue() {
+
+  Future shareDialogue(String link) {
     return Get.defaultDialog(
       title: '',
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -412,7 +516,9 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                       Share.shareXFiles([XFile(imagePath.value)],
                           subject: controller.titleController.text,
                           text:
-                              "Title: ${controller.titleController.text}\nDistance Covered:${controller.totalDistance} km");
+                          "Title: ${controller.titleController
+                              .text}\nDistance Covered:${controller
+                              .totalDistance} km");
                       controller.clearValues();
                     }),
               ),
@@ -439,11 +545,11 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
 
                   var user = UserModel.fromJson(snapshot.data()!);
 
-
                   var walk = WalkModel(
                       title: controller.titleController.text,
                       dogs: controller.selectedDogs,
                       paths: controller.pathPoints,
+                      image: link,
                       dateTime: DateTime.now(),
                       duration: controller.hours.value * 3600 +
                           controller.minutes.value * 60 +
@@ -452,8 +558,7 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                       id: "");
                   final post = PostModel(
                     text: "",
-                    username:
-                        '${user.firstName} ${user.lastName}',
+                    username: '${user.firstName} ${user.lastName}',
                     userImage: user.imagePath ?? '',
                     created: DateTime.now(),
                     groupId: '',
@@ -464,14 +569,12 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
                   );
                   final res = await _firestoreDatabaseHelper.addPost(post);
 
-
                   print(res?.id);
                   Get.back();
                   Get.back();
                   Get.back();
                 } catch (_, t) {
                   print(t);
-
                 }
               },
             ),
@@ -520,7 +623,7 @@ class _StopWalkScreenState extends State<StopWalkScreen> {
   }
 
   final FirestoreDatabaseHelper _firestoreDatabaseHelper =
-      FirestoreDatabaseHelper.instance();
+  FirestoreDatabaseHelper.instance();
 
   Widget avatar(String imagePath) {
     return CircleAvatar(

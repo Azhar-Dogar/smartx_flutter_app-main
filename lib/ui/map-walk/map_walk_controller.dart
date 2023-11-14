@@ -255,7 +255,7 @@ class MapWalkController extends GetxController {
         .toJson());
   }
 
-  addWalk() async {
+  addWalk(String link) async {
     await getAchievement();
     userWalks = <WalkModel>[].obs;
     CollectionReference ref = FirebaseFirestore.instance
@@ -267,6 +267,7 @@ class MapWalkController extends GetxController {
         title: titleController.text,
         dogs: selectedDogs,
         paths: pathPoints,
+        image: link,
         dateTime: DateTime.now(),
         duration: hours.value * 3600 + minutes.value * 60 + seconds.value,
         distance: totalDistance.value / 1000,
