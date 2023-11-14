@@ -192,6 +192,7 @@ class FirestoreDatabaseHelper {
     final documentReference = await _firebaseFirestore
         .collection(_POSTS)
         .where('userid', isEqualTo: id).where('groupId', isEqualTo: "")
+        .orderBy("created", descending: true)
         .get()
         .timeout(_timeoutDuration);
     if (documentReference.docs.isEmpty) return null;

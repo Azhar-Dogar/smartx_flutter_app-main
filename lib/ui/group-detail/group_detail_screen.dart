@@ -286,6 +286,7 @@ class FeedTabScreen extends StatelessWidget {
           stream: FirebaseFirestore.instance
               .collection("posts")
               .where("groupId", isEqualTo: controller.groupModel.id)
+              .orderBy("created", descending: true)
               .snapshots(includeMetadataChanges: true),
           builder: (_, snapshot) {
             if (snapshot.hasError) {
@@ -345,7 +346,6 @@ class SinglePostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     print(postModel.walk);
     String userName = "";
     return Container(
@@ -368,24 +368,24 @@ class SinglePostWidget extends StatelessWidget {
                       UserModel user =
                           UserModel.fromJson(snapshot.data!.data()!);
                       return Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50)),
-                          child: (user.imagePath.toString() == null ||
-                                  user.imagePath.toString() == '')
-                              ? Image.asset('assets/4.png', height: 60)
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: CachedNetworkImage(
-                                      imageUrl: user.imagePath!,
-                                      height: 60,
-                                      width: 60,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                              child: CircularProgressIndicator
-                                                  .adaptive())),
-                                ));
+                        margin: const EdgeInsets.only(right: 10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50)),
+                        child: (user.imagePath.toString() == null ||
+                                user.imagePath.toString() == '')
+                            ? Image.asset('assets/4.png', height: 60)
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: CachedNetworkImage(
+                                    imageUrl: user.imagePath!,
+                                    height: 60,
+                                    width: 60,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator
+                                            .adaptive())),
+                              ),
+                      );
                     } else {
                       return const CircularProgressIndicator();
                     }
@@ -437,7 +437,6 @@ class SinglePostWidget extends StatelessWidget {
             )
           else
             WalkWidget(model: postModel.walk!),
-
           const SizedBox(height: 10),
           Row(
             children: [

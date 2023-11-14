@@ -22,15 +22,16 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   late double width, height;
   final controller = Get.put(MapWalkController());
+
   @override
   Widget build(BuildContext context) {
-
     print(FirebaseAuth.instance.currentUser!.uid);
     final size = context.screenSize;
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    return GetX<MapWalkController>(
-      builder: (DisposableInterface con) => Column(
+
+    return Obx(() {
+      return Column(
         children: [
           const SizedBox(height: 20),
           Expanded(
@@ -45,8 +46,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     }),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
-
 }

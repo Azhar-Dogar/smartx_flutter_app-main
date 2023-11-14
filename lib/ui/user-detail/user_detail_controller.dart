@@ -29,6 +29,7 @@ class UserDetailController extends GetxController {
         .collection(_POSTS)
         .where('userid', isEqualTo: userId)
         .where('groupId', isEqualTo: "")
+        .orderBy("created", descending: true)
         .snapshots();
     getUserPosts();
     getUserDogs();
@@ -66,6 +67,7 @@ class UserDetailController extends GetxController {
         .collection(_POSTS)
         .where('userid', isEqualTo: id)
         .where('groupId', isEqualTo: "")
+        .orderBy("created", descending: true)
         .snapshots()
         .listen((event) {
       posts.clear();

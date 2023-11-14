@@ -232,6 +232,9 @@ class MapWalkController extends GetxController {
       for (var element in event.docs) {
         userWalks.add(WalkModel.fromJson(element.data()));
       }
+
+      print("------");
+      print("ho gya add");
       // userWalks.value = tempWalks;
       print("here is user walks");
       print(userWalks.length);

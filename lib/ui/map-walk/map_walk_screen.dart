@@ -203,11 +203,13 @@ class _MapWalkScreenState extends State<MapWalkScreen> {
                   }
                   Get.back();
                   controller.calDistance();
-                  Get.toNamed(StopWalkScreen.route,
-                      arguments: MapEntry(false, imagePath.path));
-                  controller.pathPoints = [];
+
                   controller.timer!.cancel();
                   controller.isStart(false);
+                  await Get.toNamed(StopWalkScreen.route,
+                      arguments: MapEntry(false, imagePath.path));
+                  controller.pathPoints = [];
+
                 },
                 child: Container(
                   alignment: Alignment.center,

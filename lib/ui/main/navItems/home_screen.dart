@@ -26,10 +26,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final mapWalkController = Get.put(MapWalkController());
   late Size size;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  final controller = Get.put(MainScreenController());
   @override
   Widget build(BuildContext context) {
     size = context.screenSize;
-    final controller = Get.put(MainScreenController());
+
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -138,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .collection("posts")
                     .where('userid', whereIn: controller.followingUserIds)
                     .where("groupId", isEqualTo: "")
+                    .orderBy("created", descending: true)
                     .snapshots(includeMetadataChanges: true),
                 builder: (_, snapshot) {
                   print(controller.followingUserIds.length);
