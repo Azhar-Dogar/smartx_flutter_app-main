@@ -17,18 +17,12 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   @override
   void initState() {
-    print("-------");
-    for(var path in widget.model.paths){
-      print(path.latitude);
-      print(path.longitude);
-    }
-    print("-------");
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     if (widget.model.paths.isEmpty) {
-      return SizedBox();
+      return  const SizedBox();
     }
     return GoogleMap(
       myLocationButtonEnabled: false,
@@ -49,4 +43,5 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
     );
   }
+
 }
